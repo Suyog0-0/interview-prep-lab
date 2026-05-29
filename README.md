@@ -5,95 +5,101 @@
   <img src="https://img.shields.io/badge/TypeScript-5-3178C6?style=for-the-badge&logo=typescript&logoColor=white" />
 </p>
 
-<h1 align="center">
-  🧪 Interview Prep Lab
-</h1>
+<h1 align="center">Interview Prep Lab</h1>
 
 <p align="center">
-  <strong>A premium, interactive web application for full-stack & frontend interview preparation.</strong>
+  <strong>An interactive web application for full-stack and frontend interview preparation.</strong>
   <br />
-  <em>Master technical interviews with flashcards, MCQ assessments, and structured lecture notes — all in one place.</em>
+  <em>Flashcards, MCQ assessments, and structured lecture notes — built for engineers, by an engineer.</em>
 </p>
 
 <p align="center">
-  <a href="#-features">Features</a> •
-  <a href="#-modules">Modules</a> •
-  <a href="#-getting-started">Getting Started</a> •
-  <a href="#-project-structure">Structure</a> •
-  <a href="#-customization">Customize</a>
+  <a href="#features">Features</a> &middot;
+  <a href="#modules">Modules</a> &middot;
+  <a href="#getting-started">Getting Started</a> &middot;
+  <a href="#project-structure">Structure</a> &middot;
+  <a href="#customization">Customize</a>
 </p>
 
 ---
 
-## ✨ Features
+## About
 
-### 🃏 Interactive Flashcards
-Premium card-based UI with a three-zone layout — **header**, **question body**, and **answer footer**. Each card features:
-- A dedicated **"Need a Hint?"** toggle button with warm amber styling, separate from the answer reveal
-- Full-width **"Click to Reveal Answer"** interaction zone with dashed-to-solid border animation on hover
+**Interview Prep Lab** is a single-page study application designed to help software engineers systematically prepare for technical interviews. It provides structured, topic-wise content across 15 modules covering core programming, frontend frameworks, backend technologies, and behavioral questions.
+
+The application is built with Next.js 16 and React 19, and features a dark-mode-first design system with smooth animations, responsive layouts, and a focus on readability.
+
+---
+
+## Features
+
+### Interactive Flashcards
+
+Premium card-based UI with a three-zone layout — header, question body, and answer footer. Each card includes:
+
+- A dedicated **"Need a Hint?"** toggle with distinct amber styling, separated from the answer reveal
+- Full-width **"Click to Reveal Answer"** interaction zone with animated border transitions
 - A floating **"Hide Answer"** pill button with scale-on-hover micro-interaction
-- **VS Code-styled code blocks** with line numbers, syntax highlighting, macOS window chrome, and a copy button
+- **VS Code-styled code blocks** with line numbers, language labels, macOS window chrome, and a copy button
 
-### ✅ MCQ Testing Engine
-Battle-test your knowledge with 20 multiple-choice questions per module:
-- Instant visual feedback — correct answers glow **emerald**, wrong answers shake in **red**
-- Per-question **explanations** reveal after answering
-- Live **accuracy tracker** with a progress bar and percentage score
+### MCQ Testing Engine
 
-### 📖 Lecture Notes
-Structured study material for each module, inspired by university-style lecture breakdowns:
+Timed-style assessments with 20 multiple-choice questions per module:
+
+- Instant visual feedback — correct answers highlighted in green, incorrect answers shake in red
+- Per-question **explanations** revealed after answering
+- Live **accuracy tracker** with a progress bar and percentage score per module
+
+### Lecture Notes
+
+Structured study material inspired by university-style lecture breakdowns:
+
 - **Markdown rendering** with bold text and inline code highlighting
-- Dedicated **code examples** with full VS Code-style blocks
-- **Pro-Tips** in amber callout boxes for quick practical advice
+- Dedicated **code examples** rendered in VS Code-style blocks
+- **Pro-Tips** in callout boxes for quick practical advice
 
-### 📊 Real-Time Progress Tracking
-- Sidebar progress bars for **Flashcards revealed** and **MCQs answered**
-- Per-module completion badges with **orange** (flashcards) and **emerald** (MCQs) indicators
-- Session-wide **accuracy percentage** displayed on the dashboard
+### Progress Tracking
 
-### 🔍 Global Search
-Instantly search across all questions, answers, hints, and MCQ explanations. Results are grouped by type and module, with one-click navigation.
+- Sidebar progress bars for flashcards revealed and MCQs answered
+- Per-module completion indicators with color-coded badges
+- Session-wide accuracy percentage displayed on the dashboard
 
-### 🎨 Premium Design System
-- **Dark mode** with a rich `#0d0d0d` base and carefully curated zinc/orange/emerald palette
-- **Glassmorphism** cards with `backdrop-blur` and subtle glow shadows
-- **Micro-animations**: `fade-up`, `pop-in`, `shake` for a polished, app-like feel
-- **Custom fonts**: Syne (headings), Inter (body), JetBrains Mono (code)
-- **Retro scanline overlay** for a unique developer aesthetic
-- Fully **responsive** — works beautifully on mobile, tablet, and desktop
+### Global Search
+
+Full-text search across all questions, answers, hints, and MCQ explanations. Results are grouped by type and module with one-click navigation to the relevant section.
 
 ---
 
-## 📚 Modules
+## Modules
 
-The curriculum is structured into **15 essential modules** covering the full spectrum of a modern web developer interview:
+The curriculum is organized into **15 modules** covering the full spectrum of a modern web developer interview:
 
-| # | Module | Topics |
-|---|--------|--------|
-| 01 | **Core Programming** | Loops, Conditionals, Recursion, Scope |
-| 02 | **Data Structures** | Arrays, Linked Lists, Stacks, Queues, Trees, Hash Maps |
-| 03 | **Big O Notation** | Time/Space Complexity, Common Patterns |
-| 04 | **OOP** | Classes, Inheritance, Polymorphism, Encapsulation |
-| 05 | **SOLID Principles** | SRP, OCP, LSP, ISP, DIP |
-| 06 | **Frontend Basics** | HTML, CSS, Box Model, Responsive Design |
-| 07 | **JavaScript** | Closures, Event Loop, Promises, Prototypes |
-| 08 | **React** | Components, Hooks, Virtual DOM, State Management |
-| 09 | **Next.js** | SSR, SSG, App Router, Optimization |
-| 10 | **REST API & SOAP** | HTTP Methods, Status Codes, API Design |
-| 11 | **CORS** | Cross-Origin Resource Sharing, Preflight |
-| 12 | **JWT** | Authentication, Stateless vs Stateful Sessions |
-| 13 | **SQL & PostgreSQL** | Joins, Indexing, Normalization, Queries |
-| 14 | **Node.js & Express** | Event Loop, Middleware, Routing |
-| 15 | **Problem Solving** | STAR Method, System Design, Behavioural |
+| #  | Module                      | Key Topics                                            |
+|----|-----------------------------|-------------------------------------------------------|
+| 01 | Core Programming            | Loops, Conditionals, Recursion, Scope, Hoisting       |
+| 02 | Data Structures             | Arrays, Linked Lists, Stacks, Queues, Trees, Maps     |
+| 03 | Big O Notation              | Time & Space Complexity, Common Patterns              |
+| 04 | Object-Oriented Programming | Classes, Inheritance, Polymorphism, Encapsulation     |
+| 05 | SOLID Principles            | SRP, OCP, LSP, ISP, DIP                              |
+| 06 | Frontend Basics             | HTML, CSS, Box Model, Responsive Design               |
+| 07 | JavaScript                  | Closures, Event Loop, Promises, Prototypes            |
+| 08 | React                       | Components, Hooks, Virtual DOM, State Management      |
+| 09 | Next.js                     | SSR, SSG, App Router, Optimization                    |
+| 10 | REST API & SOAP             | HTTP Methods, Status Codes, API Design                |
+| 11 | CORS                        | Cross-Origin Resource Sharing, Preflight Requests     |
+| 12 | JWT & Authentication        | Token-Based Auth, Stateless vs Stateful Sessions      |
+| 13 | SQL & PostgreSQL            | Joins, Indexing, Normalization, Query Optimization    |
+| 14 | Node.js & Express           | Event Loop, Middleware, Routing, Error Handling       |
+| 15 | Problem Solving             | STAR Method, System Design, Behavioural Questions     |
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
 - [Node.js](https://nodejs.org/) v18 or higher
-- npm (comes with Node.js)
+- npm (included with Node.js)
 
 ### Installation
 
@@ -101,7 +107,7 @@ The curriculum is structured into **15 essential modules** covering the full spe
 # Clone the repository
 git clone https://github.com/Suyog0-0/interview-prep-lab.git
 
-# Navigate into the project
+# Navigate into the project directory
 cd interview-prep-lab
 
 # Install dependencies
@@ -111,51 +117,52 @@ npm install
 npm run dev
 ```
 
-Open **[http://localhost:3000](http://localhost:3000)** in your browser and start studying!
+The application will be available at **http://localhost:3000**.
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 interview-prep-lab/
 ├── app/
-│   ├── data/                # All question & notes data
-│   │   ├── index.ts         # Main data aggregator (exports interviewData[])
-│   │   ├── mcqs.ts          # 300+ MCQ questions across all modules
-│   │   ├── s01_core.ts      # Module 01: Core Programming flashcards + notes
-│   │   ├── s02_ds.ts        # Module 02: Data Structures
-│   │   ├── s03_bigo.ts      # Module 03: Big O Notation
-│   │   ├── s04_oop.ts       # Module 04: OOP
-│   │   └── s05_solid.ts     # Module 05: SOLID Principles
-│   ├── globals.css          # Design system — tokens, animations, components
-│   ├── layout.tsx           # Root layout with Google Fonts
-│   └── page.tsx             # Main application (single-page)
-├── types.ts                 # TypeScript interfaces for all data models
+│   ├── data/                 # Question banks and lecture content
+│   │   ├── index.ts          # Data aggregator — exports interviewData[]
+│   │   ├── mcqs.ts           # 300+ MCQ questions across all modules
+│   │   ├── s01_core.ts       # Module 01: Core Programming
+│   │   ├── s02_ds.ts         # Module 02: Data Structures
+│   │   ├── s03_bigo.ts       # Module 03: Big O Notation
+│   │   ├── s04_oop.ts        # Module 04: OOP
+│   │   └── s05_solid.ts      # Module 05: SOLID Principles
+│   ├── globals.css           # Design system — tokens, animations, components
+│   ├── layout.tsx            # Root layout with font configuration
+│   └── page.tsx              # Main application (single-page architecture)
+├── types.ts                  # TypeScript interfaces for all data models
 ├── package.json
+├── tsconfig.json
 └── README.md
 ```
 
 ---
 
-## 🛠 Tech Stack
+## Tech Stack
 
-| Layer | Technology | Purpose |
-|-------|-----------|---------|
-| **Framework** | [Next.js 16](https://nextjs.org/) | React framework with App Router |
-| **UI Library** | [React 19](https://react.dev/) | Component-based UI |
-| **Styling** | [Tailwind CSS 4](https://tailwindcss.com/) | Utility-first CSS |
-| **Icons** | [Lucide React](https://lucide.dev/) | Beautiful, consistent icon set |
-| **Fonts** | Google Fonts | Syne · Inter · JetBrains Mono |
-| **Language** | [TypeScript 5](https://www.typescriptlang.org/) | Type-safe development |
+| Layer         | Technology                                        | Purpose                           |
+|---------------|---------------------------------------------------|-----------------------------------|
+| Framework     | [Next.js 16](https://nextjs.org/)                 | React framework with App Router   |
+| UI Library    | [React 19](https://react.dev/)                    | Component-based interface         |
+| Styling       | [Tailwind CSS 4](https://tailwindcss.com/)        | Utility-first CSS framework       |
+| Icons         | [Lucide React](https://lucide.dev/)               | Consistent SVG icon library       |
+| Typography    | [Google Fonts](https://fonts.google.com/)         | Syne, Inter, JetBrains Mono       |
+| Language      | [TypeScript 5](https://www.typescriptlang.org/)   | Static type checking              |
 
 ---
 
-## 🧩 Customization
+## Customization
 
-### Adding a New Flashcard
+### Adding a Flashcard
 
-Edit the relevant module file in `app/data/` and add an entry to the `questions` array:
+Edit the relevant module file in `app/data/` and append to the `questions` array:
 
 ```typescript
 {
@@ -169,9 +176,9 @@ console.log("5" - 3);  // 2 (number)`,
 }
 ```
 
-### Adding a New MCQ
+### Adding an MCQ
 
-Add to the module's `mcqs` array in `app/data/mcqs.ts`:
+Append to the relevant MCQ array in `app/data/mcqs.ts`:
 
 ```typescript
 {
@@ -185,7 +192,7 @@ Add to the module's `mcqs` array in `app/data/mcqs.ts`:
 
 ### Adding Lecture Notes
 
-Add a `notes` array to any module's `InterviewSection`:
+Add a `notes` array to any module's `InterviewSection` object:
 
 ```typescript
 notes: [
@@ -204,21 +211,23 @@ notes: [
 
 ### Data Model Reference
 
-All data is strongly typed. See [`types.ts`](types.ts) for the full interface definitions:
+All data conforms to the TypeScript interfaces defined in [`types.ts`](types.ts):
 
-- **`InterviewQuestion`** — Flashcard with question, hint, answer, and optional code
-- **`MCQQuestion`** — Multiple choice with 4 options, correct index, and explanation
-- **`NoteSection`** — Lecture note block with markdown content, code, and tips
-- **`InterviewSection`** — A module combining all three content types
+| Interface            | Description                                                          |
+|----------------------|----------------------------------------------------------------------|
+| `InterviewQuestion`  | Flashcard — question, hint, answer, and optional code example        |
+| `MCQQuestion`        | Multiple-choice — 4 options, correct index, and explanation          |
+| `NoteSection`        | Lecture note — markdown content, optional code block and tip         |
+| `InterviewSection`   | Module container combining flashcards, MCQs, and notes              |
 
 ---
 
-## 📄 License
+## License
 
 This project is open source and available under the [MIT License](LICENSE).
 
 ---
 
 <p align="center">
-  Built with ☕ and late nights by <a href="https://github.com/Suyog0-0"><strong>Suyog</strong></a>
+  Built by <a href="https://github.com/Suyog0-0"><strong>Suyog</strong></a>
 </p>
