@@ -1,105 +1,74 @@
 <p align="center">
-  <img src="https://img.shields.io/badge/Next.js-16-black?style=for-the-badge&logo=nextdotjs&logoColor=white" />
-  <img src="https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=black" />
-  <img src="https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white" />
-  <img src="https://img.shields.io/badge/TypeScript-5-3178C6?style=for-the-badge&logo=typescript&logoColor=white" />
+  <img src="https://img.shields.io/badge/Next.js-16.2-000000?style=flat-square&logo=nextdotjs&logoColor=white" />
+  <img src="https://img.shields.io/badge/React-19.0-61DAFB?style=flat-square&logo=react&logoColor=black" />
+  <img src="https://img.shields.io/badge/Tailwind_CSS-4.0-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white" />
+  <img src="https://img.shields.io/badge/TypeScript-5.0-3178C6?style=flat-square&logo=typescript&logoColor=white" />
 </p>
 
 <h1 align="center">Interview Prep Lab</h1>
 
 <p align="center">
-  <strong>An interactive web application for full-stack and frontend interview preparation.</strong>
+  <strong>An interactive frontend and full-stack engineering interview preparation suite.</strong>
   <br />
-  <em>Flashcards, MCQ assessments, and structured lecture notes — built for engineers, by an engineer.</em>
+  Features spaced-repetition flashcards, multiple-choice testing, and curated technical lecture notes.
 </p>
 
 <p align="center">
-  <a href="#features">Features</a> &middot;
-  <a href="#modules">Modules</a> &middot;
-  <a href="#getting-started">Getting Started</a> &middot;
-  <a href="#project-structure">Structure</a> &middot;
-  <a href="#customization">Customize</a>
+  <a href="#key-capabilities">Capabilities</a> &bull;
+  <a href="#curriculum-modules">Curriculum</a> &bull;
+  <a href="#quick-start">Quick Start</a> &bull;
+  <a href="#directory-structure">Structure</a> &bull;
+  <a href="#data-extension">Data Extension</a>
 </p>
 
 ---
 
-## About
+## Key Capabilities
 
-**Interview Prep Lab** is a single-page study application designed to help software engineers systematically prepare for technical interviews. It provides structured, topic-wise content across 15 modules covering core programming, frontend frameworks, backend technologies, and behavioral questions.
+✦ **Interactive Flashcard Deck**
+* Double-sided interactive cards featuring distinct, amber-themed lightbulb hints.
+* Smooth, high-framerate flip/reveal animations using pure CSS/Tailwind transitions.
+* Formatted, VS Code-styled inline and block-level code syntax highlighting.
 
-The application is built with Next.js 16 and React 19, and features a dark-mode-first design system with smooth animations, responsive layouts, and a focus on readability.
+✦ **MCQ Assessment Engine**
+* Modular 20-question evaluation exams with instant color-coded visual feedback.
+* Comprehensive technical explanations provided for both correct and incorrect choices.
+* Real-time metrics dashboard tracking individual section completion and exam accuracy.
 
----
+✦ **Structured Lecture Notes**
+* Compact, university-inspired review notes built directly alongside flashcard and MCQ modules.
+* Rich text formatting featuring precise typographic treatments and inline syntax markers.
+* Highlights technical nuances through beautifully styled Pro-Tip alert callouts.
 
-## Features
-
-### Interactive Flashcards
-
-Premium card-based UI with a three-zone layout — header, question body, and answer footer. Each card includes:
-
-- A dedicated **"Need a Hint?"** toggle with distinct amber styling, separated from the answer reveal
-- Full-width **"Click to Reveal Answer"** interaction zone with animated border transitions
-- A floating **"Hide Answer"** pill button with scale-on-hover micro-interaction
-- **VS Code-styled code blocks** with line numbers, language labels, macOS window chrome, and a copy button
-
-### MCQ Testing Engine
-
-Timed-style assessments with 20 multiple-choice questions per module:
-
-- Instant visual feedback — correct answers highlighted in green, incorrect answers shake in red
-- Per-question **explanations** revealed after answering
-- Live **accuracy tracker** with a progress bar and percentage score per module
-
-### Lecture Notes
-
-Structured study material inspired by university-style lecture breakdowns:
-
-- **Markdown rendering** with bold text and inline code highlighting
-- Dedicated **code examples** rendered in VS Code-style blocks
-- **Pro-Tips** in callout boxes for quick practical advice
-
-### Progress Tracking
-
-- Sidebar progress bars for flashcards revealed and MCQs answered
-- Per-module completion indicators with color-coded badges
-- Session-wide accuracy percentage displayed on the dashboard
-
-### Global Search
-
-Full-text search across all questions, answers, hints, and MCQ explanations. Results are grouped by type and module with one-click navigation to the relevant section.
+✦ **Unified Engine Search**
+* In-memory indexing engine supporting instantaneous keyword search across all content areas.
+* Segregated search results categorized by Question, Answer, Hint, and Explanation types.
 
 ---
 
-## Modules
+## Curriculum Modules
 
-The curriculum is organized into **15 modules** covering the full spectrum of a modern web developer interview:
-
-| #  | Module                      | Key Topics                                            |
-|----|-----------------------------|-------------------------------------------------------|
-| 01 | Core Programming            | Loops, Conditionals, Recursion, Scope, Hoisting       |
-| 02 | Data Structures             | Arrays, Linked Lists, Stacks, Queues, Trees, Maps     |
-| 03 | Big O Notation              | Time & Space Complexity, Common Patterns              |
-| 04 | Object-Oriented Programming | Classes, Inheritance, Polymorphism, Encapsulation     |
-| 05 | SOLID Principles            | SRP, OCP, LSP, ISP, DIP                              |
-| 06 | Frontend Basics             | HTML, CSS, Box Model, Responsive Design               |
-| 07 | JavaScript                  | Closures, Event Loop, Promises, Prototypes            |
-| 08 | React                       | Components, Hooks, Virtual DOM, State Management      |
-| 09 | Next.js                     | SSR, SSG, App Router, Optimization                    |
-| 10 | REST API & SOAP             | HTTP Methods, Status Codes, API Design                |
-| 11 | CORS                        | Cross-Origin Resource Sharing, Preflight Requests     |
-| 12 | JWT & Authentication        | Token-Based Auth, Stateless vs Stateful Sessions      |
-| 13 | SQL & PostgreSQL            | Joins, Indexing, Normalization, Query Optimization    |
-| 14 | Node.js & Express           | Event Loop, Middleware, Routing, Error Handling       |
-| 15 | Problem Solving             | STAR Method, System Design, Behavioural Questions     |
+| ID | Focus Area | Core Competencies |
+| :--- | :--- | :--- |
+| **01** | Core Programming | Execution contexts, lexical scope, closures, recursion, hoisting |
+| **02** | Data Structures | Arrays, linked lists, stacks, queues, hash maps, binary trees |
+| **03** | Big O Notation | Time and space complexity analysis, optimization strategies |
+| **04** | OOP Paradigm | Encapsulation, inheritance, polymorphism, abstraction |
+| **05** | SOLID Principles | Five-factor software design philosophy and clean architecture |
+| **06** | Web Standards | Semantic HTML5, CSS box models, layouts (Flexbox/Grid), accessibility |
+| **07** | JavaScript Core | Event loop, micro/macrotasks, prototype chains, promise pipelines |
+| **08** | React Ecosystem | Fiber reconciliation, hook lifecycles, global and local state |
+| **09** | Next.js Architecture | Server-side rendering (SSR), static site generation (SSG), App Router |
+| **10** | API Topologies | RESTful design constraints, JSON RPC, SOAP protocols, status codes |
+| **11** | CORS Protocol | Same-origin security policy, preflight handshakes, security headers |
+| **12** | Authentication | Stateless JWT standards, sessions, tokens, claims, OAuth flows |
+| **13** | Database Engines | Relational SQL, transactional ACID, indexes, query planning |
+| **14** | Node.js Runtime | Event-driven I/O, middleware patterns, scaling, stream pipelines |
+| **15** | Systems & Behavior | STAR method methodology, system-level design patterns |
 
 ---
 
-## Getting Started
-
-### Prerequisites
-
-- [Node.js](https://nodejs.org/) v18 or higher
-- npm (included with Node.js)
+## Quick Start
 
 ### Installation
 
@@ -107,127 +76,98 @@ The curriculum is organized into **15 modules** covering the full spectrum of a 
 # Clone the repository
 git clone https://github.com/Suyog0-0/interview-prep-lab.git
 
-# Navigate into the project directory
+# Enter workspace
 cd interview-prep-lab
 
-# Install dependencies
+# Install package dependencies
 npm install
 
-# Start the development server
+# Run the local development server
 npm run dev
 ```
 
-The application will be available at **http://localhost:3000**.
+The server launches instantly at `http://localhost:3000`.
 
 ---
 
-## Project Structure
+## Directory Structure
 
 ```
 interview-prep-lab/
 ├── app/
-│   ├── data/                 # Question banks and lecture content
-│   │   ├── index.ts          # Data aggregator — exports interviewData[]
-│   │   ├── mcqs.ts           # 300+ MCQ questions across all modules
-│   │   ├── s01_core.ts       # Module 01: Core Programming
-│   │   ├── s02_ds.ts         # Module 02: Data Structures
-│   │   ├── s03_bigo.ts       # Module 03: Big O Notation
-│   │   ├── s04_oop.ts        # Module 04: OOP
-│   │   └── s05_solid.ts      # Module 05: SOLID Principles
-│   ├── globals.css           # Design system — tokens, animations, components
-│   ├── layout.tsx            # Root layout with font configuration
-│   └── page.tsx              # Main application (single-page architecture)
-├── types.ts                  # TypeScript interfaces for all data models
+│   ├── data/                 # Segmented question banks and lecture guides
+│   │   ├── index.ts          # Aggregate exporter of study segments
+│   │   ├── mcqs.ts           # Consolidated MCQ dataset across all modules
+│   │   ├── s01_core.ts       # Module 01: Core programming concepts
+│   │   ├── s02_ds.ts         # Module 02: Complex data structures
+│   │   ├── s03_bigo.ts       # Module 03: Big O complexities
+│   │   ├── s04_oop.ts        # Module 04: Object-oriented programming
+│   │   └── s05_solid.ts      # Module 05: SOLID software design principles
+│   ├── globals.css           # Global typography, color tokens, and animations
+│   ├── layout.tsx            # Main layout wrapper injecting Google Fonts
+│   └── page.tsx              # Application layout and state machine controller
+├── types.ts                  # Static TypeScript schema definitions
 ├── package.json
-├── tsconfig.json
-└── README.md
+└── tsconfig.json
 ```
 
 ---
 
-## Tech Stack
+## Data Extension
 
-| Layer         | Technology                                        | Purpose                           |
-|---------------|---------------------------------------------------|-----------------------------------|
-| Framework     | [Next.js 16](https://nextjs.org/)                 | React framework with App Router   |
-| UI Library    | [React 19](https://react.dev/)                    | Component-based interface         |
-| Styling       | [Tailwind CSS 4](https://tailwindcss.com/)        | Utility-first CSS framework       |
-| Icons         | [Lucide React](https://lucide.dev/)               | Consistent SVG icon library       |
-| Typography    | [Google Fonts](https://fonts.google.com/)         | Syne, Inter, JetBrains Mono       |
-| Language      | [TypeScript 5](https://www.typescriptlang.org/)   | Static type checking              |
+The system is highly modular. You can easily extend flashcards, MCQs, or lecture notes by adhering to the type structures.
 
----
+### Extending Flashcards
 
-## Customization
-
-### Adding a Flashcard
-
-Edit the relevant module file in `app/data/` and append to the `questions` array:
+Append new items to the `questions` array inside any data file (e.g., `app/data/s01_core.ts`):
 
 ```typescript
 {
   id: "s01-q16",
   q: "What is type coercion?",
-  hint: "Automatic type conversion.",
-  answer: "Type coercion is the automatic conversion of values from one type to another.",
-  code: `console.log("5" + 3);  // "53" (string)
-console.log("5" - 3);  // 2 (number)`,
+  hint: "Automatic casting during runtime operations.",
+  answer: "The implicit conversion of values from one data type to another by the engine.",
+  code: `console.log("5" + 3);  // "53" (string concatenation)
+console.log("5" - 3);  // 2 (numeric subtraction)`,
   language: "javascript",
 }
 ```
 
-### Adding an MCQ
+### Adding New Exams
 
-Append to the relevant MCQ array in `app/data/mcqs.ts`:
+Modify `app/data/mcqs.ts` and add questions to the relevant module section:
 
 ```typescript
 {
   id: "core-mcq-21",
-  question: "Which keyword declares a block-scoped variable?",
-  options: ["var", "let", "function", "global"],
+  question: "Which keyword declares block-scoped re-assignable bindings?",
+  options: ["var", "let", "const", "global"],
   correctAnswerIndex: 1,
-  explanation: "let and const are block-scoped. var is function-scoped.",
+  explanation: "'let' assigns a mutable variable bound to the containing block.",
 }
 ```
 
-### Adding Lecture Notes
+### Writing Lecture Guides
 
-Add a `notes` array to any module's `InterviewSection` object:
+Add note records to any module configuration inside the `notes` list:
 
 ```typescript
 notes: [
   {
     title: "Understanding Closures",
-    content: "A **closure** is a function that retains access to its `outer scope`...",
-    code: `function outer() {
+    content: "A **closure** is created when a inner function retains reference to its outer lexical environment...",
+    code: `const counter = () => {
   let count = 0;
   return () => ++count;
-}`,
+};`,
     language: "javascript",
-    tip: "Closures are the foundation of React hooks like useState.",
+    tip: "Closures enable state encapsulation and form the foundational basis of React Hooks.",
   },
 ]
 ```
 
-### Data Model Reference
-
-All data conforms to the TypeScript interfaces defined in [`types.ts`](types.ts):
-
-| Interface            | Description                                                          |
-|----------------------|----------------------------------------------------------------------|
-| `InterviewQuestion`  | Flashcard — question, hint, answer, and optional code example        |
-| `MCQQuestion`        | Multiple-choice — 4 options, correct index, and explanation          |
-| `NoteSection`        | Lecture note — markdown content, optional code block and tip         |
-| `InterviewSection`   | Module container combining flashcards, MCQs, and notes              |
-
----
-
-## License
-
-This project is open source and available under the [MIT License](LICENSE).
-
 ---
 
 <p align="center">
-  Built by <a href="https://github.com/Suyog0-0"><strong>Suyog</strong></a>
+  Crafted by <a href="https://github.com/Suyog0-0"><strong>Suyog</strong></a>
 </p>
