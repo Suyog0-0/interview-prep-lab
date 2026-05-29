@@ -1,26 +1,193 @@
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800;900&family=JetBrains+Mono:wght@300;400;500;600&family=Inter:wght@300;400;500;600;700&display=swap');
 @import "tailwindcss";
 
+/* ═══════════════════════════════════════════
+   Interview Prep Lab — globals.css
+   ═══════════════════════════════════════════ */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg: #0d0d0d;
+  --bg2: #141414;
+  --bg3: #1a1a1a;
+  --surface: #202020;
+  --surface2: #2a2a2a;
+  --border: #2e2e2e;
+  --accent: #ff6b2b;
+  --accent-rgb: 255, 107, 43;
+  --accent2: #ffaa44;
+  --accent3: #4ade80;
+  --accent4: #60a5fa;
+  --accent5: #c084fc;
+  --text: #f0ede8;
+  --text2: #a8a39c;
+  --text3: #6b6560;
+  --red: #f87171;
+  --teal: #2dd4bf;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-background: var(--bg);
+  --color-foreground: var(--text);
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --color-accent: var(--accent);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+/* Retro terminal scanlines */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 0, 0, 0.03) 2px, rgba(0, 0, 0, 0.03) 4px);
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--surface); }
+
+/* Animations */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes popIn {
+  0% { transform: scale(0.94); opacity: 0; }
+  60% { transform: scale(1.02); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-5px); }
+  40% { transform: translateX(5px); }
+  60% { transform: translateX(-3px); }
+  80% { transform: translateX(3px); }
+}
+
+.animate-fade-up { animation: fadeUp 0.35s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+.animate-pop-in  { animation: popIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+.animate-shake   { animation: shake 0.35s ease-in-out; }
+
+/* Sidebar */
+.sidebar-logo {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+}
+
+.nav-group-children {
+  border-left: 1px solid var(--border);
+  margin-left: 18px;
+  padding-left: 4px;
+}
+
+/* Breadcrumb */
+.breadcrumb {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text3);
+}
+
+/* Progress bar */
+.progress-fill {
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+}
+
+/* Code blocks */
+pre {
+  background: var(--bg) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 8px;
+  padding: 18px;
+  overflow-x: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+/* Concept Cards */
+.concept-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.concept-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.01);
+}
+
+/* Explain Box */
+.explain-box {
+  background: var(--bg2);
+  border-left: 3px solid var(--accent4);
+  border-radius: 0 8px 8px 0;
+  padding: 16px;
+  font-size: 13px;
+  color: var(--text2);
+  line-height: 1.7;
+}
+
+/* MCQ Option Buttons (vivaprep style) */
+.mcq-option-btn {
+  width: 100%;
+  text-align: left;
+  padding: 14px 18px;
+  border-radius: 8px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  font-size: 13px;
+  color: var(--text2);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+.mcq-option-btn:hover:not(:disabled) {
+  border-color: var(--accent2);
+  color: var(--text);
+  background: var(--surface);
+  transform: translateX(4px);
+}
+.mcq-option-btn.selected {
+  border-color: var(--accent);
+  color: var(--text);
+  background: rgba(255, 107, 43, 0.08);
+}
+.mcq-option-btn.correct {
+  border-color: var(--accent3) !important;
+  color: var(--accent3) !important;
+  background: rgba(74, 222, 128, 0.08) !important;
+}
+.mcq-option-btn.incorrect {
+  border-color: var(--red) !important;
+  color: var(--red) !important;
+  background: rgba(248, 113, 113, 0.08) !important;
+}
+
+/* Tip box */
+.tip-box {
+  background: rgba(255, 170, 44, 0.05);
+  border-left: 3px solid var(--accent2);
+  border-radius: 0 8px 8px 0;
+  padding: 16px;
+  font-size: 13px;
+  color: var(--text2);
 }
