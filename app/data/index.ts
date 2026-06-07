@@ -203,12 +203,67 @@ export const s15_problem: InterviewSection = {
     {
       id: "s15-q01",
       q: "Describe a time you solved a difficult bug.",
-      hint: "STAR method.",
-      answer: "Situation, Task, Action, Result. Focus on your debugging process and what you learned.",
+      hint: "STAR method — focus on your debugging process.",
+      answer: "Use the STAR framework: Situation (what was the context?), Task (what was your responsibility?), Action (how did you isolate and fix it — what tools, logs, or steps did you use?), Result (what was the outcome and what did you learn?). Interviewers want to see methodical thinking, not luck.",
+    },
+    {
+      id: "s15-q02",
+      q: "Tell me about a time you had to meet a very tight deadline. How did you handle it?",
+      hint: "Show prioritisation + proactive communication — not just 'I worked harder'.",
+      answer: "Structure your answer around: (1) Scope triage — immediately identify what is truly essential vs nice-to-have. (2) Honest estimation — break the work into tasks and time-box each one. (3) Early communication — flag risks to your manager before they become blockers. (4) Focused delivery — cut distractions and deliver the core functionality first. End with what you shipped and any post-sprint reflection.",
+    },
+    {
+      id: "s15-q03",
+      q: "Describe a situation where you had a conflict with a teammate. How did you resolve it?",
+      hint: "Show maturity — you listened first, then communicated clearly.",
+      answer: "Key signals interviewers look for: (1) You didn't escalate immediately or go passive-aggressive. (2) You sought to understand their perspective first (active listening). (3) You raised your own view calmly with reasoning, not emotion. (4) You sought a compromise or escalated appropriately if needed. (5) The working relationship was preserved. Use STAR and make sure the 'Action' section is detailed.",
+    },
+    {
+      id: "s15-q04",
+      q: "Give an example of a time you took initiative without being asked.",
+      hint: "Pick something that had measurable impact — not just extra hours.",
+      answer: "Good examples: noticing a recurring bug and proactively fixing it, writing documentation that didn't exist, automating a manual process, or onboarding a new teammate when no one else offered. Frame it as: (1) What you noticed. (2) Why you decided to act. (3) What you did. (4) The outcome. Avoid stories where the 'initiative' was just doing your job.",
+    },
+    {
+      id: "s15-q05",
+      q: "How do you prioritise tasks when everything feels urgent?",
+      hint: "Show a system — not just 'I make a list'.",
+      answer: "Mention a framework: (1) Urgency vs Impact matrix — what is both urgent AND high impact? Start there. (2) Clarify with stakeholders — urgency is often perception, not reality. A quick conversation can reorder priorities. (3) Time-box context switching — avoid multitasking by batching related tasks. (4) Communicate your current priority to the team so expectations are aligned. Tools: Kanban boards, linear, notion task lists.",
+    },
+    {
+      id: "s15-q06",
+      q: "Tell me about a project that failed or didn't go as planned. What did you learn?",
+      hint: "Own it — don't deflect. Interviewers want to see resilience and a growth mindset.",
+      answer: "Choose a REAL failure — not a humble-brag. Structure: (1) What was the project and what was your role. (2) What went wrong — be specific (missed requirements, underestimated complexity, poor communication). (3) What was the impact. (4) What you did to recover or mitigate. (5) The durable lesson — what do you do differently now? Avoid blaming others entirely even if they contributed.",
+    },
+    {
+      id: "s15-q07",
+      q: "How do you approach learning a new technology or framework quickly?",
+      hint: "Show a structured process — not just 'I watch YouTube tutorials'.",
+      answer: "(1) Read the official docs first — not blog posts. (2) Build a minimal proof-of-concept rather than just reading. (3) Identify the core concepts (e.g. for React: components, state, props, lifecycle). (4) Find the gaps by doing something real and hitting actual problems. (5) Read source code or study popular open-source projects using the tech. (6) Apply it to a real side project to solidify understanding.",
+    },
+    {
+      id: "s15-q08",
+      q: "Describe a time you disagreed with a technical decision made by your team or manager.",
+      hint: "Show you can advocate for your view professionally AND accept decisions gracefully.",
+      answer: "Structure: (1) What was the decision and why you disagreed — be specific (performance, maintainability, scalability concerns). (2) How you raised it — ideally with data, a prototype, or a written comparison. (3) What happened — was your view accepted, partially accepted, or overruled? (4) How you responded if overruled — you committed fully and professionally, and you may have revisited it later if you were proven right. Shows maturity and professionalism.",
+    },
+    {
+      id: "s15-q09",
+      q: "What is your approach to giving and receiving code review feedback?",
+      hint: "Empathy + specificity in both directions.",
+      answer: "Giving feedback: (1) Be specific — not 'this is wrong', but 'consider using useMemo here because X re-renders on every render'. (2) Distinguish blocking issues from suggestions. (3) Ask questions rather than make demands ('What was the reasoning for this approach?'). (4) Acknowledge good code too. Receiving feedback: (1) Separate your ego from your code. (2) Ask for clarification if you don't understand. (3) Thank reviewers — they're investing their time in you.",
+    },
+    {
+      id: "s15-q10",
+      q: "Walk me through how you would design a simple system from scratch. For example: a to-do app.",
+      hint: "Think out loud — requirements → data model → API → frontend → edge cases.",
+      answer: "Step-by-step approach: (1) Clarify requirements — CRUD operations, user auth needed? Multi-user? (2) Data model — a Task has id, title, completed, userId, createdAt. (3) API design — GET /tasks, POST /tasks, PATCH /tasks/:id, DELETE /tasks/:id. (4) Frontend — components: TaskList, TaskItem, AddTaskForm. State: array of tasks + loading/error. (5) Edge cases — what if the network fails? Optimistic UI? Offline support? This structured thinking is what interviewers evaluate.",
     },
   ],
   mcqs: problem_mcqs,
 };
+
 
 s01_core.mcqs = core_mcqs;
 s02_ds.mcqs = ds_mcqs;
