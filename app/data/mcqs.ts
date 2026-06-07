@@ -3645,3 +3645,231 @@ export const problem_mcqs: MCQQuestion[] = [
   }
 ];
 
+export const f1soft_mcqs: MCQQuestion[] = [
+  {
+    id: "mcq-f1-01",
+    question: "What is the correct order of execution in the JavaScript event loop?",
+    options: [
+      "Synchronous code → macrotask queue → microtask queue",
+      "Synchronous code → microtask queue → macrotask queue",
+      "Microtask queue → synchronous code → macrotask queue",
+      "All queues run simultaneously",
+    ],
+    correctAnswerIndex: 1,
+    explanation:
+      "JavaScript runs synchronous code first, then drains the entire microtask queue (Promises), then runs ONE macrotask (setTimeout), then repeats. This is why Promise callbacks always run before setTimeout callbacks.",
+  },
+  {
+    id: "mcq-f1-02",
+    question: "In a FinTech payment API, which HTTP status code should be returned when a user tries to transfer more money than their account balance?",
+    options: ["400 Bad Request", "401 Unauthorized", "422 Unprocessable Entity", "500 Internal Server Error"],
+    correctAnswerIndex: 2,
+    explanation:
+      "422 Unprocessable Entity is semantically correct — the request is syntactically valid (correct format, authenticated user) but cannot be processed due to business logic constraints (insufficient funds). 400 is for malformed requests.",
+  },
+  {
+    id: "mcq-f1-03",
+    question: "Which of the following is TRUE about the SOLID Single Responsibility Principle?",
+    options: [
+      "A class should have only one method.",
+      "A class should have only one reason to change.",
+      "A class can only be used in one part of the application.",
+      "A function should only call one other function.",
+    ],
+    correctAnswerIndex: 1,
+    explanation:
+      "SRP states a class should have only ONE reason to change — meaning it should handle ONE business concern. A class doing both user management AND sending emails violates SRP because changes in email logic would require modifying the user class.",
+  },
+  {
+    id: "mcq-f1-04",
+    question: "What is the output of: console.log(typeof null)?",
+    options: ['"null"', '"undefined"', '"object"', '"NaN"'],
+    correctAnswerIndex: 2,
+    explanation:
+      "typeof null returns 'object' — this is a well-known bug in JavaScript that was never fixed to preserve backward compatibility. null is NOT an object, but typeof says it is. Use === null to check for null.",
+  },
+  {
+    id: "mcq-f1-05",
+    question: "Which SQL clause is used to filter groups AFTER aggregation?",
+    options: ["WHERE", "FILTER", "HAVING", "GROUP FILTER"],
+    correctAnswerIndex: 2,
+    explanation:
+      "HAVING filters groups AFTER GROUP BY and aggregation. WHERE filters individual rows BEFORE grouping. You cannot use aggregate functions (SUM, COUNT) in a WHERE clause — use HAVING instead.",
+  },
+  {
+    id: "mcq-f1-06",
+    question: "In React, what is the purpose of the key prop in a list?",
+    options: [
+      "It encrypts the component data.",
+      "It prevents the component from re-rendering.",
+      "It helps React identify which items changed, were added, or removed.",
+      "It passes data from parent to child.",
+    ],
+    correctAnswerIndex: 2,
+    explanation:
+      "The key prop is React's identifier for list items during reconciliation (diffing). It allows React to reuse existing DOM nodes for unchanged items instead of re-rendering the whole list. Using array index as key causes bugs when list order changes.",
+  },
+  {
+    id: "mcq-f1-07",
+    question: "What is idempotency in the context of a payment API?",
+    options: [
+      "The API response is always encrypted.",
+      "Making the same request multiple times produces the same result as making it once.",
+      "The API can process multiple payment types.",
+      "The API response is identical for all users.",
+    ],
+    correctAnswerIndex: 1,
+    explanation:
+      "Idempotency ensures that retrying a failed payment request doesn't charge a user twice. The client sends a unique idempotency-key per payment; the server returns the cached result for duplicate keys instead of processing again.",
+  },
+  {
+    id: "mcq-f1-08",
+    question: "Which JavaScript method does NOT mutate the original array?",
+    options: ["push()", "splice()", "map()", "sort()"],
+    correctAnswerIndex: 2,
+    explanation:
+      "map() returns a NEW array and does not modify the original. push() adds to the original, splice() modifies in-place, and sort() sorts the original array in place (and also returns it, confusingly).",
+  },
+  {
+    id: "mcq-f1-09",
+    question: "What does the ACID acronym stand for in databases?",
+    options: [
+      "Atomicity, Concurrency, Integrity, Durability",
+      "Atomicity, Consistency, Isolation, Durability",
+      "Authentication, Consistency, Integrity, Delivery",
+      "Atomicity, Compliance, Integrity, Distribution",
+    ],
+    correctAnswerIndex: 1,
+    explanation:
+      "ACID: Atomicity (all-or-nothing), Consistency (valid state always), Isolation (concurrent transactions don't interfere), Durability (committed data survives crashes). Critical for payment systems like eSewa.",
+  },
+  {
+    id: "mcq-f1-10",
+    question: "Where should a JWT token be stored for maximum security in a web app?",
+    options: [
+      "localStorage for easy access",
+      "sessionStorage to clear on tab close",
+      "HttpOnly, Secure, SameSite cookie",
+      "In the URL query string",
+    ],
+    correctAnswerIndex: 2,
+    explanation:
+      "HttpOnly cookies cannot be accessed by JavaScript, protecting against XSS attacks. Secure ensures HTTPS-only transmission. SameSite=Strict prevents CSRF. localStorage is vulnerable to XSS — any injected script can steal it.",
+  },
+  {
+    id: "mcq-f1-11",
+    question: "What is the time complexity of looking up a value in a JavaScript object (hash map)?",
+    options: ["O(1) average", "O(log n)", "O(n)", "O(n²)"],
+    correctAnswerIndex: 0,
+    explanation:
+      "Hash map lookup is O(1) average — the hash function maps the key directly to a memory location. In the worst case (all keys collide to the same bucket) it degrades to O(n), but this is practically never seen with good hash functions.",
+  },
+  {
+    id: "mcq-f1-12",
+    question: "What is the difference between git merge and git rebase?",
+    options: [
+      "They are identical in all ways.",
+      "Merge preserves history with a merge commit; rebase replays commits for linear history.",
+      "Rebase merges remote changes; merge handles local changes.",
+      "Merge is for features; rebase is for hotfixes.",
+    ],
+    correctAnswerIndex: 1,
+    explanation:
+      "git merge creates a merge commit preserving the full branch history. git rebase replays your commits on top of another branch creating a linear history. Never rebase shared/public branches — it rewrites history and breaks others' work.",
+  },
+  {
+    id: "mcq-f1-13",
+    question: "Which SQL JOIN returns only rows that have matching values in BOTH tables?",
+    options: ["LEFT JOIN", "RIGHT JOIN", "FULL OUTER JOIN", "INNER JOIN"],
+    correctAnswerIndex: 3,
+    explanation:
+      "INNER JOIN returns only rows where there is a match in BOTH tables. LEFT JOIN returns all rows from the left table plus matched rows from the right (NULLs where no match). FULL OUTER JOIN returns all rows from both tables.",
+  },
+  {
+    id: "mcq-f1-14",
+    question: "What is the main advantage of using a message queue in a payment notification system?",
+    options: [
+      "It makes payments faster.",
+      "It decouples the payment service from the notification service and allows retries.",
+      "It encrypts the payment data.",
+      "It stores transaction history.",
+    ],
+    correctAnswerIndex: 1,
+    explanation:
+      "A message queue decouples services — the payment service doesn't wait for SMS/email to send before responding. If the notification service is down, the queue retries automatically. This improves resilience and response time.",
+  },
+  {
+    id: "mcq-f1-15",
+    question: "Which React hook should you use to memoize an expensive computed value?",
+    options: ["useEffect", "useCallback", "useMemo", "useRef"],
+    correctAnswerIndex: 2,
+    explanation:
+      "useMemo memoizes the RESULT of a function (a value). It only recalculates when dependencies change. useCallback memoizes a FUNCTION reference. useEffect runs side effects after render. useRef holds a mutable reference.",
+  },
+  {
+    id: "mcq-f1-16",
+    question: "What is the correct way to prevent SQL injection in a Node.js application?",
+    options: [
+      "Use string concatenation but sanitize the input first.",
+      "Use parameterized queries / prepared statements.",
+      "Only accept numeric inputs.",
+      "Encrypt all SQL queries before sending.",
+    ],
+    correctAnswerIndex: 1,
+    explanation:
+      "Parameterized queries treat user input as DATA, never as SQL code. The database driver handles escaping. String concatenation of user input into SQL strings is always dangerous — even after sanitization, edge cases exist.",
+  },
+  {
+    id: "mcq-f1-17",
+    question: "In CSS, which property creates a new stacking context for z-index?",
+    options: [
+      "display: block",
+      "position: relative with a z-index value",
+      "margin: auto",
+      "color: inherit",
+    ],
+    correctAnswerIndex: 1,
+    explanation:
+      "A new stacking context is created by elements with position (relative/absolute/fixed/sticky) plus a z-index value, opacity < 1, transform, filter, and several others. Elements inside a stacking context are stacked relative to that context, not the document root.",
+  },
+  {
+    id: "mcq-f1-18",
+    question: "What does 'lifting state up' mean in React?",
+    options: [
+      "Moving state from local storage to component state.",
+      "Moving state to the Redux store.",
+      "Moving state to the closest common ancestor of components that need it.",
+      "Passing state from child to parent via callback.",
+    ],
+    correctAnswerIndex: 2,
+    explanation:
+      "Lifting state up means moving state to the nearest common parent when multiple sibling components need to share it. The parent holds the state and passes it down via props. The siblings can communicate by calling parent-provided callback functions.",
+  },
+  {
+    id: "mcq-f1-19",
+    question: "Which of the following best describes a race condition in payment processing?",
+    options: [
+      "The payment API responds too slowly.",
+      "Two concurrent operations read and modify shared state, leading to incorrect results.",
+      "A user submits the payment form twice by accident.",
+      "The network connection drops during a transaction.",
+    ],
+    correctAnswerIndex: 1,
+    explanation:
+      "A race condition occurs when two concurrent operations read the same shared state, both see it as valid, and both proceed — but only one should have been allowed. Example: two simultaneous withdrawals from an account with just enough balance for one.",
+  },
+  {
+    id: "mcq-f1-20",
+    question: "Which SOLID principle does this violate? A Bird base class has a fly() method, and Penguin extends Bird but throws an error when fly() is called.",
+    options: [
+      "Single Responsibility Principle",
+      "Open/Closed Principle",
+      "Liskov Substitution Principle",
+      "Interface Segregation Principle",
+    ],
+    correctAnswerIndex: 2,
+    explanation:
+      "Liskov Substitution Principle states that a subclass must be usable wherever its parent is used without breaking behavior. Penguin throwing an error in fly() breaks LSP — code that calls bird.fly() and expects it to work will fail for penguins.",
+  },
+];
+
