@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect, useRef, useCallback } from "react";
 import {
   BookOpen,
   CheckCircle,
@@ -16,14 +16,53 @@ import {
   Zap,
   Code2,
   Brain,
+  Mic,
+  ChevronRight,
+  Timer,
+  Star,
+  RotateCcw,
+  ArrowRight,
+  Flame,
+  Users,
+  Shuffle,
 } from "lucide-react";
 import { interviewData } from "./data";
-import type { InterviewSection, InterviewQuestion, MCQQuestion } from "../types";
+import { buildQuestionPool } from "./data/simulation";
+import type { InterviewSection, InterviewQuestion, MCQQuestion, SimRound, SimRating, SimulationQuestion } from "../types";
 
 type ViewMode = "flashcards" | "mcqs" | "notes";
+type SimPhase = "setup" | "interview" | "result";
 
 // ─── Option letter badge ───────────────────────────────────────
 const LETTERS = ["A", "B", "C", "D"];
+
+// ─── Sidebar groups ────────────────────────────────────────────
+const SIDEBAR_GROUPS = [
+  {
+    key: "fundamentals",
+    label: "Fundamentals",
+    dot: "#c084fc",
+    slugs: ["core-programming", "data-structures", "big-o", "oop", "solid"],
+  },
+  {
+    key: "frontend",
+    label: "Frontend",
+    dot: "#60a5fa",
+    slugs: ["frontend-basics", "javascript", "react", "nextjs"],
+  },
+  {
+    key: "backend",
+    label: "Backend & APIs",
+    dot: "#34d399",
+    slugs: ["rest-soap", "cors", "jwt", "sql", "node"],
+  },
+  {
+    key: "softskills",
+    label: "Soft Skills",
+    dot: "#fb923c",
+    slugs: ["problem-solving"],
+  },
+];
 
 // ─── Copy button ───────────────────────────────────────────────
 const CopyButton = ({ text }: { text: string }) => {
@@ -114,8 +153,8 @@ const renderMarkdown = (text: string) => {
     if (part.startsWith("`") && part.endsWith("`")) {
       const codeText = part.slice(1, -1);
       return (
-        <code 
-          key={index} 
+        <code
+          key={index}
           className="px-1.5 py-0.5 mx-0.5 rounded bg-[#01121f] border border-[#0b253a]/80 text-[#addb67] font-mono text-[13px] tracking-tight shadow-sm inline-block"
         >
           {codeText}
@@ -126,14 +165,474 @@ const renderMarkdown = (text: string) => {
   });
 };
 
+// ── Timer Ring SVG ──────────────────────────────────────────────
+function TimerRing({ timeLeft, totalTime }: { timeLeft: number; totalTime: number }) {
+  const radius = 45;
+  const circumference = 2 * Math.PI * radius;
+  const fraction = Math.max(0, timeLeft / totalTime);
+  const offset = circumference * (1 - fraction);
+  const color = fraction > 0.5 ? "#4ade80" : fraction > 0.25 ? "#fbbf24" : "#f87171";
+
+  return (
+    <div className="relative w-24 h-24 flex items-center justify-center">
+      <svg width="96" height="96" viewBox="0 0 100 100">
+        <circle className="sim-timer-ring-track" cx="50" cy="50" r={radius} />
+        <circle
+          className="sim-timer-ring-fill"
+          cx="50"
+          cy="50"
+          r={radius}
+          stroke={color}
+          strokeDasharray={circumference}
+          strokeDashoffset={offset}
+        />
+      </svg>
+      <div className="absolute inset-0 flex flex-col items-center justify-center">
+        <span className="text-xl font-bold font-mono" style={{ color }}>
+          {timeLeft}
+        </span>
+        <span className="text-[9px] text-zinc-600 font-mono uppercase tracking-wider">sec</span>
+      </div>
+    </div>
+  );
+}
+
+// ── Interview Simulation View ───────────────────────────────────
+function SimulationView({ onExit }: { onExit: () => void }) {
+  const [phase, setPhase] = useState<SimPhase>("setup");
+  const [round, setRound] = useState<SimRound>("mixed");
+  const [questionCount, setQuestionCount] = useState(10);
+  const [questions, setQuestions] = useState<SimulationQuestion[]>([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [userAnswer, setUserAnswer] = useState("");
+  const [showIdeal, setShowIdeal] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(0);
+  const [ratings, setRatings] = useState<Record<string, SimRating>>({});
+  const [slideKey, setSlideKey] = useState(0);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const currentQ = questions[currentIndex];
+
+  const startInterview = useCallback((selectedRound: SimRound) => {
+    const pool = buildQuestionPool(selectedRound, questionCount);
+    setQuestions(pool);
+    setRound(selectedRound);
+    setCurrentIndex(0);
+    setRatings({});
+    setUserAnswer("");
+    setShowIdeal(false);
+    setTimeLeft(pool[0]?.timeLimit ?? 120);
+    setPhase("interview");
+    setSlideKey(0);
+  }, [questionCount]);
+
+  // Timer tick
+  useEffect(() => {
+    if (phase !== "interview" || showIdeal) return;
+    if (timerRef.current) clearInterval(timerRef.current);
+    timerRef.current = setInterval(() => {
+      setTimeLeft((t) => {
+        if (t <= 1) {
+          clearInterval(timerRef.current!);
+          setShowIdeal(true);
+          return 0;
+        }
+        return t - 1;
+      });
+    }, 1000);
+    return () => { if (timerRef.current) clearInterval(timerRef.current); };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [phase, currentIndex, showIdeal]);
+
+  const handleSubmitAnswer = () => {
+    if (timerRef.current) clearInterval(timerRef.current);
+    setShowIdeal(true);
+  };
+
+  const handleRate = (rating: SimRating) => {
+    setRatings((prev) => ({ ...prev, [currentQ.id]: rating }));
+    const next = currentIndex + 1;
+    if (next >= questions.length) {
+      setPhase("result");
+    } else {
+      setCurrentIndex(next);
+      setUserAnswer("");
+      setShowIdeal(false);
+      setTimeLeft(questions[next].timeLimit);
+      setSlideKey((k) => k + 1);
+    }
+  };
+
+  const gotItCount  = Object.values(ratings).filter((r) => r === "got-it").length;
+  const partialCount = Object.values(ratings).filter((r) => r === "partial").length;
+  const missedCount  = Object.values(ratings).filter((r) => r === "missed").length;
+  const totalRated   = gotItCount + partialCount + missedCount;
+  const score = totalRated > 0 ? Math.round(((gotItCount + partialCount * 0.5) / totalRated) * 100) : 0;
+
+  const ROUNDS = [
+    {
+      id: "technical" as SimRound,
+      icon: <Code2 className="w-6 h-6" />,
+      label: "Technical Round",
+      sub: "JS, React, SQL, APIs, Algorithms",
+      color: "#60a5fa",
+      glow: "rgba(96,165,250,0.12)",
+    },
+    {
+      id: "hr" as SimRound,
+      icon: <Users className="w-6 h-6" />,
+      label: "HR / Behavioural",
+      sub: "Tell me about yourself, STAR stories",
+      color: "#fb923c",
+      glow: "rgba(251,146,60,0.12)",
+    },
+    {
+      id: "mixed" as SimRound,
+      icon: <Shuffle className="w-6 h-6" />,
+      label: "Mixed Blitz",
+      sub: "Random questions from all categories",
+      color: "#c084fc",
+      glow: "rgba(192,132,252,0.12)",
+    },
+  ];
+
+  // ── SETUP PHASE ────────────────────────────────────────────────
+  if (phase === "setup") {
+    return (
+      <section className="animate-fade-up max-w-4xl pb-24">
+        <div className="breadcrumb mb-2">Interview Prep Lab / Simulation</div>
+        <div className="mb-8 p-6 rounded-2xl bg-zinc-950/60 border border-zinc-900 relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-r from-violet-500/5 to-transparent pointer-events-none" />
+          <div className="absolute top-0 right-0 w-[220px] h-[220px] bg-violet-500/5 blur-[80px] pointer-events-none" />
+          <div className="flex items-center gap-3 mb-2">
+            <div className="w-9 h-9 rounded-xl bg-violet-500/10 border border-violet-500/20 flex items-center justify-center text-violet-400">
+              <Mic className="w-5 h-5" />
+            </div>
+            <div className="text-[11px] font-mono text-violet-400 uppercase tracking-widest">Interview Simulation</div>
+          </div>
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight leading-tight">
+            Mock Interview Round
+          </h1>
+          <p className="text-zinc-400 text-sm leading-relaxed mt-2 max-w-lg">
+            Questions appear one-by-one with a countdown timer. Type your answer, submit it, then see
+            the ideal response and rate yourself honestly.
+          </p>
+        </div>
+
+        {/* Round selector */}
+        <div className="mb-8">
+          <h2 className="text-sm font-bold text-zinc-300 mb-4 flex items-center gap-2">
+            <Target className="w-4 h-4 text-orange-400" /> Choose a Round
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {ROUNDS.map((r) => (
+              <button
+                key={r.id}
+                onClick={() => startInterview(r.id)}
+                className="sim-round-card text-left group"
+              >
+                <div
+                  className="w-11 h-11 rounded-xl flex items-center justify-center mb-4 border transition-all"
+                  style={{
+                    background: r.glow,
+                    borderColor: r.color + "33",
+                    color: r.color,
+                  }}
+                >
+                  {r.icon}
+                </div>
+                <div className="text-[15px] font-bold text-white mb-1 group-hover:text-orange-400 transition-colors">
+                  {r.label}
+                </div>
+                <div className="text-[11px] text-zinc-500 font-mono leading-relaxed">{r.sub}</div>
+                <div className="mt-4 flex items-center gap-1 text-[11px] font-mono" style={{ color: r.color }}>
+                  Start <ArrowRight className="w-3 h-3 ml-0.5 group-hover:translate-x-1 transition-transform" />
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Question count */}
+        <div className="p-5 rounded-xl bg-zinc-950/60 border border-zinc-900">
+          <div className="text-sm font-bold text-zinc-300 mb-3 flex items-center gap-2">
+            <Zap className="w-4 h-4 text-orange-400" /> Questions per session
+          </div>
+          <div className="flex flex-wrap gap-3">
+            {[5, 10, 15, 20].map((n) => (
+              <button
+                key={n}
+                onClick={() => setQuestionCount(n)}
+                className={`px-5 py-2.5 rounded-lg border text-sm font-mono font-bold transition-all ${
+                  questionCount === n
+                    ? "bg-orange-500/15 border-orange-500/40 text-orange-400"
+                    : "bg-zinc-900 border-zinc-800 text-zinc-500 hover:text-zinc-200 hover:border-zinc-700"
+                }`}
+              >
+                {n} Qs
+              </button>
+            ))}
+          </div>
+          <p className="text-[11px] text-zinc-600 font-mono mt-2">
+            ~{Math.round(questionCount * 2)} min estimated duration
+          </p>
+        </div>
+      </section>
+    );
+  }
+
+  // ── RESULT PHASE ───────────────────────────────────────────────
+  if (phase === "result") {
+    const grade =
+      score >= 80 ? { label: "Excellent!", color: "#4ade80", icon: "🏆" } :
+      score >= 60 ? { label: "Good job!", color: "#fbbf24", icon: "⭐" } :
+      score >= 40 ? { label: "Keep going!", color: "#fb923c", icon: "💪" } :
+      { label: "More practice needed", color: "#f87171", icon: "📚" };
+
+    return (
+      <section className="animate-fade-up max-w-3xl pb-24">
+        <div className="breadcrumb mb-2">Interview Prep Lab / Simulation / Results</div>
+
+        {/* Score hero */}
+        <div className="mb-6 p-8 rounded-2xl bg-zinc-950/60 border border-zinc-900 relative overflow-hidden text-center">
+          <div className="absolute inset-0 bg-gradient-to-b from-orange-500/5 to-transparent pointer-events-none" />
+          <div className="text-5xl mb-3">{grade.icon}</div>
+          <div className="text-[11px] font-mono uppercase tracking-widest text-zinc-500 mb-2">
+            Round Complete — {round.toUpperCase()}
+          </div>
+          <div className="text-5xl font-extrabold text-white mb-1">
+            <span style={{ color: grade.color }}>{score}</span>
+            <span className="text-zinc-600 text-2xl">%</span>
+          </div>
+          <div className="text-sm font-bold" style={{ color: grade.color }}>{grade.label}</div>
+          <div className="mt-4 w-full h-2 bg-zinc-900 rounded-full overflow-hidden max-w-xs mx-auto">
+            <div
+              className="h-full rounded-full transition-all duration-1000"
+              style={{ width: `${score}%`, background: `linear-gradient(90deg, ${grade.color}, ${grade.color}aa)` }}
+            />
+          </div>
+        </div>
+
+        {/* Breakdown */}
+        <div className="grid grid-cols-3 gap-4 mb-6">
+          {[
+            { label: "Got It", count: gotItCount, css: "sim-score-got", color: "#4ade80", icon: "✓" },
+            { label: "Partial", count: partialCount, css: "sim-score-part", color: "#fbbf24", icon: "~" },
+            { label: "Missed", count: missedCount, css: "sim-score-miss", color: "#f87171", icon: "✕" },
+          ].map((s) => (
+            <div key={s.label} className={`p-5 rounded-xl text-center ${s.css}`}>
+              <div className="text-2xl font-extrabold" style={{ color: s.color }}>{s.count}</div>
+              <div className="text-[10px] font-mono uppercase tracking-wider text-zinc-500 mt-1">{s.label}</div>
+            </div>
+          ))}
+        </div>
+
+        {/* Per-question review */}
+        <div className="space-y-3 mb-8">
+          <h2 className="text-sm font-bold text-zinc-300 flex items-center gap-2 mb-4">
+            <BookOpen className="w-4 h-4 text-orange-400" /> Question Review
+          </h2>
+          {questions.map((q, i) => {
+            const r = ratings[q.id];
+            const rColor = r === "got-it" ? "#4ade80" : r === "partial" ? "#fbbf24" : "#f87171";
+            const rLabel = r === "got-it" ? "Got It" : r === "partial" ? "Partial" : r === "missed" ? "Missed" : "Skipped";
+            return (
+              <div key={q.id} className="p-4 rounded-xl bg-zinc-950/60 border border-zinc-900 flex gap-4">
+                <div className="w-7 h-7 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center font-mono text-xs text-zinc-500 shrink-0">
+                  {i + 1}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-[13px] text-zinc-200 font-medium leading-snug mb-1 truncate">{q.q}</p>
+                  <span className={`text-[9px] font-mono uppercase tracking-wider px-1.5 py-0.5 rounded diff-${q.difficulty}`}>
+                    {q.difficulty}
+                  </span>
+                  <span className="text-[9px] text-zinc-600 font-mono ml-2">{q.category}</span>
+                </div>
+                <div className="text-[11px] font-mono font-bold shrink-0" style={{ color: rColor }}>
+                  {rLabel}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Actions */}
+        <div className="flex flex-wrap gap-3">
+          <button
+            onClick={() => setPhase("setup")}
+            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-orange-500 text-white text-sm font-bold hover:bg-orange-600 active:scale-95 transition-all"
+          >
+            <RotateCcw className="w-4 h-4" /> Try Another Round
+          </button>
+          <button
+            onClick={onExit}
+            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-300 text-sm font-bold hover:bg-zinc-800 active:scale-95 transition-all"
+          >
+            Back to Modules
+          </button>
+        </div>
+      </section>
+    );
+  }
+
+  // ── INTERVIEW PHASE ────────────────────────────────────────────
+  if (!currentQ) return null;
+
+  const progress = ((currentIndex) / questions.length) * 100;
+
+  return (
+    <section className="max-w-3xl pb-24">
+      {/* Progress bar + header */}
+      <div className="mb-6">
+        <div className="flex items-center justify-between mb-2">
+          <div className="breadcrumb">Simulation / Question {currentIndex + 1} of {questions.length}</div>
+          <button
+            onClick={() => { if (timerRef.current) clearInterval(timerRef.current); setPhase("setup"); }}
+            className="text-[11px] font-mono text-zinc-600 hover:text-zinc-400 flex items-center gap-1 transition-colors"
+          >
+            <X className="w-3 h-3" /> Exit
+          </button>
+        </div>
+        <div className="w-full h-1 bg-zinc-900 rounded-full overflow-hidden">
+          <div
+            className="h-full rounded-full transition-all duration-500"
+            style={{ width: `${progress}%`, background: "linear-gradient(90deg, #ff6b2b, #ffaa44)" }}
+          />
+        </div>
+      </div>
+
+      <div key={slideKey} className="sim-slide-in">
+        {/* Question card */}
+        <div className="p-6 sm:p-8 rounded-2xl bg-zinc-950/80 border border-zinc-800 mb-5 relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-orange-500/3 to-transparent pointer-events-none" />
+
+          {/* Meta row */}
+          <div className="flex flex-wrap items-center gap-3 mb-6">
+            <span className={`text-[9px] font-mono uppercase tracking-wider px-2 py-1 rounded diff-${currentQ.difficulty}`}>
+              {currentQ.difficulty}
+            </span>
+            <span className="text-[10px] font-mono text-zinc-500 bg-zinc-900 border border-zinc-800 px-2 py-1 rounded">
+              {currentQ.category}
+            </span>
+            <span className="text-[10px] font-mono text-zinc-600 flex items-center gap-1">
+              <Timer className="w-3 h-3" /> {currentQ.timeLimit}s
+            </span>
+          </div>
+
+          {/* Question + Timer */}
+          <div className="flex items-start gap-5">
+            <div className="flex-1">
+              <h2 className="text-[19px] sm:text-[22px] font-bold text-white leading-snug tracking-tight">
+                {currentQ.q}
+              </h2>
+              {!showIdeal && (
+                <p className="text-[11px] text-zinc-600 font-mono mt-3 italic">
+                  💡 Hint: {currentQ.hint}
+                </p>
+              )}
+            </div>
+            {!showIdeal && (
+              <div className="shrink-0">
+                <TimerRing timeLeft={timeLeft} totalTime={currentQ.timeLimit} />
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Answer area (only when not yet submitted) */}
+        {!showIdeal && (
+          <div className="mb-5">
+            <label className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider mb-2 block">
+              Your Answer
+            </label>
+            <textarea
+              className="sim-answer-textarea"
+              placeholder="Type your answer here... Don't worry about being perfect — this is practice."
+              value={userAnswer}
+              onChange={(e) => setUserAnswer(e.target.value)}
+            />
+            <button
+              onClick={handleSubmitAnswer}
+              className="mt-3 w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-orange-500 text-white text-sm font-bold hover:bg-orange-600 active:scale-[0.99] transition-all"
+            >
+              <Eye className="w-4 h-4" /> Submit & Reveal Ideal Answer
+            </button>
+          </div>
+        )}
+
+        {/* Ideal answer reveal */}
+        {showIdeal && (
+          <div className="animate-fade-up space-y-5">
+            {/* User's answer recap */}
+            {userAnswer.trim() && (
+              <div className="p-4 rounded-xl bg-zinc-900/50 border border-zinc-800">
+                <div className="text-[10px] font-mono uppercase tracking-widest text-zinc-500 mb-2 flex items-center gap-1.5">
+                  <EyeOff className="w-3 h-3" /> Your Answer
+                </div>
+                <p className="text-zinc-300 text-[13px] leading-relaxed whitespace-pre-wrap">{userAnswer}</p>
+              </div>
+            )}
+
+            {/* Ideal answer */}
+            <div className="p-5 rounded-xl border border-orange-500/20 bg-gradient-to-b from-orange-500/5 to-transparent">
+              <div className="text-[10px] font-mono uppercase tracking-widest text-orange-400 mb-3 flex items-center gap-1.5">
+                <Star className="w-3 h-3" /> Ideal Answer
+              </div>
+              <p className="text-zinc-200 text-[14.5px] leading-relaxed whitespace-pre-wrap">{currentQ.answer}</p>
+              {currentQ.code && (
+                <div className="mt-4">
+                  <CodeBlock code={currentQ.code} language={currentQ.language ?? "javascript"} />
+                </div>
+              )}
+            </div>
+
+            {/* Self-rating */}
+            <div>
+              <div className="text-[11px] font-mono text-zinc-400 uppercase tracking-wider mb-3 text-center">
+                How did you do?
+              </div>
+              <div className="flex gap-3">
+                <button className="sim-rating-btn got-it" onClick={() => handleRate("got-it")}>
+                  <span className="text-xl">✓</span>
+                  <span>Got It</span>
+                </button>
+                <button className="sim-rating-btn partial" onClick={() => handleRate("partial")}>
+                  <span className="text-xl">~</span>
+                  <span>Partial</span>
+                </button>
+                <button className="sim-rating-btn missed" onClick={() => handleRate("missed")}>
+                  <span className="text-xl">✕</span>
+                  <span>Missed</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
+
 // ══════════════════════════════════════════════════════════════
 export default function Home() {
+  // -1 = interview simulation, 0 = dashboard, >0 = module section
   const [activeSectionId, setActiveSectionId] = useState<number>(0);
   const [viewMode, setViewMode] = useState<ViewMode>("flashcards");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
   const [quizStates, setQuizStates] = useState<Record<string, { showAnswer: boolean; showHint?: boolean }>>({});
   const [mcqStates, setMcqStates] = useState<Record<string, { selectedIndex: number | null }>>({});
+
+  // Sidebar accordion state — one entry per group key
+  const [sidebarCollapsed, setSidebarCollapsed] = useState<Record<string, boolean>>({
+    fundamentals: false,
+    frontend: false,
+    backend: false,
+    softskills: false,
+  });
+
+  const toggleGroup = (key: string) =>
+    setSidebarCollapsed((prev) => ({ ...prev, [key]: !prev[key] }));
 
   // ── Totals ─────────────────────────────────────────────────
   const totalFlashcards = useMemo(
@@ -179,7 +678,7 @@ export default function Home() {
   // ── State toggles ──────────────────────────────────────────
   const toggleFlashcard = (id: string) =>
     setQuizStates((prev) => ({ ...prev, [id]: { ...prev[id], showAnswer: !prev[id]?.showAnswer } }));
-    
+
   const toggleHint = (id: string) =>
     setQuizStates((prev) => ({ ...prev, [id]: { ...prev[id], showHint: !prev[id]?.showHint } }));
 
@@ -205,6 +704,59 @@ export default function Home() {
     });
     return results;
   }, [searchQuery]);
+
+  // ── Sidebar group render helper ────────────────────────────
+  const renderSidebarGroup = (group: typeof SIDEBAR_GROUPS[0]) => {
+    const modules = interviewData.filter((sec) => group.slugs.includes(sec.slug));
+    const isOpen = !sidebarCollapsed[group.key];
+
+    return (
+      <div key={group.key} className="pt-1.5">
+        <button
+          onClick={() => toggleGroup(group.key)}
+          className="sidebar-group-header"
+          aria-expanded={isOpen}
+        >
+          <div className="flex items-center gap-2">
+            <div className="sidebar-group-dot" style={{ background: group.dot }} />
+            <span>{group.label}</span>
+          </div>
+          <ChevronDown
+            className="w-3.5 h-3.5 transition-transform duration-200"
+            style={{ transform: isOpen ? "rotate(0deg)" : "rotate(-90deg)" }}
+          />
+        </button>
+
+        {isOpen && (
+          <div className="nav-group-children space-y-0.5 mt-1">
+            {modules.map((sec) => {
+              const isActive = activeSectionId === sec.id && !searchQuery;
+              return (
+                <button
+                  key={sec.id}
+                  onClick={() => handleNav(sec.id)}
+                  className={`w-full text-left px-3 py-1.5 rounded text-[12.5px] transition-all flex items-center gap-2 group/item ${
+                    isActive
+                      ? "text-orange-400 font-semibold bg-zinc-900/80"
+                      : "text-zinc-500 hover:text-zinc-200 hover:bg-zinc-900/30"
+                  }`}
+                >
+                  <span
+                    className="w-1 h-1 rounded-full shrink-0 transition-all"
+                    style={{
+                      background: isActive ? group.dot : "#3f3f46",
+                      boxShadow: isActive ? `0 0 6px ${group.dot}` : "none",
+                    }}
+                  />
+                  <span className="truncate">{sec.title}</span>
+                </button>
+              );
+            })}
+          </div>
+        )}
+      </div>
+    );
+  };
 
   // ─────────────────────────────────────────────────────────────
   return (
@@ -290,6 +842,7 @@ export default function Home() {
 
             {/* Nav */}
             <nav className="flex-1 space-y-0.5">
+              {/* Dashboard */}
               <button
                 onClick={() => handleNav(0)}
                 className={"w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all font-medium " + (activeSectionId === 0 && !searchQuery ? "bg-[#202020] text-white border-l-2 border-orange-500 pl-2.5" : "text-[#a8a39c] hover:bg-zinc-900/50 hover:text-white")}
@@ -298,37 +851,30 @@ export default function Home() {
                 Dashboard
               </button>
 
-              <div className="pt-3 pb-1 text-[10px] uppercase font-bold text-zinc-600 tracking-widest font-mono px-2">
-                Modules ({interviewData.length})
+              {/* Interview Simulation — top-level highlight */}
+              <button
+                onClick={() => { setActiveSectionId(-1); setMobileMenuOpen(false); window.scrollTo({ top: 0, behavior: "smooth" }); }}
+                className={"w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all font-medium group " + (activeSectionId === -1 && !searchQuery ? "bg-violet-500/10 text-violet-400 border-l-2 border-violet-500 pl-2.5" : "text-[#a8a39c] hover:bg-zinc-900/50 hover:text-white")}
+              >
+                <Mic className="w-4 h-4 shrink-0 group-hover:text-violet-400 transition-colors" />
+                <span className="flex-1 text-left">Interview Simulation</span>
+                <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-violet-500/15 text-violet-400 border border-violet-500/20">
+                  NEW
+                </span>
+              </button>
+
+              {/* Separator */}
+              <div className="pt-2 pb-1 text-[10px] uppercase font-bold text-zinc-700 tracking-widest font-mono px-3">
+                Modules
               </div>
 
-              {interviewData.map((sec) => {
-                const stats = getSectionStats(sec, quizStates, mcqStates);
-                const isActive = activeSectionId === sec.id && !searchQuery;
-                return (
-                  <button
-                    key={sec.id}
-                    onClick={() => handleNav(sec.id)}
-                    className={"w-full text-left px-3 py-2 rounded-lg text-[13px] transition-all flex items-center gap-2.5 group " + (isActive ? "text-orange-400 font-semibold bg-zinc-900/80 border-l-2 border-orange-500 pl-2.5" : "text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900/30")}
-                  >
-                    <span className={"w-1.5 h-1.5 rounded-full shrink-0 " + (isActive ? "bg-orange-500 shadow-[0_0_6px_#ff6b2b]" : "bg-zinc-700 group-hover:bg-zinc-500")} />
-                    <span className="truncate flex-1">{sec.title}</span>
-                    <div className="flex items-center gap-1 shrink-0">
-                      {stats.fcDone > 0 && (
-                        <span className="text-[9px] font-mono text-orange-400 bg-orange-500/10 px-1 rounded">{stats.fcDone}</span>
-                      )}
-                      {stats.mcqDone > 0 && (
-                        <span className="text-[9px] font-mono text-emerald-400 bg-emerald-500/10 px-1 rounded">{stats.mcqDone}</span>
-                      )}
-                    </div>
-                  </button>
-                );
-              })}
+              {/* Accordion groups */}
+              {SIDEBAR_GROUPS.map(renderSidebarGroup)}
             </nav>
           </div>
 
           <div className="pt-4 border-t border-zinc-900 text-[10px] text-zinc-600 font-mono text-center">
-            INTERVIEW PREP LAB v2.0.0
+            INTERVIEW PREP LAB v2.1.0
           </div>
         </aside>
 
@@ -382,6 +928,10 @@ export default function Home() {
               )}
             </section>
 
+          ) : activeSectionId === -1 ? (
+            /* ── INTERVIEW SIMULATION ─────────────────── */
+            <SimulationView onExit={() => handleNav(0)} />
+
           ) : activeSectionId === 0 ? (
             /* ── DASHBOARD ──────────────────────────────── */
             <section className="animate-fade-up space-y-8 max-w-5xl">
@@ -394,7 +944,7 @@ export default function Home() {
                   Interview Prep Lab &amp; <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-amber-500">Interactive MCQ Engine</span>
                 </h1>
                 <p className="text-zinc-400 max-w-xl text-sm leading-relaxed mt-3">
-                  A comprehensive, single-page preparation hub for Junior Frontend &amp; Full-Stack roles. Study with interactive Flashcards, then validate your knowledge with 20 MCQs per module.
+                  A comprehensive, single-page preparation hub for Junior Frontend &amp; Full-Stack roles. Study with interactive Flashcards, validate with MCQs, and simulate a real interview round.
                 </p>
               </div>
 
@@ -416,6 +966,27 @@ export default function Home() {
                   </div>
                 ))}
               </div>
+
+              {/* Interview Simulation CTA */}
+              <button
+                onClick={() => { setActiveSectionId(-1); window.scrollTo({ top: 0, behavior: "smooth" }); }}
+                className="w-full p-6 rounded-2xl border border-violet-500/20 bg-gradient-to-r from-violet-500/8 to-transparent hover:border-violet-500/40 hover:from-violet-500/12 transition-all text-left group relative overflow-hidden"
+              >
+                <div className="absolute top-0 right-0 w-[160px] h-[160px] bg-violet-500/8 blur-[60px] pointer-events-none" />
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-xl bg-violet-500/10 border border-violet-500/20 flex items-center justify-center text-violet-400 group-hover:bg-violet-500/15 transition-colors">
+                    <Mic className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="text-[16px] font-bold text-white">Try an Interview Simulation</span>
+                      <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-violet-500/15 text-violet-400 border border-violet-500/20">NEW</span>
+                    </div>
+                    <p className="text-zinc-500 text-xs">Timed mock interview — Technical, HR, or Mixed round. Answer, then self-rate.</p>
+                  </div>
+                  <ChevronRight className="w-5 h-5 text-violet-400 ml-auto shrink-0 group-hover:translate-x-1 transition-transform" />
+                </div>
+              </button>
 
               {/* Module grid */}
               <div>
@@ -497,7 +1068,7 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* ── VIVAPREP-STYLE TAB SELECTOR ─────────────── */}
+              {/* ── TAB SELECTOR ─────────────────────────────── */}
               <div className="flex flex-wrap gap-2 pt-2 pb-4 border-b border-zinc-900 mb-6">
                 {activeSection.notes && activeSection.notes.length > 0 && (
                   <button
@@ -538,7 +1109,7 @@ export default function Home() {
                     return (
                       <div key={q.id} className="relative group">
                         <div className={`relative bg-zinc-950/80 backdrop-blur-md border rounded-2xl overflow-hidden transition-all duration-500 hover:shadow-[0_8px_30px_rgb(0,0,0,0.5)] ${shown ? "border-orange-500/40 shadow-[0_0_15px_rgba(249,115,22,0.1)]" : "border-zinc-800/80 group-hover:border-zinc-700"}`}>
-                          
+
                           {/* ── CARD HEADER ── */}
                           <div className="flex items-center justify-between px-6 py-4 border-b border-zinc-900/80 bg-zinc-900/30">
                             <div className="flex items-center gap-3">
@@ -549,13 +1120,13 @@ export default function Home() {
                                 Flashcard
                               </span>
                             </div>
-                            
+
                             {/* Hint Toggle */}
-                            <button 
+                            <button
                               onClick={() => toggleHint(q.id)}
                               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-mono font-bold transition-all ${quizStates[q.id]?.showHint ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20 shadow-[0_0_10px_rgba(245,158,11,0.15)]' : 'bg-zinc-950 text-zinc-500 border border-zinc-800 hover:text-amber-400 hover:border-amber-500/30 hover:bg-zinc-900'}`}
                             >
-                              <Lightbulb className={`w-3.5 h-3.5 ${quizStates[q.id]?.showHint ? 'text-amber-400' : ''}`} /> 
+                              <Lightbulb className={`w-3.5 h-3.5 ${quizStates[q.id]?.showHint ? 'text-amber-400' : ''}`} />
                               {quizStates[q.id]?.showHint ? "Hide Hint" : "Need a Hint?"}
                             </button>
                           </div>
@@ -596,18 +1167,18 @@ export default function Home() {
                                       Answer
                                     </span>
                                   </div>
-                                  
+
                                   <div className="text-zinc-200 text-[15px] whitespace-pre-wrap leading-relaxed">
                                     {q.answer}
                                   </div>
-                                  
+
                                   {q.code && (
                                     <div className="mt-6">
                                       <CodeBlock code={q.code} language={q.language ?? "javascript"} />
                                     </div>
                                   )}
                                 </div>
-                                
+
                                 {/* Floating close button */}
                                 <button
                                   onClick={() => toggleFlashcard(q.id)}

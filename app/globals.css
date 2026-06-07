@@ -191,3 +191,177 @@ pre {
   font-size: 13px;
   color: var(--text2);
 }
+
+/* ══════════════════════════════════════════════
+   SIDEBAR ACCORDION GROUPS
+   ══════════════════════════════════════════════ */
+
+.sidebar-group-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 12px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-family: 'JetBrains Mono', monospace;
+  color: #52525b;
+  transition: color 0.2s;
+  cursor: pointer;
+  border-radius: 6px;
+}
+.sidebar-group-header:hover { color: #a1a1aa; }
+
+.sidebar-group-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* ══════════════════════════════════════════════
+   INTERVIEW SIMULATION
+   ══════════════════════════════════════════════ */
+
+/* Timer ring */
+@keyframes timerCountdown {
+  from { stroke-dashoffset: 0; }
+  to   { stroke-dashoffset: 283; } /* 2π × 45 ≈ 283 */
+}
+
+.sim-timer-ring-track {
+  fill: none;
+  stroke: #27272a;
+  stroke-width: 5;
+}
+.sim-timer-ring-fill {
+  fill: none;
+  stroke-width: 5;
+  stroke-linecap: round;
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
+  transition: stroke-dashoffset 1s linear, stroke 0.5s ease;
+}
+
+/* Answer textarea */
+.sim-answer-textarea {
+  width: 100%;
+  min-height: 160px;
+  padding: 16px;
+  border-radius: 12px;
+  background: #141414;
+  border: 1px solid #2e2e2e;
+  color: #f0ede8;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  line-height: 1.7;
+  resize: vertical;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+.sim-answer-textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(255, 107, 43, 0.12);
+}
+.sim-answer-textarea::placeholder { color: #3f3f46; }
+
+/* Self-rating buttons */
+.sim-rating-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 14px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.sim-rating-btn:hover { transform: translateY(-2px); }
+.sim-rating-btn:active { transform: scale(0.97); }
+
+.sim-rating-btn.got-it {
+  background: rgba(74, 222, 128, 0.08);
+  border-color: rgba(74, 222, 128, 0.25);
+  color: #4ade80;
+}
+.sim-rating-btn.got-it:hover {
+  background: rgba(74, 222, 128, 0.14);
+  border-color: #4ade80;
+  box-shadow: 0 0 16px rgba(74, 222, 128, 0.15);
+}
+
+.sim-rating-btn.partial {
+  background: rgba(251, 191, 36, 0.08);
+  border-color: rgba(251, 191, 36, 0.25);
+  color: #fbbf24;
+}
+.sim-rating-btn.partial:hover {
+  background: rgba(251, 191, 36, 0.14);
+  border-color: #fbbf24;
+  box-shadow: 0 0 16px rgba(251, 191, 36, 0.15);
+}
+
+.sim-rating-btn.missed {
+  background: rgba(248, 113, 113, 0.08);
+  border-color: rgba(248, 113, 113, 0.25);
+  color: #f87171;
+}
+.sim-rating-btn.missed:hover {
+  background: rgba(248, 113, 113, 0.14);
+  border-color: #f87171;
+  box-shadow: 0 0 16px rgba(248, 113, 113, 0.15);
+}
+
+/* Difficulty badge */
+.diff-easy   { color: #4ade80; background: rgba(74,222,128,0.08); border: 1px solid rgba(74,222,128,0.2); }
+.diff-medium { color: #fbbf24; background: rgba(251,191,36,0.08); border: 1px solid rgba(251,191,36,0.2); }
+.diff-hard   { color: #f87171; background: rgba(248,113,113,0.08); border: 1px solid rgba(248,113,113,0.2); }
+
+/* Round selector card */
+.sim-round-card {
+  padding: 24px;
+  border-radius: 16px;
+  border: 1px solid #2e2e2e;
+  background: #141414;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+.sim-round-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,107,43,0.04) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity 0.25s;
+}
+.sim-round-card:hover { border-color: var(--accent); transform: translateY(-3px); box-shadow: 0 12px 40px rgba(0,0,0,0.4); }
+.sim-round-card:hover::before { opacity: 1; }
+
+/* Score result cards */
+.sim-score-got   { background: rgba(74,222,128,0.06); border: 1px solid rgba(74,222,128,0.18); }
+.sim-score-part  { background: rgba(251,191,36,0.06); border: 1px solid rgba(251,191,36,0.18); }
+.sim-score-miss  { background: rgba(248,113,113,0.06); border: 1px solid rgba(248,113,113,0.18); }
+
+/* Question slide animation */
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+.sim-slide-in  { animation: slideInRight 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+.sim-slide-out { animation: slideInLeft  0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+

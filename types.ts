@@ -30,6 +30,19 @@ export interface InterviewSection {
   subtitle: string;  // e.g. "Loops, Conditionals, Basics"
   color: string;     // Tailwind-compatible hex accent
   questions: InterviewQuestion[];
-  mcqs: MCQQuestion[]; // 20 MCQs for the test
+  mcqs?: MCQQuestion[]; // 20 MCQs for the test — injected after creation for some modules
   notes?: NoteSection[]; // Learning notes for the module
+}
+
+// ─── Interview Simulation ──────────────────────────────────────────────────
+
+export type SimRound = "technical" | "hr" | "mixed";
+export type SimDifficulty = "easy" | "medium" | "hard";
+export type SimRating = "got-it" | "partial" | "missed";
+
+export interface SimulationQuestion extends InterviewQuestion {
+  category: string;          // e.g. "JavaScript", "Behavioural"
+  difficulty: SimDifficulty;
+  timeLimit: number;         // seconds per question
+  roundType: SimRound[];     // which rounds this question appears in
 }
