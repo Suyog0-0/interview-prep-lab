@@ -4,6 +4,7 @@ import { s02_ds } from "./s02_ds";
 import { s03_bigo } from "./s03_bigo";
 import { s04_oop } from "./s04_oop";
 import { s05_solid } from "./s05_solid";
+import { s06_f1soft } from "./s06_f1soft";   // ← NEW IMPORT
 import {
   core_mcqs,
   ds_mcqs,
@@ -19,9 +20,10 @@ import {
   jwt_mcqs,
   sql_mcqs,
   node_mcqs,
-  problem_mcqs
+  problem_mcqs,
+  f1soft_mcqs,   
 } from "./mcqs";
-
+ 
 export const s06_frontend: InterviewSection = {
   id: 6,
   slug: "frontend-basics",
@@ -44,7 +46,7 @@ export const s06_frontend: InterviewSection = {
   ],
   mcqs: frontend_mcqs,
 };
-
+ 
 export const s07_js: InterviewSection = {
   id: 7,
   slug: "javascript",
@@ -67,7 +69,7 @@ export const s07_js: InterviewSection = {
   ],
   mcqs: js_mcqs,
 };
-
+ 
 export const s08_react: InterviewSection = {
   id: 8,
   slug: "react",
@@ -90,7 +92,7 @@ export const s08_react: InterviewSection = {
   ],
   mcqs: react_mcqs,
 };
-
+ 
 export const s09_nextjs: InterviewSection = {
   id: 9,
   slug: "nextjs",
@@ -107,7 +109,7 @@ export const s09_nextjs: InterviewSection = {
   ],
   mcqs: nextjs_mcqs,
 };
-
+ 
 export const s10_rest: InterviewSection = {
   id: 10,
   slug: "rest-soap",
@@ -124,7 +126,7 @@ export const s10_rest: InterviewSection = {
   ],
   mcqs: rest_mcqs,
 };
-
+ 
 export const s11_cors: InterviewSection = {
   id: 11,
   slug: "cors",
@@ -141,7 +143,7 @@ export const s11_cors: InterviewSection = {
   ],
   mcqs: cors_mcqs,
 };
-
+ 
 export const s12_jwt: InterviewSection = {
   id: 12,
   slug: "jwt",
@@ -158,7 +160,7 @@ export const s12_jwt: InterviewSection = {
   ],
   mcqs: jwt_mcqs,
 };
-
+ 
 export const s13_sql: InterviewSection = {
   id: 13,
   slug: "sql",
@@ -175,7 +177,7 @@ export const s13_sql: InterviewSection = {
   ],
   mcqs: sql_mcqs,
 };
-
+ 
 export const s14_node: InterviewSection = {
   id: 14,
   slug: "node",
@@ -192,7 +194,7 @@ export const s14_node: InterviewSection = {
   ],
   mcqs: node_mcqs,
 };
-
+ 
 export const s15_problem: InterviewSection = {
   id: 15,
   slug: "problem-solving",
@@ -263,14 +265,15 @@ export const s15_problem: InterviewSection = {
   ],
   mcqs: problem_mcqs,
 };
-
-
+ 
+ 
 s01_core.mcqs = core_mcqs;
 s02_ds.mcqs = ds_mcqs;
 s03_bigo.mcqs = bigo_mcqs;
 s04_oop.mcqs = oop_mcqs;
 s05_solid.mcqs = solid_mcqs;
-
+s06_f1soft.mcqs = f1soft_mcqs;   // ← NEW LINE
+ 
 export const interviewData: InterviewSection[] = [
   s01_core,
   s02_ds,
@@ -287,4 +290,5 @@ export const interviewData: InterviewSection[] = [
   s13_sql,
   s14_node,
   s15_problem,
+  s06_f1soft, 
 ];
