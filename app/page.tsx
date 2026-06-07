@@ -62,6 +62,12 @@ const SIDEBAR_GROUPS = [
     dot: "#fb923c",
     slugs: ["problem-solving"],
   },
+  {
+    key: "f1soft",                                           // ← NEW
+     label: "🏦 F1Soft Prep",                                // ← NEW
+     dot: "#10b981",                                          // ← NEW
+     slugs: ["f1soft-interview"],
+  }
 ];
 
 // ─── Copy button ───────────────────────────────────────────────
@@ -629,6 +635,7 @@ export default function Home() {
     frontend: false,
     backend: false,
     softskills: false,
+    f1soft: false,
   });
 
   const toggleGroup = (key: string) =>
