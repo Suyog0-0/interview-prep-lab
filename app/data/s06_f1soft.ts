@@ -1,12 +1,6 @@
 import type { InterviewSection } from "../../types";
 
-export const s06_f1soft: InterviewSection = {
-  id: 16,
-  slug: "f1soft-interview",
-  title: "F1Soft Interview Prep",
-  subtitle: "Questions sourced from real F1Soft / eSewa interview reports",
-  color: "#10b981",
-  questions: [
+const allQuestions = [
     // ── SECTION A: JavaScript / Core ──────────────────────────────
     {
       id: "f1-q01",
@@ -20,6 +14,20 @@ Promise.resolve().then(() => console.log('C'));
 console.log('D');
 // Output: A D C B`,
       language: "javascript",
+      diagram: `[Call Stack]         [Web APIs (Browser)]
+|          | ------> | setTimeout()     |
+| console  |         | fetch()          |
+|__________|         |__________________|
+     ^                        |
+     |                        v
+     |               [Task / Macrotask Queue]
+     |               | callback()       |
+[Event Loop] <-------|__________________|
+     ^                        
+     |               [Microtask Queue]
+     |               | Promise.then()   |
+     +---------------|__________________|
+     (Drains Microtasks FIRST, then 1 Macrotask)`,
     },
     {
       id: "f1-q02",
@@ -687,8 +695,21 @@ const result = await pool.query(
       answer:
         "Synchronous: Request waits for the entire operation to complete before responding. Simple, easy to reason about, but blocks the thread.\n\nAsynchronous: Request returns immediately (202 Accepted), work happens in the background.\n\nWhen to use a message queue (Kafka, RabbitMQ, SQS):\n1. Operations that can fail and need retry (send SMS after payment).\n2. Operations that don't need to block the user response (email receipt).\n3. Decoupling services — payment service doesn't need to know about notification service.\n4. Traffic spikes — queue absorbs load, workers process at their own rate.\n\nFinTech example: eSewa payment succeeds → push event to queue → notification worker sends SMS/email. If SMS provider is down, the queue retries — payment doesn't fail.",
     },
-  ],
+  ];
 
-  // ── MCQs injected separately from mcqs.ts ─────────────────────
-  mcqs: [],
+allQuestions.slice(0, 10).forEach(q => q.category = "JS Core");
+allQuestions.slice(10, 15).forEach(q => q.category = "OOP & SOLID");
+allQuestions.slice(15, 23).forEach(q => q.category = "DSA");
+allQuestions.slice(23, 30).forEach(q => q.category = "React");
+allQuestions.slice(30, 40).forEach(q => q.category = "Backend & DB");
+allQuestions.slice(40, 60).forEach(q => q.category = "Arch & Security");
+
+export const s06_f1soft: InterviewSection = {
+  id: 16,
+  slug: "f1soft-interview",
+  title: "F1Soft Interview Prep",
+  subtitle: "Questions sourced from real F1Soft / eSewa interview reports",
+  color: "#10b981",
+  questions: allQuestions,
+  mcqs: []
 };

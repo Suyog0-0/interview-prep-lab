@@ -362,6 +362,7 @@ export function buildQuestionPool(round: SimRound, count: number): SQ[] {
   const targetSlugs =
     round === "hr" ? hrSlugs :
     round === "technical" ? technicalSlugs :
+    round === "f1soft" ? ["f1soft-interview"] :
     [...technicalSlugs, ...hrSlugs]; // mixed = all
 
   interviewData.forEach((sec) => {

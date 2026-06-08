@@ -25,12 +25,14 @@ import {
   Flame,
   Users,
   Shuffle,
+  Building,
+  GitBranch,
 } from "lucide-react";
 import { interviewData } from "./data";
 import { buildQuestionPool } from "./data/simulation";
 import type { InterviewSection, InterviewQuestion, MCQQuestion, SimRound, SimRating, SimulationQuestion } from "../types";
 
-type ViewMode = "flashcards" | "mcqs" | "notes";
+type ViewMode = "flashcards" | "mcqs" | "notes" | "simulation";
 type SimPhase = "setup" | "interview" | "result";
 
 // ─── Option letter badge ───────────────────────────────────────
@@ -63,10 +65,11 @@ const SIDEBAR_GROUPS = [
     slugs: ["problem-solving"],
   },
   {
-    key: "f1soft",                                           // ← NEW
-     label: "🏦 F1Soft Prep",                                // ← NEW
-     dot: "#10b981",                                          // ← NEW
-     slugs: ["f1soft-interview"],
+    key: "f1soft",
+    label: "F1Soft Prep",
+    dot: "#10b981",
+    icon: <Building className="w-4 h-4 text-emerald-500" />,
+    slugs: ["f1soft-interview"],
   }
 ];
 
@@ -204,9 +207,9 @@ function TimerRing({ timeLeft, totalTime }: { timeLeft: number; totalTime: numbe
 }
 
 // ── Interview Simulation View ───────────────────────────────────
-function SimulationView({ onExit }: { onExit: () => void }) {
+function SimulationView({ onExit, initialRound }: { onExit: () => void; initialRound?: SimRound }) {
   const [phase, setPhase] = useState<SimPhase>("setup");
-  const [round, setRound] = useState<SimRound>("mixed");
+  const [round, setRound] = useState<SimRound>(initialRound || "mixed");
   const [questionCount, setQuestionCount] = useState(10);
   const [questions, setQuestions] = useState<SimulationQuestion[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -231,6 +234,13 @@ function SimulationView({ onExit }: { onExit: () => void }) {
     setPhase("interview");
     setSlideKey(0);
   }, [questionCount]);
+
+  // Auto-start if initialRound is provided
+  useEffect(() => {
+    if (initialRound && phase === "setup" && questions.length === 0) {
+      startInterview(initialRound);
+    }
+  }, [initialRound, phase, questions.length, startInterview]);
 
   // Timer tick
   useEffect(() => {
@@ -299,6 +309,14 @@ function SimulationView({ onExit }: { onExit: () => void }) {
       sub: "Random questions from all categories",
       color: "#c084fc",
       glow: "rgba(192,132,252,0.12)",
+    },
+    {
+      id: "f1soft" as SimRound,
+      icon: <Brain className="w-6 h-6" />,
+      label: "F1Soft Mock Interview",
+      sub: "Questions directly from F1Soft prep",
+      color: "#ef4444",
+      glow: "rgba(239,68,68,0.12)",
     },
   ];
 
@@ -465,7 +483,10 @@ function SimulationView({ onExit }: { onExit: () => void }) {
         {/* Actions */}
         <div className="flex flex-wrap gap-3">
           <button
-            onClick={() => setPhase("setup")}
+            onClick={() => {
+              setQuestions([]);
+              setPhase("setup");
+            }}
             className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-orange-500 text-white text-sm font-bold hover:bg-orange-600 active:scale-95 transition-all"
           >
             <RotateCcw className="w-4 h-4" /> Try Another Round
@@ -628,6 +649,7 @@ export default function Home() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
   const [quizStates, setQuizStates] = useState<Record<string, { showAnswer: boolean; showHint?: boolean }>>({});
   const [mcqStates, setMcqStates] = useState<Record<string, { selectedIndex: number | null }>>({});
+  const [activeF1SoftCategory, setActiveF1SoftCategory] = useState<string>("JS Core");
 
   // Sidebar accordion state — one entry per group key
   const [sidebarCollapsed, setSidebarCollapsed] = useState<Record<string, boolean>>({
@@ -725,8 +747,12 @@ export default function Home() {
           aria-expanded={isOpen}
         >
           <div className="flex items-center gap-2">
-            <div className="sidebar-group-dot" style={{ background: group.dot }} />
-            <span>{group.label}</span>
+            {group.icon ? (
+              group.icon
+            ) : (
+              <div className="sidebar-group-dot" style={{ background: group.dot }} />
+            )}
+            <span className={group.icon ? "text-emerald-400 font-bold tracking-wide" : ""}>{group.label}</span>
           </div>
           <ChevronDown
             className="w-3.5 h-3.5 transition-transform duration-200"
@@ -1106,16 +1132,68 @@ export default function Home() {
                   <CheckCircle className="w-3.5 h-3.5" />
                   MCQ Test ({activeSection.mcqs?.length ?? 0})
                 </button>
+                {(() => {
+                  const isF1SoftMock = activeSection.slug.startsWith("f1soft-");
+                  const isProblemMock = activeSection.slug === "problem-solving";
+                  if (!isF1SoftMock && !isProblemMock) return null;
+
+                  return (
+                    <button
+                      onClick={() => setViewMode("simulation")}
+                      className={"flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-mono font-semibold border transition-all " + (viewMode === "simulation"
+                        ? "bg-violet-500/15 border-violet-500/40 text-violet-400"
+                        : "bg-zinc-900 border-zinc-800 text-zinc-500 hover:text-zinc-200 hover:border-zinc-700")}
+                    >
+                      <Mic className="w-3.5 h-3.5" />
+                      Mock Interview
+                    </button>
+                  );
+                })()}
               </div>
+
+              {/* ── SIMULATION VIEW ────────────────────────────── */}
+              {viewMode === "simulation" && (
+                <div className="animate-fade-up">
+                  <SimulationView 
+                    onExit={() => setViewMode("flashcards")} 
+                    initialRound={activeSection.slug.startsWith("f1soft-") ? "f1soft" : "hr"} 
+                  />
+                </div>
+              )}
 
               {/* ── FLASHCARDS VIEW ──────────────────────────── */}
               {viewMode === "flashcards" && (
                 <div className="space-y-5 animate-fade-up">
-                  {activeSection.questions.map((q, idx) => {
+                  {/* Category Tabs for F1Soft */}
+                  {activeSection.slug === "f1soft-interview" && (
+                    <div className="flex flex-wrap gap-2 mb-6 p-4 rounded-xl bg-zinc-900/40 border border-zinc-800/80">
+                      {["JS Core", "OOP & SOLID", "DSA", "React", "Backend & DB", "Arch & Security"].map(cat => (
+                        <button 
+                          key={cat} 
+                          onClick={() => setActiveF1SoftCategory(cat)}
+                          className={`px-4 py-2 rounded-lg text-xs font-mono font-bold transition-all ${
+                            activeF1SoftCategory === cat 
+                              ? "bg-orange-500 text-white shadow-[0_0_12px_rgba(249,115,22,0.3)] border border-orange-500/50" 
+                              : "bg-zinc-950 text-zinc-400 border border-zinc-800 hover:text-zinc-200 hover:bg-zinc-900 hover:border-zinc-700"
+                          }`}
+                        >
+                          {cat}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+
+                  {activeSection.questions.filter(q => activeSection.slug === "f1soft-interview" ? q.category === activeF1SoftCategory : true).map((q, idx) => {
                     const shown = quizStates[q.id]?.showAnswer;
+                    const isCommon = q.q.includes("(common question)");
+                    const questionText = q.q.replace(/\s*\(common question\)/i, "");
+                    const borderColorClass = shown
+                      ? (isCommon ? "border-red-500/40 shadow-[0_0_15px_rgba(239,68,68,0.15)]" : "border-orange-500/40 shadow-[0_0_15px_rgba(249,115,22,0.1)]")
+                      : (isCommon ? "border-red-900/50 group-hover:border-red-700/80 shadow-[0_0_10px_rgba(239,68,68,0.05)]" : "border-zinc-800/80 group-hover:border-zinc-700");
+
                     return (
                       <div key={q.id} className="relative group">
-                        <div className={`relative bg-zinc-950/80 backdrop-blur-md border rounded-2xl overflow-hidden transition-all duration-500 hover:shadow-[0_8px_30px_rgb(0,0,0,0.5)] ${shown ? "border-orange-500/40 shadow-[0_0_15px_rgba(249,115,22,0.1)]" : "border-zinc-800/80 group-hover:border-zinc-700"}`}>
+                        <div className={`relative bg-zinc-950/80 backdrop-blur-md border rounded-2xl overflow-hidden transition-all duration-500 hover:shadow-[0_8px_30px_rgb(0,0,0,0.5)] ${borderColorClass}`}>
 
                           {/* ── CARD HEADER ── */}
                           <div className="flex items-center justify-between px-6 py-4 border-b border-zinc-900/80 bg-zinc-900/30">
@@ -1123,8 +1201,9 @@ export default function Home() {
                               <span className="flex items-center justify-center w-7 h-7 rounded-full bg-zinc-950 text-zinc-500 font-mono text-[11px] font-bold border border-zinc-800 shadow-inner">
                                 {idx + 1}
                               </span>
-                              <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest font-semibold">
+                              <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest font-semibold flex items-center">
                                 Flashcard
+                                {isCommon && <span className="ml-2 px-1.5 py-0.5 rounded bg-red-500/10 text-red-400 border border-red-500/20 flex items-center gap-1"><Flame className="w-3 h-3" /> COMMON</span>}
                               </span>
                             </div>
 
@@ -1141,7 +1220,7 @@ export default function Home() {
                           {/* ── CARD BODY (QUESTION) ── */}
                           <div className="px-6 py-8">
                             <h3 className="text-[18px] sm:text-[20px] font-semibold text-zinc-100 leading-relaxed tracking-tight">
-                              {q.q}
+                              {questionText}
                             </h3>
 
                             {/* Hint Content Area */}
@@ -1161,16 +1240,16 @@ export default function Home() {
                             {!shown ? (
                               <button
                                 onClick={() => toggleFlashcard(q.id)}
-                                className="w-full flex items-center justify-center gap-2 py-4 px-6 bg-zinc-900/40 text-[13px] font-mono font-semibold text-zinc-400 hover:text-orange-400 hover:bg-orange-500/5 transition-all border-t border-dashed border-zinc-800 hover:border-solid hover:border-orange-500/30 group/reveal"
+                                className={`w-full flex items-center justify-center gap-2 py-4 px-6 bg-zinc-900/40 text-[13px] font-mono font-semibold text-zinc-400 transition-all border-t border-dashed border-zinc-800 hover:border-solid group/reveal ${isCommon ? 'hover:text-red-400 hover:bg-red-500/5 hover:border-red-500/30' : 'hover:text-orange-400 hover:bg-orange-500/5 hover:border-orange-500/30'}`}
                               >
                                 <Eye className="w-4 h-4 group-hover/reveal:scale-110 transition-transform" /> Click to Reveal Answer
                               </button>
                             ) : (
-                              <div className="border-t border-orange-500/20 bg-gradient-to-b from-orange-500/5 to-transparent animate-fade-up">
+                              <div className={`border-t animate-fade-up ${isCommon ? 'border-red-500/20 bg-gradient-to-b from-red-500/5 to-transparent' : 'border-orange-500/20 bg-gradient-to-b from-orange-500/5 to-transparent'}`}>
                                 <div className="p-6 pb-20">
                                   <div className="flex items-center gap-2.5 mb-5">
-                                    <div className="w-1.5 h-1.5 rounded-full bg-orange-500 shadow-[0_0_8px_#f97316]" />
-                                    <span className="text-[11px] font-mono text-orange-400 uppercase tracking-widest font-bold">
+                                    <div className={`w-1.5 h-1.5 rounded-full ${isCommon ? 'bg-red-500 shadow-[0_0_8px_#ef4444]' : 'bg-orange-500 shadow-[0_0_8px_#f97316]'}`} />
+                                    <span className={`text-[11px] font-mono uppercase tracking-widest font-bold ${isCommon ? 'text-red-400' : 'text-orange-400'}`}>
                                       Answer
                                     </span>
                                   </div>
@@ -1178,6 +1257,17 @@ export default function Home() {
                                   <div className="text-zinc-200 text-[15px] whitespace-pre-wrap leading-relaxed">
                                     {q.answer}
                                   </div>
+
+                                  {q.diagram && (
+                                    <div className="mt-6 p-5 rounded-xl bg-[#09090b] border border-zinc-800/80 overflow-x-auto shadow-inner">
+                                      <div className="text-[10px] font-mono uppercase tracking-widest text-zinc-500 mb-3 flex items-center gap-2">
+                                        <GitBranch className="w-3 h-3 text-violet-400" /> Process Flow
+                                      </div>
+                                      <pre className="text-[12px] sm:text-[13px] font-mono text-zinc-300 leading-snug min-w-max selection:bg-violet-500/30">
+                                        {q.diagram}
+                                      </pre>
+                                    </div>
+                                  )}
 
                                   {q.code && (
                                     <div className="mt-6">

@@ -5,6 +5,7 @@ export interface InterviewQuestion {
   answer: string;  // full concise answer
   code?: string;   // optional code example
   language?: string; // "javascript" | "sql" | "bash" | "typescript"
+  category?: string; // Category for grouping flashcards
 }
 
 export interface MCQQuestion {
@@ -36,7 +37,7 @@ export interface InterviewSection {
 
 // ─── Interview Simulation ──────────────────────────────────────────────────
 
-export type SimRound = "technical" | "hr" | "mixed";
+export type SimRound = "technical" | "hr" | "mixed" | "f1soft";
 export type SimDifficulty = "easy" | "medium" | "hard";
 export type SimRating = "got-it" | "partial" | "missed";
 

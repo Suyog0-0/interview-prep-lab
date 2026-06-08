@@ -4,7 +4,7 @@ import { s02_ds } from "./s02_ds";
 import { s03_bigo } from "./s03_bigo";
 import { s04_oop } from "./s04_oop";
 import { s05_solid } from "./s05_solid";
-import { s06_f1soft } from "./s06_f1soft";   // ← NEW IMPORT
+import { s06_f1soft } from "./s06_f1soft";
 import {
   core_mcqs,
   ds_mcqs,
@@ -122,6 +122,21 @@ export const s10_rest: InterviewSection = {
       q: "What are the HTTP methods and what do they do?",
       hint: "CRUD maps to HTTP methods.",
       answer: "GET: read, POST: create, PUT: replace, PATCH: partial update, DELETE: remove.",
+      diagram: `[Client]                      [REST API Server]
+   |                             |
+   |--- GET /users/1 ----------->| (Read user 1)
+   |<-- 200 OK { id: 1 } --------|
+   |                             |
+   |--- POST /users ------------>| (Create new user)
+   |    { name: "John" }         |
+   |<-- 201 Created { id: 2 } ---|
+   |                             |
+   |--- PUT /users/2 ----------->| (Replace user 2)
+   |    { name: "Jane" }         |
+   |<-- 200 OK { id: 2 } --------|
+   |                             |
+   |--- DELETE /users/2 -------->| (Delete user 2)
+   |<-- 204 No Content ----------|`,
     },
   ],
   mcqs: rest_mcqs,
@@ -139,6 +154,17 @@ export const s11_cors: InterviewSection = {
       q: "What is CORS?",
       hint: "Cross-Origin Resource Sharing.",
       answer: "CORS is a security feature built into web browsers that blocks web pages from making requests to a different domain than the one that served the web page.",
+      diagram: `[Browser]                             [Server (api.com)]
+    |                                     |
+    |--- 1. Preflight OPTIONS request --->|
+    |    (Origin: site.com)               |
+    |                                     |-- Check allowed origins
+    |<-- 2. 204 No Content ---------------|
+    |    (Access-Control-Allow-Origin: *) |
+    |                                     |
+    |--- 3. Actual GET/POST request ----->|
+    |                                     |-- Process request
+    |<-- 4. 200 OK (with Data) -----------|`,
     },
   ],
   mcqs: cors_mcqs,
@@ -156,6 +182,19 @@ export const s12_jwt: InterviewSection = {
       q: "What is JWT?",
       hint: "JSON Web Token.",
       answer: "JWT is a compact URL-safe means of representing claims to be transferred between two parties. It's often used for stateless authentication.",
+      diagram: `[Client]                      [Server]
+   |                             |
+   |--- 1. POST /login --------->|
+   |    (username, password)     |
+   |                             |-- Validate credentials
+   |                             |-- Generate JWT (Header.Payload.Signature)
+   |<-- 2. Return JWT -----------|
+   |                             |
+   |--- 3. GET /protected ------>|
+   |    (Header: Bearer <JWT>)   |
+   |                             |-- Verify Signature using Secret
+   |                             |-- Extract Payload (e.g. userId: 123)
+   |<-- 4. Return 200 OK --------|`,
     },
   ],
   mcqs: jwt_mcqs,
@@ -190,6 +229,16 @@ export const s14_node: InterviewSection = {
       q: "What is Node.js?",
       hint: "JavaScript runtime.",
       answer: "Node.js is an open-source, cross-platform JavaScript runtime environment that executes JavaScript code outside a web browser.",
+      diagram: `[Incoming Requests]
+       |
+       v
+[V8 Engine (JS Execution)] <---> [Event Queue]
+       |                               |
+       | (Non-blocking I/O)            | (Event Loop picks up callbacks)
+       v                               |
+[libuv (C++ Thread Pool)] -------------+
+   |        |        |
+[ File ] [ DB ] [ Network ]`,
     },
   ],
   mcqs: node_mcqs,
@@ -272,7 +321,7 @@ s02_ds.mcqs = ds_mcqs;
 s03_bigo.mcqs = bigo_mcqs;
 s04_oop.mcqs = oop_mcqs;
 s05_solid.mcqs = solid_mcqs;
-s06_f1soft.mcqs = f1soft_mcqs;   // ← NEW LINE
+s06_f1soft.mcqs = f1soft_mcqs;
  
 export const interviewData: InterviewSection[] = [
   s01_core,
@@ -290,5 +339,5 @@ export const interviewData: InterviewSection[] = [
   s13_sql,
   s14_node,
   s15_problem,
-  s06_f1soft, 
+  s06_f1soft,
 ];
