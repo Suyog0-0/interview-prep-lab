@@ -92,15 +92,20 @@ const SIDEBAR_GROUPS: {
     dot: "#3b82f6",
     icon: <Building className="w-4 h-4 text-blue-500" />,
     slugs: [
-      {
-        label: "Overall Prep Schedule",
-        slugs: [
-          "leapfrog-overall",
-          ...Array.from({ length: 21 }, (_, i) => `leapfrog-overall-day-${i + 1}`)
-        ]
-      },
-      "leapfrog-coding", "leapfrog-virtual", "leapfrog-onsite", "leapfrog-hr", "leapfrog-simulation"
-    ],
+  {
+    label: "Overall Prep Schedule",
+    slugs: [
+      "leapfrog-overall",
+      ...Array.from({ length: 21 }, (_, i) => `leapfrog-overall-day-${i + 1}`)
+    ]
+  },
+  "leapfrog-coding",
+  "leapfrog-virtual",
+  "leapfrog-onsite",
+  "leapfrog-hr",
+  "leapfrog-remote",
+  "leapfrog-simulation"
+],
   }
 ];
 
