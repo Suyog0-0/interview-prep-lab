@@ -305,6 +305,174 @@ When answering in an interview:
 2. Explain WHY (what causes each loop/recursion).
 3. Mention if you could do better.`,
     },
+    {
+      id: "lfc-q13",
+      q: "Find the first non-repeating element in an array.",
+      hint: "Frequency counting with a hash map, then scan for the first frequency of 1.",
+      answer: `Use a hash map to count occurrences of each element in one pass.
+Then scan the array again (preserving order) to find the first element with a count of exactly 1.
+
+Time: O(n)  Space: O(k) where k = unique elements.`,
+      code: `function firstNonRepeating(arr) {
+  const freq = new Map();
+  for (const el of arr) freq.set(el, (freq.get(el) || 0) + 1);
+  for (const el of arr) {
+    if (freq.get(el) === 1) return el;
+  }
+  return null;
+}
+
+console.log(firstNonRepeating([4, 5, 1, 2, 1, 4, 3, 5])); // 2`,
+    },
+    {
+      id: "lfc-q14",
+      q: "Check whether two strings are anagrams of each other.",
+      hint: "Frequency map: count characters in both strings and compare.",
+      answer: `Anagrams contain the exact same characters with the exact same frequencies.
+Build a frequency map for the first string, decrement for the second.
+If all counts are zero → anagram.
+
+Time: O(n)  Space: O(k) where k = charset size.`,
+      code: `function isAnagram(s1, s2) {
+  if (s1.length !== s2.length) return false;
+  const count = {};
+  for (const ch of s1) count[ch] = (count[ch] || 0) + 1;
+  for (const ch of s2) {
+    if (!count[ch]) return false;
+    count[ch]--;
+  }
+  return true;
+}
+
+console.log(isAnagram("listen", "silent")); // true
+console.log(isAnagram("hello", "world"));   // false`,
+    },
+    {
+      id: "lfc-q15",
+      q: "What is the time complexity of searching in a HashMap / HashSet?",
+      hint: "Average vs worst case.",
+      answer: `Average case: O(1) — the hash function distributes keys uniformly across buckets.
+Worst case: O(n) — when all keys collide into the same bucket (degenerates to a linked list).
+
+In practice (and in interviews), assume O(1) average case for HashMap operations (get, set, has, delete).
+Mention the collision caveat to show deep understanding.`,
+    },
+    {
+      id: "lfc-q16",
+      q: "How would you optimize a brute-force O(n²) solution to O(n)?",
+      hint: "Hashing, preprocessing, or two-pointer after sorting.",
+      answer: `Common strategies to drop from O(n²) to O(n):
+
+1. Hash Map / Set — Store seen elements for O(1) lookups.
+   Example: Two Sum (nested loops → HashMap)
+
+2. Frequency Counter — Pre-count occurrences, then derive answer in one pass.
+   Example: Anagram check, most frequent element
+
+3. Prefix Sum / Running Total — Avoid re-computing subarray sums.
+   Example: Subarray sum equals K
+
+4. Two-Pointer — After sorting, use two pointers to find pairs.
+   Example: Two Sum in sorted array
+
+5. Sliding Window — Avoid re-computing overlapping subarrays.
+   Example: Max sum of subarray of size K
+
+Key interview phrase: "Can we trade space for time?"`,
+    },
+    {
+      id: "lfc-q17",
+      q: "Implement Binary Search on a sorted array.",
+      hint: "Compare target to middle, eliminate half each iteration.",
+      answer: `Initialize left = 0, right = arr.length - 1.
+While left <= right:
+  • mid = Math.floor((left + right) / 2)
+  • If arr[mid] === target → return mid
+  • If arr[mid] < target → left = mid + 1
+  • If arr[mid] > target → right = mid - 1
+
+If loop ends without finding target → return -1.
+
+Time: O(log n)  Space: O(1)`,
+      code: `function binarySearch(arr, target) {
+  let left = 0, right = arr.length - 1;
+  while (left <= right) {
+    const mid = Math.floor((left + right) / 2);
+    if (arr[mid] === target) return mid;
+    if (arr[mid] < target) left = mid + 1;
+    else right = mid - 1;
+  }
+  return -1;
+}
+
+console.log(binarySearch([1, 3, 5, 7, 9, 11], 7)); // 3`,
+    },
+    {
+      id: "lfc-q18",
+      q: "Find the missing number in an array containing n distinct numbers from 0 to n.",
+      hint: "Sum formula: expected sum - actual sum. Or XOR.",
+      answer: `Mathematical approach: The expected sum of 0..n is n*(n+1)/2.
+Subtract the actual sum of the array → the difference is the missing number.
+
+Alternative: XOR all indices and all values. The remaining number is the missing one.
+
+Time: O(n)  Space: O(1)`,
+      code: `function missingNumber(nums) {
+  const n = nums.length;
+  const expected = (n * (n + 1)) / 2;
+  const actual = nums.reduce((a, b) => a + b, 0);
+  return expected - actual;
+}
+
+console.log(missingNumber([3, 0, 1])); // 2`,
+    },
+    {
+      id: "lfc-q19",
+      q: "FizzBuzz — print numbers 1 to n, but 'Fizz' for multiples of 3, 'Buzz' for 5, 'FizzBuzz' for both.",
+      hint: "Modulo operator and conditional checks.",
+      answer: `A classic screening question. Loop from 1 to n.
+If divisible by 15 → 'FizzBuzz'
+If divisible by 3 → 'Fizz'
+If divisible by 5 → 'Buzz'
+Else → number as string.
+
+Time: O(n)  Space: O(1) (excluding output).`,
+      code: `function fizzBuzz(n) {
+  const result = [];
+  for (let i = 1; i <= n; i++) {
+    let str = '';
+    if (i % 3 === 0) str += 'Fizz';
+    if (i % 5 === 0) str += 'Buzz';
+    result.push(str || i.toString());
+  }
+  return result;
+}
+
+console.log(fizzBuzz(15));`,
+    },
+    {
+      id: "lfc-q20",
+      q: "Merge two sorted arrays into a single sorted array.",
+      hint: "Two-pointer technique comparing elements from both arrays.",
+      answer: `Use two pointers, one for each array.
+Compare arr1[i] and arr2[j], push the smaller to result, and advance that pointer.
+When one array is exhausted, append the remainder of the other.
+
+Time: O(n + m)  Space: O(n + m) for the result.`,
+      code: `function mergeSorted(arr1, arr2) {
+  const merged = [];
+  let i = 0, j = 0;
+  while (i < arr1.length && j < arr2.length) {
+    if (arr1[i] < arr2[j]) merged.push(arr1[i++]);
+    else merged.push(arr2[j++]);
+  }
+  while (i < arr1.length) merged.push(arr1[i++]);
+  while (j < arr2.length) merged.push(arr2[j++]);
+  return merged;
+}
+
+console.log(mergeSorted([1, 3, 5], [2, 4, 6])); // [1,2,3,4,5,6]`,
+    },
   ],
   mcqs: [
     {
@@ -486,6 +654,34 @@ When answering in an interview:
       ],
       correctAnswerIndex: 1,
       explanation: "Leapfrog interviewers review your thought process. Writing pseudocode or comments that explain your approach demonstrates problem-solving ability even if implementation is incomplete — it earns partial credit.",
+    },
+    {
+      id: "mcq-lfc-21",
+      question: "What is the worst-case time complexity of HashMap search when all keys collide?",
+      options: ["O(1)", "O(log n)", "O(n)", "O(n²)"],
+      correctAnswerIndex: 2,
+      explanation: "In the worst case (all keys hash to the same bucket), the HashMap degenerates to a linked list and search becomes linear O(n).",
+    },
+    {
+      id: "mcq-lfc-22",
+      question: "Which technique is best for optimizing a nested-loop pair-finding problem to O(n)?",
+      options: ["Bubble Sort", "Hash Map / Set", "Binary Search", "Merge Sort"],
+      correctAnswerIndex: 1,
+      explanation: "Hash Maps allow O(1) lookups, converting O(n²) pair-finding into O(n) by storing seen elements and checking for complements in a single pass.",
+    },
+    {
+      id: "mcq-lfc-23",
+      question: "Binary Search on a sorted array of 1,000,000 elements requires at most how many comparisons?",
+      options: ["1,000,000", "20", "1,000", "log(1,000,000) ≈ 20"],
+      correctAnswerIndex: 3,
+      explanation: "log₂(1,000,000) is approximately 20. Binary search halves the search space each time, making it extremely efficient even for large arrays.",
+    },
+    {
+      id: "mcq-lfc-24",
+      question: "FizzBuzz is primarily used in interviews to test:",
+      options: ["Advanced algorithmic knowledge", "Basic loop and conditional logic", "Database design", "System architecture"],
+      correctAnswerIndex: 1,
+      explanation: "FizzBuzz tests basic programming competency — can the candidate write a loop, use modulo, and handle multiple conditions correctly?",
     },
   ],
 };
@@ -750,6 +946,163 @@ class Dog extends Animal {
 }
 console.log(new Dog("Rex").speak()); // Rex barks.`,
     },
+    {
+      id: "lfv-q09",
+      q: "What is a closure in JavaScript? Give a practical example.",
+      hint: "A function that retains access to its outer scope variables even after the outer function returns.",
+      answer: `A closure is created when an inner function retains a reference to variables from its enclosing outer function, even after that outer function has finished executing.
+
+This enables:
+  • Data privacy (private variables)
+  • Function factories
+  • Maintaining state in callbacks
+
+Key point: The inner function 'closes over' the outer variables, keeping them alive in memory.`,
+      code: `function createCounter() {
+  let count = 0; // private variable
+  return {
+    increment: () => ++count,
+    decrement: () => --count,
+    getCount:  () => count,
+  };
+}
+
+const counter = createCounter();
+console.log(counter.getCount());  // 0
+console.log(counter.increment()); // 1
+console.log(counter.increment()); // 2
+console.log(counter.count);       // undefined — private!`,
+    },
+    {
+      id: "lfv-q10",
+      q: "Explain deep copy vs shallow copy in JavaScript. How do you create a deep copy?",
+      hint: "Shallow copy copies references; deep copy copies values recursively.",
+      answer: `Shallow copy:
+  Copies the top-level properties. Nested objects/arrays are still referenced (shared).
+  Methods: Object.assign(), spread operator {...obj}, arr.slice()
+
+Deep copy:
+  Creates a completely independent copy, including all nested objects.
+  Methods:
+    • JSON.parse(JSON.stringify(obj)) — simple but loses functions, undefined, Date, Map, Set, circular refs.
+    • structuredClone(obj) — modern, handles most types, supports circular references.
+    • Libraries like lodash.cloneDeep — most robust.
+
+Interview tip: Always mention structuredClone() as the modern native solution.`,
+      code: `const original = { a: 1, b: { c: 2 } };
+
+// Shallow copy — nested object still shared
+const shallow = { ...original };
+shallow.b.c = 99;
+console.log(original.b.c); // 99 — mutated!
+
+// Deep copy — fully independent
+const deep = structuredClone(original);
+deep.b.c = 42;
+console.log(original.b.c); // 99 — unchanged`,
+    },
+    {
+      id: "lfv-q11",
+      q: "What is event delegation in JavaScript and why is it useful?",
+      hint: "Attach one listener to a parent instead of many listeners to children.",
+      answer: `Event delegation leverages event bubbling to attach a single event listener to a parent element instead of individual listeners to each child.
+
+Benefits:
+  1. Memory efficiency — one listener vs many.
+  2. Dynamic elements — works for elements added after the listener is attached.
+  3. Less code — easier to maintain.
+
+Pattern: Listen on the parent, check event.target to identify which child was clicked.`,
+      code: `// Instead of attaching to every button
+// document.querySelectorAll('.btn').forEach(btn => btn.addEventListener('click', handler));
+
+// Delegate to the parent
+document.getElementById('button-list').addEventListener('click', (e) => {
+  if (e.target.matches('.btn')) {
+    console.log('Clicked:', e.target.textContent);
+  }
+});`,
+    },
+    {
+      id: "lfv-q12",
+      q: "How would you walk an interviewer through your coding solution as if they cannot see your screen?",
+      hint: "Communication matters: assumptions, algorithm, complexity, edge cases, trade-offs.",
+      answer: `In a virtual interview, you may be asked to explain your code without screen sharing.
+
+Framework for verbal walkthrough:
+  1. ASSUMPTIONS — "I'm assuming the input is a valid array of integers."
+  2. ALGORITHM CHOICE — "I'll use a HashMap because we need O(1) lookups."
+  3. STEP-BY-STEP — Walk through the first 2-3 iterations with a real example.
+  4. COMPLEXITY — "Time is O(n), space is O(n) for the map."
+  5. EDGE CASES — "If the array is empty, I'll return null."
+  6. TRADE-OFFS — "I could sort first for O(n log n) time and O(1) space, but HashMap is faster."
+
+Practice this out loud while coding solo — it feels unnatural at first but is a high-value interview skill.`,
+    },
+    {
+      id: "lfv-q13",
+      q: "How would you debug a failing production issue remotely?",
+      hint: "Systematic process: logs → reproduce → isolate → fix → test → deploy.",
+      answer: `A structured debugging process for production issues:
+
+1. GATHER LOGS — Check server logs, error tracking (Sentry), monitoring dashboards, and user reports.
+2. REPRODUCE — Try to reproduce locally or in staging with the same data/state.
+3. ISOLATE — Use binary search / comment out sections to find the exact component causing the failure.
+4. VERIFY ASSUMPTIONS — Check if a recent deployment, config change, or third-party service is the root cause.
+5. IDENTIFY ROOT CAUSE — Don't just fix symptoms; understand WHY it broke.
+6. FIX & TEST — Write a test that reproduces the bug before fixing it.
+7. DEPLOY SAFELY — Use feature flags, canary deployments, or rollback plans.
+8. POST-MORTEM — Document the incident to prevent recurrence.`,
+    },
+    {
+      id: "lfv-q14",
+      q: "List the most important ES6+ features and explain their benefits.",
+      hint: "let/const, arrow functions, template literals, destructuring, spread, modules, Promises.",
+      answer: `Key ES6+ features every Leapfrog candidate should know:
+
+1. let / const — Block-scoped variables, no hoisting bugs.
+2. Arrow functions — Concise syntax, lexical this binding.
+3. Template literals — \`Hello \${name}\` instead of string concatenation.
+4. Destructuring — const { name, age } = user; const [first, second] = arr;
+5. Spread / Rest — [...arr], { ...obj }, function fn(...args)
+6. Modules — import / export for clean dependency management.
+7. Classes — Syntactic sugar over prototypes (constructor, extends, super).
+8. Promises — async flow control (.then, .catch, Promise.all).
+9. Async/await — Syntactic sugar over Promises for readable async code.
+10. Optional chaining — user?.profile?.name safely accesses nested properties.`,
+      code: `// Destructuring + Spread + Template literal
+const user = { name: "Anish", role: "Frontend", skills: ["React", "Node"] };
+const { name, ...rest } = user;
+const updated = { ...rest, level: "Junior" };
+console.log(\`\${name} is a \${updated.level} dev\`);`,
+    },
+    {
+      id: "lfv-q15",
+      q: "TypeScript: What is the difference between an interface and a type alias?",
+      hint: "Interface is extendable and mergable; type is more flexible (unions, tuples, primitives).",
+      answer: `interface:
+  • Primarily for object shapes.
+  • Declaration merging — defining the same interface twice merges them.
+  • Extends other interfaces via 'extends'.
+  • Better error messages in complex types.
+
+type:
+  • Can define unions, tuples, primitives, mapped types.
+  • Cannot be merged (no declaration merging).
+  • Extends via intersection types (&).
+  • More flexible for complex type transformations.
+
+Rule of thumb: Use interface for object shapes that might be extended; use type for unions, tuples, or when you need mapped types.`,
+      code: `interface User {
+  name: string;
+}
+interface User {
+  age: number; // merged — User now has both name and age
+}
+
+type ID = string | number;
+type Admin = User & { role: 'admin' };`,
+    },
   ],
   mcqs: [
     {
@@ -966,6 +1319,44 @@ console.log(new Dog("Rex").speak()); // Rex barks.`,
       ],
       correctAnswerIndex: 2,
       explanation: "Interviewers at Leapfrog value reasoning and communication over memorized answers. Admitting uncertainty while showing structured thinking ('I'm not sure, but I know X, so I'd guess Y because...') demonstrates intellectual honesty and problem-solving maturity.",
+    },
+    {
+      id: "mcq-lfv-21",
+      question: "What is the main benefit of event delegation?",
+      options: [
+        "Faster event handling execution",
+        "Reduced memory usage and automatic handling of dynamically added elements",
+        "Prevents all default browser behavior",
+        "Allows synchronous event processing",
+      ],
+      correctAnswerIndex: 1,
+      explanation: "Event delegation attaches one listener to a parent instead of many to children, saving memory. It also handles dynamically added children because the event bubbles up to the existing parent listener.",
+    },
+    {
+      id: "mcq-lfv-22",
+      question: "Which is the modern native way to create a deep copy of an object in JavaScript?",
+      options: ["JSON.parse(JSON.stringify(obj))", "Object.assign({}, obj)", "structuredClone(obj)", "lodash.cloneDeep"],
+      correctAnswerIndex: 2,
+      explanation: "structuredClone() is the modern native API for deep cloning. It handles circular references, Date, Map, Set, and ArrayBuffer — unlike JSON.parse/stringify which loses functions and some types.",
+    },
+    {
+      id: "mcq-lfv-23",
+      question: "TypeScript interfaces support which feature that type aliases do NOT?",
+      options: ["Union types", "Intersection types", "Declaration merging", "Tuple types"],
+      correctAnswerIndex: 2,
+      explanation: "Interfaces support declaration merging (defining the same interface multiple times merges them). Type aliases do not support this but can express unions, intersections, and tuples.",
+    },
+    {
+      id: "mcq-lfv-24",
+      question: "In a virtual Leapfrog interview, when debugging a production issue, what should you check FIRST?",
+      options: [
+        "Restart the server immediately",
+        "Check logs, error tracking, and monitoring dashboards",
+        "Blame the most recent commit author",
+        "Rollback to the previous version without investigation",
+      ],
+      correctAnswerIndex: 1,
+      explanation: "Systematic debugging starts with gathering evidence from logs, monitoring tools, and error trackers. Jumping to fixes without understanding the root cause often creates more problems.",
     },
   ],
 };
@@ -1210,6 +1601,241 @@ Analogy:
 6. EDGE CASES (30 sec)
    "What if the array is empty? What about duplicates? What about negatives?"`,
     },
+    {
+      id: "lfo-q10",
+      q: "What would happen if your API suddenly received 10x more traffic? How would you handle it?",
+      hint: "Scalability: caching, horizontal scaling, load balancing, DB optimization, rate limiting.",
+      answer: `Handling a 10x traffic spike requires a multi-layer strategy:
+
+1. CACHING — Redis/CDN for frequently accessed data. Reduces database load.
+2. LOAD BALANCING — Distribute traffic across multiple server instances (Nginx, AWS ALB).
+3. HORIZONTAL SCALING — Auto-scale server instances based on CPU/memory metrics.
+4. DATABASE OPTIMIZATION — Connection pooling, read replicas, query optimization, indexing.
+5. RATE LIMITING — Prevent abuse and protect resources (e.g., 100 requests/min per IP).
+6. ASYNC PROCESSING — Move heavy tasks (emails, reports) to background queues (Bull, RabbitMQ).
+7. MONITORING — Real-time alerts via Datadog, New Relic, or CloudWatch to detect bottlenecks.
+8. CIRCUIT BREAKER — Fail fast when downstream services are overwhelmed to prevent cascading failures.
+
+Key interview phrase: "I'd identify the bottleneck first — usually the database — then scale outward."`,
+    },
+    {
+      id: "lfo-q11",
+      q: "Design a URL shortening service like bit.ly.",
+      hint: "System design: URL generation, database schema, caching, collision handling, scalability.",
+      answer: `High-level design for a URL shortener:
+
+1. URL GENERATION — Convert long URL to a short unique key (6-8 characters).
+   • Base62 encoding of an auto-incrementing ID (a-z, A-Z, 0-9).
+   • Or MD5 hash + truncation (handle collisions by appending a counter).
+
+2. DATABASE SCHEMA —
+   • short_code (PK, indexed)
+   • long_url
+   • created_at, expires_at, click_count
+
+3. CACHING — Redis stores hot short_code → long_url mappings to avoid DB hits.
+
+4. REDIRECT FLOW —
+   • GET /:short_code → Check Redis → if miss, query DB → 301 redirect to long_url.
+
+5. SCALABILITY —
+   • Read replicas for high redirect traffic.
+   • Sharding by short_code prefix if needed.
+
+6. COLLISION HANDLING — If generated code exists, regenerate with a different salt/counter.
+
+Time complexity: O(1) for generation and redirect. Space: O(n) for n stored URLs.`,
+    },
+    {
+      id: "lfo-q12",
+      q: "Explain the architecture of your current/most recent project in detail.",
+      hint: "Frontend → Backend → Database → APIs → Auth → Deployment → Monitoring.",
+      answer: `Leapfrog interviewers ask this to assess real-world understanding. Structure your answer:
+
+1. FRONTEND — React/Vue/Angular? Why? Component structure? State management?
+2. BACKEND — Node.js/Express? REST or GraphQL? Why this stack?
+3. DATABASE — PostgreSQL/MySQL/Mongo? Schema design? Why relational vs document?
+4. APIs — RESTful conventions? Versioning? Rate limiting?
+5. AUTHENTICATION — JWT? Session cookies? OAuth? How do you handle refresh tokens?
+6. DEPLOYMENT — Docker? AWS/GCP? CI/CD pipeline? How do you deploy without downtime?
+7. MONITORING — Logs (Winston/Pino)? Error tracking (Sentry)? Uptime monitoring?
+8. SCALING — Is it stateless? Can you add more instances? Database read replicas?
+
+Be specific about YOUR decisions, not just what the tutorial told you to do.`,
+    },
+    {
+      id: "lfo-q13",
+      q: "What is database normalization? Explain 1NF, 2NF, and 3NF.",
+      hint: "Eliminate redundancy and dependency anomalies through progressive normal forms.",
+      answer: `Normalization organizes database tables to reduce redundancy and improve integrity.
+
+1NF (First Normal Form):
+  • All columns contain atomic (indivisible) values.
+  • No repeating groups or arrays in a single cell.
+  • Each row is unique (has a primary key).
+
+2NF (Second Normal Form):
+  • Must be in 1NF.
+  • No partial dependencies — non-key columns must depend on the ENTIRE primary key, not just part of it.
+  • Only relevant for composite keys.
+
+3NF (Third Normal Form):
+  • Must be in 2NF.
+  • No transitive dependencies — non-key columns must depend ONLY on the primary key, not on other non-key columns.
+
+Example violation: In a table (OrderID, CustomerID, CustomerName), CustomerName depends on CustomerID, not directly on OrderID. Move CustomerName to a Customers table.`,
+    },
+    {
+      id: "lfo-q14",
+      q: "Explain SQL JOINs: INNER, LEFT, RIGHT, and FULL OUTER.",
+      hint: "Venn diagram visualization. INNER = intersection, OUTER = union with nulls for missing matches.",
+      answer: `INNER JOIN:
+  Returns only rows where there is a match in BOTH tables.
+  Like the intersection of two sets.
+
+LEFT (OUTER) JOIN:
+  Returns ALL rows from the left table, and matched rows from the right.
+  If no match, right-side columns are NULL.
+
+RIGHT (OUTER) JOIN:
+  Returns ALL rows from the right table, and matched rows from the left.
+  If no match, left-side columns are NULL.
+
+FULL OUTER JOIN:
+  Returns ALL rows from both tables.
+  Matches where they exist; NULLs where they don't.
+
+Leapfrog tip: In practice, LEFT JOIN is most common. Know when to use each.`,
+      code: `-- INNER: only employees with departments
+SELECT e.name, d.name FROM employees e
+INNER JOIN departments d ON e.dept_id = d.id;
+
+-- LEFT: all employees, even those without a department
+SELECT e.name, d.name FROM employees e
+LEFT JOIN departments d ON e.dept_id = d.id;`,
+    },
+    {
+      id: "lfo-q15",
+      q: "What are REST API best practices and conventions?",
+      hint: "HTTP verbs, status codes, versioning, statelessness, resource naming, pagination.",
+      answer: `Key REST API best practices:
+
+1. RESOURCE NAMING — Use nouns, not verbs. /users not /getUsers. Plural for collections.
+2. HTTP VERBS — GET (read), POST (create), PUT/PATCH (update), DELETE (remove).
+3. STATUS CODES — 200 OK, 201 Created, 204 No Content, 400 Bad Request, 401 Unauthorized, 404 Not Found, 500 Internal Error.
+4. STATELESSNESS — Each request contains all info needed. No server-side session state.
+5. VERSIONING — /v1/users to allow backward-compatible evolution.
+6. PAGINATION — Use limit + offset or cursor-based for large collections.
+7. FILTERING/SORTING — ?status=active&sort=-created_at
+8. CONSISTENT RESPONSE FORMAT — Wrap in { data, meta, error } structure.
+9. HATEOAS (optional) — Include related links in responses.
+10. DOCUMENTATION — OpenAPI/Swagger for discoverability.`,
+    },
+    {
+      id: "lfo-q16",
+      q: "What is CORS and how do you handle it in a web application?",
+      hint: "Cross-Origin Resource Sharing — browser security feature controlled by HTTP headers.",
+      answer: `CORS (Cross-Origin Resource Sharing) is a browser security mechanism that prevents web pages from making requests to a different domain than the one that served the page.
+
+How it works:
+  • Browser sends a preflight OPTIONS request for non-simple requests.
+  • Server responds with Access-Control-Allow-Origin header.
+  • If the origin is allowed, the actual request proceeds.
+
+Handling CORS:
+  1. Server-side — Configure headers in Express (cors middleware):
+     app.use(cors({ origin: 'https://myfrontend.com', credentials: true }));
+  2. Proxy — Route requests through the same origin via a proxy.
+  3. NEVER disable CORS in production with '*' and credentials together — it's a security risk.
+
+Common interview mistake: CORS is a server-side configuration, not a client-side bug to 'fix' in the browser.`,
+      code: `const cors = require('cors');
+app.use(cors({
+  origin: ['http://localhost:3000', 'https://myapp.com'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+}));`,
+    },
+    {
+      id: "lfo-q17",
+      q: "JWT vs Session-based Authentication: When to use which?",
+      hint: "JWT = stateless, scalable, client-side storage. Session = stateful, server-side storage, easier to revoke.",
+      answer: `JWT (JSON Web Token):
+  • Stateless — server doesn't store session data.
+  • Scalable — any server instance can verify the token with the secret key.
+  • Stored client-side (localStorage/cookies).
+  • Harder to revoke before expiration (requires blacklist).
+  • Good for microservices and mobile APIs.
+
+Session-based:
+  • Stateful — session data stored server-side (Redis, database).
+  • Session ID sent via cookie.
+  • Easy to revoke — just delete the server-side session.
+  • Simpler for traditional server-rendered apps.
+  • Requires sticky sessions or shared session store for scaling.
+
+Leapfrog context: Modern full-stack apps often use JWT access tokens (short-lived) + refresh tokens (longer-lived) stored in httpOnly cookies.`,
+    },
+    {
+      id: "lfo-q18",
+      q: "What is database indexing and why does it matter?",
+      hint: "Indexes speed up SELECTs but slow down INSERT/UPDATE/DELETE. B-Tree is the default structure.",
+      answer: `A database index is a data structure (usually B-Tree) that improves the speed of data retrieval operations on a table at the cost of additional writes and storage space.
+
+How it works:
+  • Without an index: Full table scan — O(n) rows checked.
+  • With an index: Tree traversal — O(log n) lookups.
+
+When to index:
+  • Columns frequently used in WHERE, JOIN, ORDER BY.
+  • Columns with high cardinality (many unique values).
+
+When NOT to index:
+  • Small tables (full scan is faster than index lookup).
+  • Columns with low cardinality (boolean, gender).
+  • Tables with heavy write loads (indexes slow down inserts/updates).
+
+Types: PRIMARY, UNIQUE, INDEX, FULLTEXT, composite (multi-column).`,
+    },
+    {
+      id: "lfo-q19",
+      q: "Explain the SOLID principles of OOP.",
+      hint: "Single Responsibility, Open/Closed, Liskov Substitution, Interface Segregation, Dependency Inversion.",
+      answer: `SOLID is a mnemonic for five design principles that make software more maintainable:
+
+S — Single Responsibility Principle:
+  A class should have only ONE reason to change. One job per class.
+
+O — Open/Closed Principle:
+  Open for extension, closed for modification. Use inheritance/interfaces to add behavior without changing existing code.
+
+L — Liskov Substitution Principle:
+  Subtypes must be substitutable for their base types without altering program correctness.
+
+I — Interface Segregation Principle:
+  Clients should not be forced to depend on interfaces they don't use. Split fat interfaces into smaller ones.
+
+D — Dependency Inversion Principle:
+  Depend on abstractions, not concrete implementations. Use dependency injection.
+
+Interview tip: Don't just recite them — give a brief example of violating and fixing one.`,
+    },
+    {
+      id: "lfo-q20",
+      q: "What are the four pillars of OOP?",
+      hint: "Encapsulation, Abstraction, Inheritance, Polymorphism.",
+      answer: `The four pillars of Object-Oriented Programming:
+
+1. ENCAPSULATION — Bundle data (state) and methods (behavior) together, and restrict direct access from outside. Use private fields and public getters/setters.
+
+2. ABSTRACTION — Hide complex implementation details and expose only the essential features. A car driver doesn't need to know how the engine works.
+
+3. INHERITANCE — A child class (subclass) inherits properties and methods from a parent class (superclass), promoting code reuse.
+
+4. POLYMORPHISM — Many forms. Objects of different classes can be treated through a common interface, each implementing it differently. Method overriding and method overloading.
+
+Leapfrog interviewers often ask for real-world examples of each.`,
+    },
   ],
   mcqs: [
     {
@@ -1417,6 +2043,44 @@ Analogy:
       correctAnswerIndex: 1,
       explanation: "Inheritance allows a child class to reuse code from a parent (super) class. The child can also override inherited methods to provide specialised behaviour, reducing code duplication.",
     },
+    {
+      id: "mcq-lfo-21",
+      question: "Which database normal form eliminates transitive dependencies?",
+      options: ["1NF", "2NF", "3NF", "BCNF"],
+      correctAnswerIndex: 2,
+      explanation: "3NF (Third Normal Form) requires that all non-key attributes depend ONLY on the primary key, not on other non-key attributes. This eliminates transitive dependencies.",
+    },
+    {
+      id: "mcq-lfo-22",
+      question: "What is the primary purpose of database indexing?",
+      options: [
+        "To enforce data uniqueness",
+        "To speed up data retrieval at the cost of slower writes and more storage",
+        "To encrypt sensitive data",
+        "To compress the database size",
+      ],
+      correctAnswerIndex: 1,
+      explanation: "Indexes create a data structure (usually B-Tree) that allows O(log n) lookups instead of O(n) full table scans. The trade-off is slower INSERT/UPDATE/DELETE operations and additional storage space.",
+    },
+    {
+      id: "mcq-lfo-23",
+      question: "JWT tokens are typically signed using which algorithm family?",
+      options: ["RSA", "HMAC (HS256)", "AES", "MD5"],
+      correctAnswerIndex: 1,
+      explanation: "JWTs are commonly signed with HMAC (HS256) using a shared secret, or with RSA (RS256) using a private/public key pair. HS256 is the most common default for stateless authentication.",
+    },
+    {
+      id: "mcq-lfo-24",
+      question: "Which SOLID principle states that classes should be open for extension but closed for modification?",
+      options: [
+        "Single Responsibility",
+        "Open/Closed",
+        "Liskov Substitution",
+        "Dependency Inversion",
+      ],
+      correctAnswerIndex: 1,
+      explanation: "The Open/Closed Principle (OCP) states that software entities should be open for extension (new behavior can be added) but closed for modification (existing code isn't changed). Achieved via inheritance and interfaces.",
+    },
   ],
 };
 
@@ -1579,6 +2243,104 @@ Key signals for Leapfrog:
   • You used data/reasoning, not authority or emotion.
   • The relationship was preserved.
   • The outcome was better because of the conflict, not despite it.`,
+    },
+    {
+      id: "lfh-q08",
+      q: "Describe a time when your code review feedback was rejected. How did you handle it?",
+      hint: "Professionalism, communication, and willingness to align with team decisions.",
+      answer: `This tests your ego and collaboration skills.
+
+Structure:
+  1. CONTEXT — You suggested a refactor or pattern change in a PR review.
+  2. REJECTION — The author disagreed, citing time pressure or a different approach.
+  3. YOUR RESPONSE — Instead of insisting, you asked clarifying questions:
+     "Can you help me understand the trade-off you see? I'm worried about maintainability."
+  4. RESOLUTION — Either:
+     • You realized their constraint was valid and conceded gracefully.
+     • You found a middle ground that addressed both concerns.
+     • You agreed to revisit in a future sprint.
+  5. LESSON — Code review is about the best solution, not winning arguments. Relationships matter more than being right.
+
+Key signal: You care about the code quality AND the team dynamic.`,
+    },
+    {
+      id: "lfh-q09",
+      q: "How do you handle receiving critical feedback?",
+      hint: "Growth mindset: listen, clarify, improve, learn.",
+      answer: `A strong answer shows emotional maturity and a growth mindset:
+
+1. LISTEN — Don't defend immediately. Let the feedback land. Take notes if needed.
+2. CLARIFY — Ask specific questions to understand exactly what needs improvement.
+   "Can you give me an example of where my code wasn't readable enough?"
+3. IMPLEMENT — Act on the feedback quickly. Show you can change.
+4. FOLLOW UP — After implementing, ask if the improvement met expectations.
+5. LEARN — Extract a principle. "From now on, I'll add comments for complex business logic before the reviewer asks."
+
+Sample:
+  "In my last project, my tech lead said my commit messages were too vague. Instead of feeling attacked,
+  I asked for examples of good ones. I started using the Conventional Commits format (feat:, fix:, refactor:)
+  and he noticed the improvement within a week. Now it's a habit I use on every project."
+
+Avoid: "I don't really get critical feedback" or "I just ignore it if it's not constructive."`,
+    },
+    {
+      id: "lfh-q10",
+      q: "Tell me about a time you failed at something technical. What did you learn?",
+      hint: "Honest ownership, concrete actions, durable lesson learned.",
+      answer: `Leapfrog values genuine self-reflection. A real failure story demonstrates emotional maturity.
+
+Structure:
+  1. THE FAILURE — Be specific and own it fully. No excuses.
+     "I underestimated the complexity of a feature and promised delivery in 2 days. It took 2 weeks."
+  2. IMPACT — How did it affect the team/project?
+     "The QA team had to reschedule their sprint, and the release was delayed."
+  3. IMMEDIATE ACTION — What did you do to fix it?
+     "I broke the feature into smaller tickets, communicated daily updates, and asked for help."
+  4. LONG-TERM CHANGE — What system or habit did you build?
+     "Now I always add a 50% buffer to my estimates and break work down before committing to deadlines."
+
+What NOT to say:
+  • A fake failure ("I worked too hard and got tired").
+  • Blaming others ("The requirements were unclear" — own the communication gap).
+  • A failure with no lesson (shows you don't grow from mistakes).`,
+    },
+    {
+      id: "lfh-q11",
+      q: "How do you stay updated with the latest technology and engineering practices?",
+      hint: "Show genuine curiosity and a learning system, not just random browsing.",
+      answer: `Interviewers want to see a SYSTEM, not just "I read blogs sometimes."
+
+Strong structure:
+  1. CURATED SOURCES — Specific newsletters, YouTube channels, or podcasts.
+     "I subscribe to JavaScript Weekly, read the React changelog, and follow Fireship for quick updates."
+  2. HANDS-ON LEARNING — You actually build things.
+     "When I learn a new concept, I create a small repo to test it. I have a 'experiments' GitHub folder."
+  3. COMMUNITY — You learn from others.
+     "I'm active in the r/technepal community and attend local JS meetups when possible."
+  4. DEEP DIVES — You don't just skim headlines.
+     "For important topics, I read the official docs or spec. For example, when ES2023 array methods came out, I read the TC39 proposal."
+
+Signal: You're self-directed and will keep growing without a manager pushing you.`,
+    },
+    {
+      id: "lfh-q12",
+      q: "What motivates you as a developer?",
+      hint: "Intrinsic motivation: solving problems, impact, craft, growth — not just money.",
+      answer: `A strong answer balances multiple dimensions:
+
+1. PROBLEM-SOLVING — "I love the moment when a complex bug finally makes sense."
+2. USER IMPACT — "Knowing that code I wrote makes someone's day easier is deeply satisfying."
+3. CRAFT — "I care about clean code, good architecture, and writing software that lasts."
+4. GROWTH — "I'm motivated by learning — new languages, patterns, domains."
+5. TEAM — "Building something with smart people who challenge me is energizing."
+
+Sample:
+  "I'm primarily motivated by solving real problems with clean code. At my last internship,
+  I rebuilt a reporting feature that used to take users 5 minutes down to 30 seconds.
+  Seeing the user's reaction in the demo was the highlight of my year.
+  That combination of technical challenge and human impact is what drives me."
+
+Avoid: "Money" or "I just want a job" — even if true, frame it around growth and impact.`,
     },
   ],
   mcqs: [
@@ -1811,6 +2573,54 @@ Key signals for Leapfrog:
       ],
       correctAnswerIndex: 1,
       explanation: "Ending with a clear, confident statement of why THIS role is the right next step bridges your story into the interview. It answers the unspoken interviewer question: 'Why are you here?' — before they have to ask it.",
+    },
+    {
+      id: "mcq-lfh-21",
+      question: "When receiving critical feedback in a previous role, what is the BEST first response?",
+      options: [
+        "Defend your approach immediately",
+        "Listen carefully and ask clarifying questions to understand exactly what needs improvement",
+        "Ignore it if you disagree",
+        "Promise to fix it without understanding the issue",
+      ],
+      correctAnswerIndex: 1,
+      explanation: "The best first response is to listen and clarify. Immediate defense signals ego; blind agreement signals lack of critical thinking. Asking questions shows you want to understand and improve genuinely.",
+    },
+    {
+      id: "mcq-lfh-22",
+      question: "A strong answer to 'What motivates you?' should primarily focus on:",
+      options: [
+        "Salary and benefits",
+        "Solving problems, user impact, craft, and growth — intrinsic motivators",
+        "Working less hours",
+        "Getting promoted quickly",
+      ],
+      correctAnswerIndex: 1,
+      explanation: "While compensation matters, focusing on intrinsic motivators (problem-solving, impact, craft, growth) signals that you'll be engaged and driven even when the work is hard. It shows you care about the work itself.",
+    },
+    {
+      id: "mcq-lfh-23",
+      question: "In a conflict story, using 'I' instead of 'we' is important because:",
+      options: [
+        "It sounds more selfish",
+        "It helps the interviewer assess your individual actions and decision-making",
+        "It makes the story shorter",
+        "It avoids giving credit to others",
+      ],
+      correctAnswerIndex: 1,
+      explanation: "The interviewer is evaluating YOU, not your team. Using 'I' to describe your specific actions, thoughts, and decisions is essential for them to assess your individual contribution and behaviour.",
+    },
+    {
+      id: "mcq-lfh-24",
+      question: "When asked about a time you failed, the failure should be:",
+      options: [
+        "A trivial mistake with no consequences",
+        "A significant technical or professional failure that you owned and learned from",
+        "Something that was mostly someone else's fault",
+        "A success disguised as a failure",
+      ],
+      correctAnswerIndex: 1,
+      explanation: "A meaningful failure that you take full ownership of, combined with concrete recovery actions and lessons learned, demonstrates the emotional maturity and growth mindset that Leapfrog values in Fellowship candidates.",
     },
   ],
 };
@@ -2143,6 +2953,309 @@ Clean commit history (minimum 3-4 commits):
 
 This commit history tells a clear story of progress and is a positive signal.`,
     },
+    {
+      id: "lfr-q09",
+      q: "Build a REST API for a Todo application. What endpoints and status codes are needed?",
+      hint: "CRUD operations with proper HTTP verbs and status codes.",
+      answer: `A minimal REST API for a Todo app needs 4 core endpoints:
+
+GET    /api/todos       → List all todos          → 200 OK
+GET    /api/todos/:id   → Get single todo         → 200 OK or 404 Not Found
+POST   /api/todos       → Create new todo         → 201 Created
+PUT    /api/todos/:id   → Replace entire todo     → 200 OK or 404
+PATCH  /api/todos/:id   → Toggle complete status  → 200 OK or 404
+DELETE /api/todos/:id   → Remove todo             → 204 No Content or 404
+
+Validation:
+  • 400 Bad Request if title is missing or too long.
+  • 500 Internal Server Error for unexpected crashes (always log the error).
+
+Leapfrog expects you to know WHY each status code is used, not just memorized numbers.`,
+      code: `// Express.js Todo API skeleton
+const express = require('express');
+const app = express();
+app.use(express.json());
+
+let todos = [];
+let nextId = 1;
+
+app.get('/api/todos', (req, res) => res.json(todos));
+
+app.post('/api/todos', (req, res) => {
+  const { title } = req.body;
+  if (!title) return res.status(400).json({ error: 'Title is required' });
+  const todo = { id: nextId++, title, completed: false };
+  todos.push(todo);
+  res.status(201).json(todo);
+});
+
+app.patch('/api/todos/:id', (req, res) => {
+  const todo = todos.find(t => t.id === parseInt(req.params.id));
+  if (!todo) return res.status(404).json({ error: 'Not found' });
+  todo.completed = !todo.completed;
+  res.json(todo);
+});
+
+app.delete('/api/todos/:id', (req, res) => {
+  const idx = todos.findIndex(t => t.id === parseInt(req.params.id));
+  if (idx === -1) return res.status(404).json({ error: 'Not found' });
+  todos.splice(idx, 1);
+  res.status(204).send();
+});`,
+    },
+    {
+      id: "lfr-q10",
+      q: "How would you structure a Next.js application for maintainability?",
+      hint: "Folder organization: components, hooks, services, API calls, utilities, feature modules.",
+      answer: `A scalable Next.js folder structure separates concerns by feature or by type:
+
+By feature (recommended for larger apps):
+  src/
+    ├── features/
+    │   ├── todos/
+    │   │   ├── components/      ← TodoList, TodoItem
+    │   │   ├── hooks/           ← useTodos, useAddTodo
+    │   │   ├── services/        ← todoApi.ts (fetch wrappers)
+    │   │   └── types.ts         ← Todo interface
+    │   └── users/
+    ├── components/ui/           ← Shared UI (Button, Input, Modal)
+    ├── lib/                     ← Utilities, helpers, constants
+    ├── hooks/                   ← Shared hooks (useDebounce, useLocalStorage)
+    └── styles/                  ← Global styles, Tailwind config
+
+By type (simpler for small apps):
+  src/
+    ├── components/
+    ├── pages/ or app/           ← Next.js routing
+    ├── hooks/
+    ├── services/ or api/        ← All fetch calls
+    ├── utils/                   ← Helpers
+    └── styles/
+
+Key principles:
+  • Co-locate related files (component + hook + service + test).
+  • Keep shared code in top-level folders.
+  • Never import from a feature's internals from another feature.`,
+    },
+    {
+      id: "lfr-q11",
+      q: "Implement pagination in an API. What query parameters and response shape are standard?",
+      hint: "limit/offset or page/pageSize. Return data array + meta object with total, page, hasNext.",
+      answer: `Standard pagination approaches:
+
+1. OFFSET/LIMIT (simple, but slow on deep pages):
+   GET /api/todos?offset=20&limit=10
+   SQL: SELECT * FROM todos LIMIT 10 OFFSET 20
+
+2. PAGE/PAGE_SIZE (more intuitive for UI):
+   GET /api/todos?page=3&pageSize=10
+   offset = (page - 1) * pageSize
+
+Response shape should include metadata:
+  {
+    "data": [...],
+    "meta": {
+      "total": 100,
+      "page": 3,
+      "pageSize": 10,
+      "totalPages": 10,
+      "hasNext": true,
+      "hasPrev": true
+    }
+  }
+
+Cursor-based pagination (better for real-time feeds):
+  GET /api/todos?cursor=abc123&limit=10
+  Uses an opaque pointer instead of page numbers.`,
+      code: `// Offset/limit pagination in Express
+app.get('/api/todos', (req, res) => {
+  const page = parseInt(req.query.page) || 1;
+  const pageSize = parseInt(req.query.pageSize) || 10;
+  const offset = (page - 1) * pageSize;
+
+  const data = todos.slice(offset, offset + pageSize);
+  res.json({
+    data,
+    meta: {
+      total: todos.length,
+      page,
+      pageSize,
+      totalPages: Math.ceil(todos.length / pageSize),
+      hasNext: offset + pageSize < todos.length,
+      hasPrev: page > 1,
+    },
+  });
+});`,
+    },
+    {
+      id: "lfr-q12",
+      q: "How would you secure a JWT authentication system?",
+      hint: "HTTPS, short-lived access tokens, refresh tokens, secure storage, proper validation.",
+      answer: `JWT security best practices:
+
+1. HTTPS ONLY — Never transmit tokens over HTTP. Use secure cookies or Authorization headers.
+
+2. SHORT-LIVED ACCESS TOKENS — 15 minutes max. Reduces blast radius if stolen.
+
+3. REFRESH TOKENS — Longer-lived (7-30 days), stored in httpOnly, secure, SameSite=strict cookies.
+   Used only to obtain new access tokens. Can be revoked server-side.
+
+4. SECURE STORAGE —
+   • Access token: memory only (React context / variable). Never localStorage.
+   • Refresh token: httpOnly cookie (not accessible to JS).
+
+5. PROPER VALIDATION — Verify signature, issuer (iss), audience (aud), and expiration (exp) on every request.
+
+6. LOGOUT / REVOCATION — Maintain a token blacklist in Redis for immediate revocation.
+
+7. CSRF PROTECTION — If using cookies, implement Double Submit Cookie pattern or CSRF tokens.`,
+      code: `// Secure refresh token cookie setup
+res.cookie('refreshToken', refreshToken, {
+  httpOnly: true,
+  secure: true,        // HTTPS only
+  sameSite: 'strict',  // CSRF protection
+  maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+});`,
+    },
+    {
+      id: "lfr-q13",
+      q: "Write unit tests for a service function. What should you test?",
+      hint: "Happy paths, edge cases, failure scenarios. Mock external dependencies.",
+      answer: `Testing fundamentals for a service function:
+
+1. HAPPY PATH — Normal input produces expected output.
+2. EDGE CASES — Empty arrays, zero values, maximum lengths, null inputs.
+3. FAILURE SCENARIOS — Network errors, invalid arguments, thrown exceptions.
+4. MOCKING — Stub external dependencies (API calls, database) so tests are fast and deterministic.
+
+Structure: Arrange → Act → Assert
+  Arrange: Set up inputs and mocks.
+  Act: Call the function.
+  Assert: Check the result and side effects.
+
+Leapfrog expects Jest familiarity for JS roles.`,
+      code: `// todoService.js
+export const addTodo = (todos, title) => {
+  if (!title || title.trim() === '') throw new Error('Title is required');
+  return [...todos, { id: Date.now(), title: title.trim(), completed: false }];
+};
+
+// todoService.test.js
+import { addTodo } from './todoService';
+
+describe('addTodo', () => {
+  test('adds a todo to the list', () => {
+    const result = addTodo([], 'Learn Jest');
+    expect(result).toHaveLength(1);
+    expect(result[0].title).toBe('Learn Jest');
+    expect(result[0].completed).toBe(false);
+  });
+
+  test('throws on empty title', () => {
+    expect(() => addTodo([], '')).toThrow('Title is required');
+    expect(() => addTodo([], '   ')).toThrow('Title is required');
+  });
+
+  test('trims whitespace from title', () => {
+    const result = addTodo([], '  Test  ');
+    expect(result[0].title).toBe('Test');
+  });
+});`,
+    },
+    {
+      id: "lfr-q14",
+      q: "Review this pull request. What issues would you look for?",
+      hint: "Correctness, readability, maintainability, performance, security, testing, consistency.",
+      answer: `A structured code review checklist:
+
+1. CORRECTNESS — Does it actually work? Are there obvious bugs? Off-by-one errors?
+2. READABILITY — Clear naming? Functions are short and focused? Comments explain WHY?
+3. MAINTAINABILITY — Is it coupled to implementation details? Will it break when requirements change?
+4. PERFORMANCE — Inefficient loops? N+1 queries? Unnecessary re-renders?
+5. SECURITY — SQL injection? XSS vulnerabilities? Hardcoded secrets? Unsafe eval?
+6. TESTING — Are there tests? Do they cover edge cases? Are they deterministic?
+7. CONSISTENCY — Follows project conventions? Same style as surrounding code?
+8. ERROR HANDLING — Are failures handled gracefully? Are users informed appropriately?
+
+Review tone:
+  • Ask questions rather than dictate: "What happens if this array is empty?"
+  • Suggest, don't command: "Consider using a Map here for O(1) lookups."
+  • Praise good parts: "I like how you separated the API layer."`,
+    },
+    {
+      id: "lfr-q15",
+      q: "Build a Tic Tac Toe game in vanilla JavaScript.",
+      hint: "2D array or flat array for board state. Check win conditions after each move.",
+      answer: `Key components for a Tic Tac Toe implementation:
+
+1. STATE — Array of 9 cells: ['', '', '', '', '', '', '', '', ''] or 3x3 matrix.
+2. CURRENT PLAYER — 'X' or 'O', toggled after each valid move.
+3. WIN CHECK — 8 possible winning combinations (3 rows, 3 cols, 2 diagonals).
+4. DRAW CHECK — All 9 cells filled with no winner.
+5. RESET — Clear board and reset current player to 'X'.
+
+What Leapfrog evaluates:
+  • Clean state management (no DOM as source of truth).
+  • Separation of game logic from rendering.
+  • Handling of invalid moves (clicking a filled cell).
+  • UI feedback for win/draw states.`,
+      code: `// tic-tac-toe.js
+const board = Array(9).fill('');
+let currentPlayer = 'X';
+let gameOver = false;
+
+const wins = [
+  [0,1,2], [3,4,5], [6,7,8], // rows
+  [0,3,6], [1,4,7], [2,5,8], // cols
+  [0,4,8], [2,4,6]             // diagonals
+];
+
+function checkWinner() {
+  for (const [a, b, c] of wins) {
+    if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+      return board[a];
+    }
+  }
+  return board.includes('') ? null : 'Draw';
+}
+
+function handleCellClick(index) {
+  if (board[index] || gameOver) return;
+  board[index] = currentPlayer;
+  renderCell(index, currentPlayer);
+
+  const result = checkWinner();
+  if (result) {
+    gameOver = true;
+    renderMessage(result === 'Draw' ? "It's a draw!" : \`\${result} wins!\`);
+    return;
+  }
+  currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+}`,
+    },
+    {
+      id: "lfr-q16",
+      q: "Build a Weather Dashboard that fetches data from a public API and displays it.",
+      hint: "fetch() → parse JSON → display current temp, humidity, wind. Handle errors and loading.",
+      answer: `A Weather Dashboard tests your ability to:
+  • Call an external API (OpenWeatherMap, WeatherAPI)
+  • Parse nested JSON responses
+  • Display multiple data points cleanly
+  • Handle geolocation or city search input
+  • Manage loading, error, and empty states
+
+Architecture:
+  1. Search input for city name (or use navigator.geolocation).
+  2. Fetch weather data from API endpoint.
+  3. Extract and format: temperature, feels_like, humidity, wind_speed, description, icon.
+  4. Render in a card layout.
+  5. Cache recent searches in localStorage for UX improvement.
+
+What to mention in README:
+  • API key management (use .env, never commit keys).
+  • Why you chose the specific weather API.
+  • How you handled the API rate limit.`,
+    },
   ],
   mcqs: [
     {
@@ -2250,7 +3363,7 @@ This commit history tells a clear story of progress and is a positive signal.`,
     },
     {
       id: "mcq-lfr-10",
-      question: "What does an 'empty state' mean in a UI context?",
+      question: "What is an 'empty state' in a UI context?",
       options: [
         "A page with no CSS styling",
         "The state when there is no data to display — e.g. search returns zero results",
@@ -2374,6 +3487,49 @@ This commit history tells a clear story of progress and is a positive signal.`,
       ],
       correctAnswerIndex: 1,
       explanation: "A one-line README signals that documentation wasn't taken seriously. In a professional team, a README is how you communicate intent to colleagues. Leapfrog reviewers consider documentation a core engineering skill, not an optional extra.",
+    },
+    {
+      id: "mcq-lfr-21",
+      question: "Which HTTP status code should be returned when a new Todo is successfully created?",
+      options: ["200 OK", "201 Created", "204 No Content", "400 Bad Request"],
+      correctAnswerIndex: 1,
+      explanation: "201 Created is the standard response for a successful POST request that creates a new resource. 200 is generic success. 204 means success with no body. 400 indicates a client error.",
+    },
+    {
+      id: "mcq-lfr-22",
+      question: "In a Next.js project, where should shared UI components like Button and Input live?",
+      options: [
+        "In the pages/ directory",
+        "In a top-level components/ui/ or shared/ directory",
+        "In the public/ folder",
+        "In node_modules/",
+      ],
+      correctAnswerIndex: 1,
+      explanation: "Shared UI components that are used across multiple features should live in a top-level components/ or shared/ directory, separate from feature-specific components. This promotes reusability and discoverability.",
+    },
+    {
+      id: "mcq-lfr-23",
+      question: "Where should JWT refresh tokens be stored for maximum security in a web app?",
+      options: [
+        "localStorage",
+        "sessionStorage",
+        "httpOnly, secure, SameSite=strict cookie",
+        "IndexedDB",
+      ],
+      correctAnswerIndex: 2,
+      explanation: "Refresh tokens should be stored in httpOnly cookies (not accessible to JavaScript) with secure and SameSite flags. This prevents XSS attacks from stealing them. localStorage is vulnerable to XSS.",
+    },
+    {
+      id: "mcq-lfr-24",
+      question: "What is the primary purpose of unit tests in a Remote Assignment?",
+      options: [
+        "To prove you wrote a lot of code",
+        "To verify that individual functions work correctly for happy paths, edge cases, and failures",
+        "To make the README longer",
+        "To replace the need for manual testing",
+      ],
+      correctAnswerIndex: 1,
+      explanation: "Unit tests demonstrate that you think about edge cases, that your code is testable (well-separated), and that you care about correctness. They signal professional engineering habits beyond just making the UI work.",
     },
   ],
 };
