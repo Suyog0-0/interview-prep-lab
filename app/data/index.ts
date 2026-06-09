@@ -323,6 +323,51 @@ s04_oop.mcqs = oop_mcqs;
 s05_solid.mcqs = solid_mcqs;
 s06_f1soft.mcqs = f1soft_mcqs;
  
+export const leapfrog_coding: InterviewSection = {
+  id: 17,
+  slug: "leapfrog-coding",
+  title: "Coding Exam Prep",
+  subtitle: "Leapfrog specific coding test",
+  color: "#3b82f6",
+  questions: [],
+};
+
+export const leapfrog_virtual: InterviewSection = {
+  id: 18,
+  slug: "leapfrog-virtual",
+  title: "Virtual Interview Prep",
+  subtitle: "Leapfrog 1st round",
+  color: "#3b82f6",
+  questions: [],
+};
+
+export const leapfrog_onsite: InterviewSection = {
+  id: 19,
+  slug: "leapfrog-onsite",
+  title: "On-Site Technical Interview",
+  subtitle: "Leapfrog core technical round",
+  color: "#3b82f6",
+  questions: [],
+};
+
+export const leapfrog_hr: InterviewSection = {
+  id: 20,
+  slug: "leapfrog-hr",
+  title: "HR Interview Prep",
+  subtitle: "Behavioral & Cultural fit",
+  color: "#3b82f6",
+  questions: [],
+};
+
+export const leapfrog_simulation: InterviewSection = {
+  id: 21,
+  slug: "leapfrog-simulation",
+  title: "Interview Simulation",
+  subtitle: "Mock Leapfrog Interview",
+  color: "#3b82f6",
+  questions: [],
+};
+
 export const interviewData: InterviewSection[] = [
   s01_core,
   s02_ds,
@@ -340,4 +385,9 @@ export const interviewData: InterviewSection[] = [
   s14_node,
   s15_problem,
   s06_f1soft,
+  leapfrog_coding,
+  leapfrog_virtual,
+  leapfrog_onsite,
+  leapfrog_hr,
+  leapfrog_simulation,
 ];

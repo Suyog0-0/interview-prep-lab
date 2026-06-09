@@ -26,7 +26,6 @@ import {
   Users,
   Shuffle,
   Building,
-  GitBranch,
 } from "lucide-react";
 import { interviewData } from "./data";
 import { buildQuestionPool } from "./data/simulation";
@@ -67,9 +66,16 @@ const SIDEBAR_GROUPS = [
   {
     key: "f1soft",
     label: "F1Soft Prep",
-    dot: "#10b981",
-    icon: <Building className="w-4 h-4 text-emerald-500" />,
+    dot: "#ef4444",
+    icon: <Building className="w-4 h-4 text-red-500" />,
     slugs: ["f1soft-interview"],
+  },
+  {
+    key: "leapfrog",
+    label: "Leapfrog Prep",
+    dot: "#3b82f6",
+    icon: <Building className="w-4 h-4 text-blue-500" />,
+    slugs: ["leapfrog-coding", "leapfrog-virtual", "leapfrog-onsite", "leapfrog-hr", "leapfrog-simulation"],
   }
 ];
 
@@ -96,6 +102,26 @@ const CopyButton = ({ text }: { text: string }) => {
 };
 
 // ─── VS-Code style code block ──────────────────────────────────
+const syntaxHighlight = (code: string) => {
+  if (!code) return "";
+  let html = code.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+  const regex = /(?<comment>\/\/[^\n]*|\/\*[\s\S]*?\*\/)|(?<string>"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|`(?:[^`\\]|\\.)*`)|(?<keyword>\b(?:const|let|var|function|return|if|else|switch|case|default|break|continue|while|for|class|extends|new|typeof|null|undefined|true|false|abstract|interface|implements|async|await|try|catch|throw|console|this)\b)|(?<func>\b[a-zA-Z_$][a-zA-Z0-9_$]*(?=\s*\())|(?<className>\b[A-Z][a-zA-Z0-9_$]*\b)|(?<number>\b\d+\b)/g;
+
+  html = html.replace(regex, (match, ...args) => {
+    const groups = args[args.length - 1] as Record<string, string>;
+    if (groups.comment) return `<span class="text-[#637777] italic">${groups.comment}</span>`;
+    if (groups.string) return `<span class="text-[#addb67]">${groups.string}</span>`;
+    if (groups.keyword) return `<span class="text-[#c792ea] italic">${groups.keyword}</span>`;
+    if (groups.func) return `<span class="text-[#82aaff]">${groups.func}</span>`;
+    if (groups.className) return `<span class="text-[#ffcb6b]">${groups.className}</span>`;
+    if (groups.number) return `<span class="text-[#f78c6c]">${groups.number}</span>`;
+    return match;
+  });
+
+  return html;
+};
+
 const CodeBlock = ({ code, language = "javascript" }: { code: string; language?: string }) => {
   const lines = code.trim().split("\n");
   return (
@@ -118,13 +144,153 @@ const CodeBlock = ({ code, language = "javascript" }: { code: string; language?:
             <div key={idx} className="h-5 text-[11px] leading-5">{idx + 1}</div>
           ))}
         </div>
-        <pre className="pl-4 pr-6 overflow-visible select-text w-full m-0 bg-transparent border-0 font-mono text-[13px] leading-5 whitespace-pre text-[#addb67]">
-          <code>{code.trim()}</code>
+        <pre className="pl-4 pr-6 overflow-visible select-text w-full m-0 bg-transparent border-0 font-mono text-[13px] leading-5 whitespace-pre text-[#d6deeb]">
+          <code dangerouslySetInnerHTML={{ __html: syntaxHighlight(code.trim()) }} />
         </pre>
       </div>
     </div>
   );
 };
+
+// ─── Diagram Renderer ────────────────────────────────────────
+function DiagramRenderer({ diagram }: { diagram: string }) {
+  const renderLine = (line: string, lineIdx: number) => {
+    const tokens: { text: string; cls: string }[] = [];
+    let i = 0;
+
+    while (i < line.length) {
+      // [Box label]
+      if (line[i] === "[") {
+        const end = line.indexOf("]", i);
+        if (end !== -1) {
+          tokens.push({ text: line.slice(i, end + 1), cls: "text-cyan-300 font-bold" });
+          i = end + 1;
+          continue;
+        }
+      }
+      // (parenthetical note)
+      if (line[i] === "(") {
+        const end = line.indexOf(")", i);
+        if (end !== -1) {
+          tokens.push({ text: line.slice(i, end + 1), cls: "text-amber-300/90 italic" });
+          i = end + 1;
+          continue;
+        }
+      }
+      // Arrows: <---, --->, <-->, <=, =>
+      const arrowRight = line.slice(i).match(/^(=+>|-+>)/);
+      const arrowLeft  = line.slice(i).match(/^(<-+|<=+)/);
+      const arrowBoth  = line.slice(i).match(/^(<-+>|<=-*>)/);
+      const arrowMatch = arrowBoth || arrowRight || arrowLeft;
+      if (arrowMatch) {
+        tokens.push({ text: arrowMatch[0], cls: "text-orange-400 font-bold" });
+        i += arrowMatch[0].length;
+        continue;
+      }
+      // Dashes standalone (connection lines)
+      const dashMatch = line.slice(i).match(/^(-{2,})/);
+      if (dashMatch) {
+        tokens.push({ text: dashMatch[0], cls: "text-zinc-500" });
+        i += dashMatch[0].length;
+        continue;
+      }
+      // Equals standalone
+      const eqMatch = line.slice(i).match(/^(={2,})/);
+      if (eqMatch) {
+        tokens.push({ text: eqMatch[0], cls: "text-zinc-600" });
+        i += eqMatch[0].length;
+        continue;
+      }
+      // Pipe / caret / v connector
+      if (line[i] === "|" || line[i] === "^" || line[i] === "v") {
+        tokens.push({ text: line[i], cls: "text-violet-400 font-bold" });
+        i++;
+        continue;
+      }
+      // Collect plain text until next special char
+      let text = "";
+      while (
+        i < line.length &&
+        line[i] !== "[" &&
+        line[i] !== "(" &&
+        line[i] !== "|" &&
+        line[i] !== "^" &&
+        !(line[i] === "-" && line[i + 1] === "-") &&
+        !(line[i] === "=" && line[i + 1] === "=") &&
+        !(line[i] === "<" && (line[i + 1] === "-" || line[i + 1] === "="))
+      ) {
+        // stop at `v` only if isolated (surrounded by spaces or start/end)
+        if (line[i] === "v" && (i === 0 || line[i - 1] === " ") && (i === line.length - 1 || line[i + 1] === " " || line[i + 1] === "\n")) break;
+        text += line[i];
+        i++;
+      }
+      if (text) {
+        // Highlight ALL-CAPS labels differently
+        if (/^[A-Z][A-Z\s/\\&]+$/.test(text.trim()) && text.trim().length > 1) {
+          tokens.push({ text, cls: "text-emerald-400/80 font-semibold" });
+        } else {
+          tokens.push({ text, cls: "text-zinc-300" });
+        }
+      }
+    }
+
+    return (
+      <div key={lineIdx} className="leading-7 whitespace-pre">
+        {tokens.map((tok, ti) => (
+          <span key={ti} className={tok.cls}>{tok.text}</span>
+        ))}
+      </div>
+    );
+  };
+
+  return (
+    <div className="mt-6 rounded-xl overflow-hidden border border-violet-500/20 bg-[#06060f] shadow-[0_0_40px_rgba(139,92,246,0.07)]">
+      {/* Window chrome */}
+      <div className="flex items-center justify-between px-4 py-2.5 bg-violet-500/5 border-b border-violet-500/10">
+        <div className="flex items-center gap-2">
+          <div className="flex gap-1.5">
+            <div className="w-2.5 h-2.5 rounded-full bg-red-500/60" />
+            <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/60" />
+            <div className="w-2.5 h-2.5 rounded-full bg-green-500/60" />
+          </div>
+          <span className="ml-2 text-[10px] font-mono uppercase tracking-widest text-violet-400/60">Flow Diagram</span>
+        </div>
+        <div className="flex items-center gap-1.5">
+          <span className="w-1.5 h-1.5 rounded-full bg-cyan-400/50" /><span className="text-[9px] font-mono text-zinc-600">[  ] = Node</span>
+          <span className="ml-2 text-orange-400/60 text-[10px] font-mono">→</span><span className="text-[9px] font-mono text-zinc-600">Flow</span>
+          <span className="ml-2 text-violet-400/60 font-bold text-[10px] font-mono">|</span><span className="text-[9px] font-mono text-zinc-600">Link</span>
+        </div>
+      </div>
+      {/* Grid background + content */}
+      <div
+        className="relative p-5 overflow-x-auto"
+        style={{
+          backgroundImage:
+            "radial-gradient(circle at 1px 1px, rgba(139,92,246,0.06) 1px, transparent 0)",
+          backgroundSize: "24px 24px",
+        }}
+      >
+        <div className="font-mono text-[13px] min-w-max">
+          {diagram.split("\n").map(renderLine)}
+        </div>
+      </div>
+      {/* Legend row */}
+      <div className="px-4 py-2 border-t border-violet-500/10 bg-zinc-950/60 flex items-center gap-4 flex-wrap">
+        {[
+          { dot: "bg-cyan-400",   label: "Nodes / Boxes" },
+          { dot: "bg-orange-400", label: "Arrows / Flow" },
+          { dot: "bg-violet-400", label: "Connectors" },
+          { dot: "bg-amber-400",  label: "Notes" },
+        ].map(({ dot, label }) => (
+          <div key={label} className="flex items-center gap-1.5">
+            <div className={`w-2 h-2 rounded-full ${dot}/70`} />
+            <span className="text-[9px] font-mono text-zinc-600 uppercase tracking-wider">{label}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 // ─── Section stats helper ──────────────────────────────────────
 function getSectionStats(
@@ -1134,8 +1300,9 @@ export default function Home() {
                 </button>
                 {(() => {
                   const isF1SoftMock = activeSection.slug.startsWith("f1soft-");
+                  const isLeapfrogMock = activeSection.slug.startsWith("leapfrog-");
                   const isProblemMock = activeSection.slug === "problem-solving";
-                  if (!isF1SoftMock && !isProblemMock) return null;
+                  if (!isF1SoftMock && !isLeapfrogMock && !isProblemMock) return null;
 
                   return (
                     <button
@@ -1156,7 +1323,7 @@ export default function Home() {
                 <div className="animate-fade-up">
                   <SimulationView 
                     onExit={() => setViewMode("flashcards")} 
-                    initialRound={activeSection.slug.startsWith("f1soft-") ? "f1soft" : "hr"} 
+                    initialRound={activeSection.slug.startsWith("f1soft-") ? "f1soft" : activeSection.slug.startsWith("leapfrog-") ? "leapfrog" : "hr"} 
                   />
                 </div>
               )}
@@ -1259,14 +1426,7 @@ export default function Home() {
                                   </div>
 
                                   {q.diagram && (
-                                    <div className="mt-6 p-5 rounded-xl bg-[#09090b] border border-zinc-800/80 overflow-x-auto shadow-inner">
-                                      <div className="text-[10px] font-mono uppercase tracking-widest text-zinc-500 mb-3 flex items-center gap-2">
-                                        <GitBranch className="w-3 h-3 text-violet-400" /> Process Flow
-                                      </div>
-                                      <pre className="text-[12px] sm:text-[13px] font-mono text-zinc-300 leading-snug min-w-max selection:bg-violet-500/30">
-                                        {q.diagram}
-                                      </pre>
-                                    </div>
+                                    <DiagramRenderer diagram={q.diagram} />
                                   )}
 
                                   {q.code && (

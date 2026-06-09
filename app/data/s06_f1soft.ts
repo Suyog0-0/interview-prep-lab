@@ -1,6 +1,6 @@
-import type { InterviewSection } from "../../types";
+import type { InterviewSection, InterviewQuestion } from "../../types";
 
-const allQuestions = [
+const allQuestions: InterviewQuestion[] = [
     // ── SECTION A: JavaScript / Core ──────────────────────────────
     {
       id: "f1-q01",
@@ -42,6 +42,19 @@ console.log('D');
       hint: "Scope, hoisting, re-assignment.",
       answer:
         "var: function-scoped, hoisted (initialized as undefined), can be re-declared and re-assigned.\nlet: block-scoped, hoisted but NOT initialized (temporal dead zone), can be re-assigned but not re-declared.\nconst: block-scoped, hoisted but NOT initialized, CANNOT be re-assigned or re-declared. Object properties can still change.\n\nBest practice: use const by default, let when re-assignment is needed, avoid var.",
+      code: `// var: function scoped, hoisted
+var name = "eSewa"; 
+name = "Khalti"; // re-assigned
+
+// let: block scoped, not initialized
+let amount = 1000;
+amount = 500; // re-assigned
+
+// const: block scoped, cannot re-assign
+const user = { id: 1 };
+user.id = 2; // Allowed (property mutation)
+// user = { id: 3 }; // TypeError`,
+      language: "javascript",
     },
     {
       id: "f1-q04",
@@ -69,6 +82,15 @@ c.value();     // 2`,
       hint: "Type coercion vs strict equality.",
       answer:
         '== performs type coercion before comparing. === checks value AND type without coercion.\n\nExamples:\n0 == false   → true  (false coerced to 0)\n0 === false  → false (different types)\nnull == undefined  → true\nnull === undefined → false\n"5" == 5     → true\n"5" === 5    → false\n\nAlways use === in production code to avoid subtle bugs. F1Soft\'s fintech apps handle money — type coercion bugs can be dangerous.',
+      code: `console.log(0 == false);    // true (coerced)
+console.log(0 === false);   // false (different types)
+
+console.log(null == undefined);  // true
+console.log(null === undefined); // false
+
+console.log("5" == 5);      // true
+console.log("5" === 5);     // false`,
+      language: "javascript",
     },
     {
       id: "f1-q06",
@@ -100,6 +122,15 @@ async function getUser() {
       hint: "One is intentional absence, the other is uninitialized.",
       answer:
         "undefined: a variable declared but never assigned. Also returned by functions with no return statement, or accessing non-existent object properties.\n\nnull: explicitly set by a developer to represent 'intentionally empty'. Typeof null returns 'object' (historical JS bug).\n\nnull == undefined → true (loose equality)\nnull === undefined → false (strict equality)\n\nUse null when YOU want to say 'no value here'. JavaScript uses undefined when it doesn't know what value to give.",
+      code: `let balance;
+console.log(balance); // undefined (not initialized)
+
+const transaction = { id: 123, amount: null };
+console.log(transaction.amount); // null (intentionally empty)
+
+function doNothing() {}
+console.log(doNothing()); // undefined (default return)`,
+      language: "javascript",
     },
     {
       id: "f1-q08",
@@ -107,6 +138,18 @@ async function getUser() {
       hint: "Declarations are moved to top of scope before execution.",
       answer:
         "Hoisting is JavaScript's behavior of moving declarations (not initializations) to the top of their scope before code runs.\n\nvar: hoisted AND initialized to undefined.\nlet/const: hoisted but NOT initialized → accessing before declaration throws ReferenceError (Temporal Dead Zone).\nFunction declarations: fully hoisted — you can call them before they appear.\nFunction expressions (const fn = function(){}): NOT hoisted.\n\nExample: console.log(x); var x = 5; → logs undefined (not error).",
+      code: `console.log(a); // undefined (hoisted, initialized)
+var a = 5;
+
+// console.log(b); // ReferenceError: Cannot access 'b' before initialization
+let b = 10;
+
+hello(); // "Hi" (fully hoisted)
+function hello() { console.log("Hi"); }
+
+// world(); // TypeError: world is not a function
+var world = function() { console.log("World"); };`,
+      language: "javascript",
     },
     {
       id: "f1-q09",
@@ -147,6 +190,16 @@ document.querySelector('ul').addEventListener('click', e => {
       hint: "S-O-L-I-D: five design principles for clean, maintainable OOP code.",
       answer:
         "S — Single Responsibility: A class/function should have only ONE reason to change.\n  Example: UserService handles users, EmailService handles emails — never one class doing both.\n\nO — Open/Closed: Open for extension, closed for modification. Add new features by adding new code, not editing old code.\n  Example: Use a payment strategy interface — add new payment methods without touching existing ones.\n\nL — Liskov Substitution: Subclasses must be usable wherever the parent is used without breaking behavior.\n  Example: If Bird has a fly() method, Penguin should NOT extend Bird since penguins don't fly.\n\nI — Interface Segregation: Don't force classes to implement interfaces they don't use. Split fat interfaces.\n  Example: Separate Printable, Scannable, Faxable instead of one big OfficeMachine interface.\n\nD — Dependency Inversion: High-level modules should depend on abstractions, not concrete implementations.\n  Example: OrderService should depend on a PaymentGateway interface, not directly on eSewa or Khalti class.",
+      code: `// S - Single Responsibility
+class UserAuth { login() {} }
+class UserEmail { sendWelcome() {} }
+
+// O - Open/Closed
+class Payment { pay(method) { method.process(); } }
+
+// D - Dependency Inversion
+// OrderService depends on PaymentGateway abstraction, not a concrete class`,
+      language: "javascript",
     },
     {
       id: "f1-q12",
@@ -154,6 +207,19 @@ document.querySelector('ul').addEventListener('click', e => {
       hint: "APIE — Abstraction, Polymorphism, Inheritance, Encapsulation.",
       answer:
         "Abstraction: Hide complexity, show only what's needed. In eSewa, you call pay(amount) without knowing the bank API internals.\n\nPolymorphism: Same method, different behaviors. pay() on EsewaGateway, KhaltiGateway, and ConnectIPSGateway all work differently but share the same interface.\n\nInheritance: Child class extends parent. DigitalWallet extends PaymentMethod — gets base methods like validate() but overrides processPayment().\n\nEncapsulation: Bundle data + methods, restrict access. A Wallet class hides the internal balance and exposes only deposit(), withdraw(), getBalance(). Direct balance mutation is prevented.",
+      code: `// Encapsulation
+class Account {
+  #balance = 0;
+  deposit(amount) { this.#balance += amount; }
+  getBalance() { return this.#balance; }
+}
+
+// Inheritance & Polymorphism
+class Payment { process() { console.log("Processing..."); } }
+class EsewaPayment extends Payment {
+  process() { console.log("Processing via eSewa..."); } // Override
+}`,
+      language: "javascript",
     },
     {
       id: "f1-q13",
@@ -161,6 +227,17 @@ document.querySelector('ul').addEventListener('click', e => {
       hint: "Abstract class = partial blueprint. Interface = pure contract.",
       answer:
         "Abstract class:\n- Can have both implemented and abstract (unimplemented) methods.\n- Can have constructors, state (fields).\n- A class can extend only ONE abstract class.\n- Use when classes share code AND a common contract.\n\nInterface:\n- Pure contract — only method signatures, no implementation (in most languages).\n- A class can implement MULTIPLE interfaces.\n- Use when unrelated classes need to share a capability.\n\nIn TypeScript/Java: PaymentGateway is an interface (shared by eSewa, Khalti, bank). BasePaymentProvider is an abstract class (shared retry logic, but payment differs).",
+      code: `// Interface (Contract only)
+interface PaymentGateway {
+  pay(amount: number): boolean;
+}
+
+// Abstract Class (Contract + Shared logic)
+abstract class BaseProvider {
+  logTransaction() { console.log("Logged"); }
+  abstract process(): void; // Must be implemented by child
+}`,
+      language: "typescript",
     },
     {
       id: "f1-q14",
@@ -168,6 +245,19 @@ document.querySelector('ul').addEventListener('click', e => {
       hint: "Overriding = child redefines parent method. Overloading = same name, different params.",
       answer:
         "Method Overriding: A subclass redefines a method that already exists in the parent class. Same name, same signature. Used for runtime polymorphism.\n  Example: Dog.speak() overrides Animal.speak()\n\nMethod Overloading: Same method name but different parameters (number or types). Resolved at COMPILE time. JavaScript doesn't natively support overloading — simulate it with default params or rest args.\n\nJava supports both. JavaScript only supports overriding natively.",
+      code: `class Animal { speak() { return "Sound"; } }
+
+class Dog extends Animal {
+  // Method Overriding
+  speak() { return "Woof!"; }
+}
+
+// Simulating Method Overloading in JS
+function processPayment(amount, method = "Cash") {
+  if (method === "Cash") { /*...*/ }
+  else { /*...*/ }
+}`,
+      language: "javascript",
     },
     {
       id: "f1-q15",
