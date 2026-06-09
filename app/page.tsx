@@ -26,9 +26,17 @@ import {
   Users,
   Shuffle,
   Building,
+  Calendar,
+  Link as LinkIcon,
+  MessageSquare,
+  ExternalLink,
 } from "lucide-react";
 import { interviewData } from "./data";
 import { buildQuestionPool } from "./data/simulation";
+import {
+  rhythmTips, prepWeeks, priorityProblems, jsTheoryQuestions,
+  prepStages, smartQuestions, prepResources,
+} from "./data/leapfrog_prep_data";
 import type { InterviewSection, InterviewQuestion, MCQQuestion, SimRound, SimRating, SimulationQuestion } from "../types";
 
 type ViewMode = "flashcards" | "mcqs" | "notes" | "simulation";
@@ -37,8 +45,16 @@ type SimPhase = "setup" | "interview" | "result";
 // ─── Option letter badge ───────────────────────────────────────
 const LETTERS = ["A", "B", "C", "D"];
 
+type SidebarSlug = string | { label: string; slugs: string[] };
+
 // ─── Sidebar groups ────────────────────────────────────────────
-const SIDEBAR_GROUPS = [
+const SIDEBAR_GROUPS: {
+  key: string;
+  label: string;
+  dot?: string;
+  icon?: React.ReactNode;
+  slugs: SidebarSlug[];
+}[] = [
   {
     key: "fundamentals",
     label: "Fundamentals",
@@ -75,7 +91,16 @@ const SIDEBAR_GROUPS = [
     label: "Leapfrog Prep",
     dot: "#3b82f6",
     icon: <Building className="w-4 h-4 text-blue-500" />,
-    slugs: ["leapfrog-coding", "leapfrog-virtual", "leapfrog-onsite", "leapfrog-hr", "leapfrog-simulation"],
+    slugs: [
+      {
+        label: "Overall Prep Schedule",
+        slugs: [
+          "leapfrog-overall",
+          ...Array.from({ length: 21 }, (_, i) => `leapfrog-overall-day-${i + 1}`)
+        ]
+      },
+      "leapfrog-coding", "leapfrog-virtual", "leapfrog-onsite", "leapfrog-hr", "leapfrog-simulation"
+    ],
   }
 ];
 
@@ -807,6 +832,230 @@ function SimulationView({ onExit, initialRound }: { onExit: () => void; initialR
 }
 
 // ══════════════════════════════════════════════════════════════
+function LeapfrogOverallPrepView() {
+  return (
+    <div className="space-y-12 animate-fade-up max-w-5xl mx-auto pb-32">
+      {/* Header */}
+      <div className="text-center space-y-4 mb-12">
+        <h1 className="text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">
+          Leapfrog Interview Prep Schedule
+        </h1>
+        <p className="text-lg text-zinc-400 font-mono">3-Week Intensive Plan</p>
+      </div>
+
+      {/* Rhythm Tips */}
+      <section>
+        <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
+          <Zap className="w-5 h-5 text-amber-400" /> Daily Rhythm Tips
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {rhythmTips.map(tip => (
+            <div key={tip.num} className="p-4 rounded-xl bg-zinc-900/50 border border-zinc-800 hover:border-amber-500/30 transition-all">
+              <div className="text-amber-500 font-mono text-xs font-bold mb-2">TIP {tip.num}</div>
+              <h3 className="text-zinc-200 font-bold mb-2">{tip.title}</h3>
+              <p className="text-sm text-zinc-400 leading-relaxed">{tip.body}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* 3-Week Schedule */}
+      <section className="space-y-8">
+        <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
+          <Calendar className="w-5 h-5 text-blue-400" /> The 3-Week Schedule
+        </h2>
+        {prepWeeks.map(week => (
+          <div key={week.weekNum} className="space-y-6">
+            <div className="p-4 rounded-xl bg-blue-500/10 border border-blue-500/20">
+              <h3 className="text-xl font-bold text-blue-400">Week {week.weekNum} <span className="text-zinc-500 text-sm ml-2 font-mono">{week.dates}</span></h3>
+              <p className="text-blue-300 mt-1">{week.focus}</p>
+            </div>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 pl-0 md:pl-4">
+              {week.days.map(day => (
+                <div key={day.dayNum} className="p-5 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-zinc-700 transition-all">
+                  <div className="flex items-center justify-between mb-3 pb-3 border-b border-zinc-800/50">
+                    <span className="text-white font-bold">{day.label}</span>
+                    <span className="text-xs font-mono px-2 py-1 bg-zinc-800 text-zinc-400 rounded">Day {day.dayNum}</span>
+                  </div>
+                  <div className="text-sm text-blue-400 font-medium mb-4">{day.topic}</div>
+                  <div className="space-y-3">
+                    {day.blocks.map((block, i) => (
+                      <div key={i} className="flex items-start gap-3 text-sm">
+                        <span className="text-zinc-500 font-mono whitespace-nowrap w-24 flex-shrink-0">{block.time}</span>
+                        <span className="text-zinc-300 leading-relaxed">{block.task} <span className="ml-2 text-[9px] px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-500 font-mono uppercase">{block.tag}</span></span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </section>
+
+      {/* Priority Problems & Theory */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <section>
+          <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+            <Code2 className="w-5 h-5 text-emerald-400" /> Top 15 Priority Problems
+          </h2>
+          <div className="bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden">
+            {priorityProblems.map(p => (
+              <div key={p.num} className="flex items-center justify-between p-3 border-b border-zinc-800/50 hover:bg-zinc-800/30 transition-colors last:border-0">
+                <span className="text-zinc-300 text-sm"><span className="text-zinc-500 font-mono w-6 inline-block">{p.num}.</span> {p.problem}</span>
+                <span className="text-[10px] font-mono px-2 py-1 rounded bg-zinc-950 text-zinc-500">{p.platform}</span>
+              </div>
+            ))}
+          </div>
+        </section>
+        
+        <section>
+          <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+            <BookOpen className="w-5 h-5 text-purple-400" /> JS Theory Questions
+          </h2>
+          <div className="bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden p-2">
+            {jsTheoryQuestions.map((q, i) => (
+              <div key={i} className="flex items-start gap-3 p-2 hover:bg-zinc-800/30 rounded transition-colors">
+                <div className="w-5 h-5 rounded bg-purple-500/10 text-purple-400 flex items-center justify-center text-xs font-mono flex-shrink-0 mt-0.5">{i+1}</div>
+                <span className="text-zinc-300 text-sm leading-relaxed">{q}</span>
+              </div>
+            ))}
+          </div>
+        </section>
+      </div>
+
+      {/* Stages & Questions */}
+      <section>
+        <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
+          <Target className="w-5 h-5 text-rose-400" /> Interview Prep Stages
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {prepStages.map(stage => (
+            <div key={stage.num} className="p-5 rounded-xl bg-zinc-900 border border-zinc-800 relative overflow-hidden group">
+              <div className="absolute top-0 right-0 w-16 h-16 bg-rose-500/5 rounded-bl-full -mr-8 -mt-8 transition-transform group-hover:scale-150" />
+              <div className="text-rose-500 font-mono text-xs font-bold mb-2 uppercase tracking-wider">Stage {stage.num}</div>
+              <h3 className="text-white font-bold mb-4">{stage.title}</h3>
+              <ul className="space-y-2">
+                {stage.bullets.map((b, i) => (
+                  <li key={i} className="text-sm text-zinc-400 flex items-start gap-2">
+                    <span className="text-rose-500/50 mt-1">•</span>
+                    <span className="leading-relaxed">{b}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Resources & Smart Questions */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <section>
+          <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+            <MessageSquare className="w-5 h-5 text-indigo-400" /> Questions for Leapfrog
+          </h2>
+          <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4 space-y-3">
+            {smartQuestions.map((q, i) => (
+              <div key={i} className="text-sm text-zinc-300 bg-zinc-950 p-3 rounded-lg border border-zinc-800/50">
+                {q}
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section>
+          <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+            <LinkIcon className="w-5 h-5 text-teal-400" /> Resources
+          </h2>
+          <div className="space-y-3">
+            {prepResources.map((r, i) => (
+              <a key={i} href={r.url} target="_blank" rel="noopener noreferrer" className="block p-4 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-teal-500/30 transition-all group">
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-white font-medium group-hover:text-teal-400 transition-colors">{r.title}</span>
+                  <ExternalLink className="w-4 h-4 text-zinc-600 group-hover:text-teal-400 transition-colors" />
+                </div>
+                <div className="text-xs text-zinc-500">{r.description}</div>
+              </a>
+            ))}
+          </div>
+        </section>
+      </div>
+
+    </div>
+  );
+}
+// ══════════════════════════════════════════════════════════════
+function LeapfrogDayPrepView({ dayNum }: { dayNum: number }) {
+  // Find the day data
+  let targetDay = null;
+  let targetWeekNum = 0;
+  for (const week of prepWeeks) {
+    const day = week.days.find(d => d.dayNum === dayNum);
+    if (day) {
+      targetDay = day;
+      targetWeekNum = week.weekNum;
+      break;
+    }
+  }
+
+  if (!targetDay) return null;
+
+  return (
+    <div className="space-y-8 animate-fade-up max-w-4xl pb-32">
+      <div className="breadcrumb mb-2 text-zinc-500">Leapfrog Prep / Overall Prep Schedule / <span className="text-zinc-300">Day {dayNum}</span></div>
+      
+      <div className="mb-6 p-6 rounded-2xl bg-zinc-950/60 border border-zinc-900 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-transparent pointer-events-none" />
+        
+        <div className="text-[11px] font-mono text-blue-500 uppercase tracking-widest mb-2 flex items-center gap-2">
+          <Calendar className="w-3 h-3" /> Week {targetWeekNum} · {targetDay.label}
+        </div>
+        
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight mb-2">Day {targetDay.dayNum}: {targetDay.topic.split('—')[0].trim()}</h1>
+        <p className="text-zinc-400 text-sm leading-relaxed max-w-2xl">{targetDay.topic.split('—')[1]?.trim() || targetDay.topic}</p>
+      </div>
+
+      <section>
+        <h2 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
+          <Target className="w-5 h-5 text-emerald-400" /> Today's Schedule
+        </h2>
+        <div className="space-y-4">
+          {targetDay.blocks.map((block, i) => (
+            <div key={i} className="p-4 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-zinc-700 transition-all flex flex-col sm:flex-row sm:items-start gap-3 sm:gap-6">
+              <div className="text-zinc-500 font-mono text-sm whitespace-nowrap sm:w-28 flex-shrink-0 flex items-center sm:items-start gap-2">
+                <div className="w-1.5 h-1.5 rounded-full bg-blue-500 mt-1.5" />
+                {block.time}
+              </div>
+              <div className="flex-1">
+                <p className="text-zinc-200 leading-relaxed mb-2">{block.task}</p>
+                <span className={`text-[10px] px-2 py-0.5 rounded font-mono uppercase tracking-wider ${
+                  block.tag === "JS" ? "bg-yellow-500/10 text-yellow-500 border border-yellow-500/20" :
+                  block.tag === "DSA" ? "bg-red-500/10 text-red-500 border border-red-500/20" :
+                  block.tag === "PROJECT" ? "bg-emerald-500/10 text-emerald-500 border border-emerald-500/20" :
+                  block.tag === "REVIEW" ? "bg-purple-500/10 text-purple-500 border border-purple-500/20" :
+                  block.tag === "INTERVIEW" ? "bg-orange-500/10 text-orange-500 border border-orange-500/20" :
+                  "bg-zinc-800 text-zinc-400 border border-zinc-700"
+                }`}>
+                  {block.tag}
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <div className="p-5 rounded-xl bg-zinc-900/50 border border-amber-500/20 flex items-start gap-4">
+        <Lightbulb className="w-6 h-6 text-amber-500 flex-shrink-0" />
+        <div>
+          <h3 className="text-zinc-200 font-bold mb-1">Remember the Rhythm</h3>
+          <p className="text-sm text-zinc-400 leading-relaxed">Study 50 minutes, break 10 minutes. For every DSA problem, write your approach in plain language first. Solve every problem out loud, as if someone is watching.</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ══════════════════════════════════════════════════════════════
 export default function Home() {
   // -1 = interview simulation, 0 = dashboard, >0 = module section
   const [activeSectionId, setActiveSectionId] = useState<number>(0);
@@ -902,7 +1151,6 @@ export default function Home() {
 
   // ── Sidebar group render helper ────────────────────────────
   const renderSidebarGroup = (group: typeof SIDEBAR_GROUPS[0]) => {
-    const modules = interviewData.filter((sec) => group.slugs.includes(sec.slug));
     const isOpen = !sidebarCollapsed[group.key];
 
     return (
@@ -928,28 +1176,75 @@ export default function Home() {
 
         {isOpen && (
           <div className="nav-group-children space-y-0.5 mt-1">
-            {modules.map((sec) => {
-              const isActive = activeSectionId === sec.id && !searchQuery;
-              return (
-                <button
-                  key={sec.id}
-                  onClick={() => handleNav(sec.id)}
-                  className={`w-full text-left px-3 py-1.5 rounded text-[12.5px] transition-all flex items-center gap-2 group/item ${
-                    isActive
-                      ? "text-orange-400 font-semibold bg-zinc-900/80"
-                      : "text-zinc-500 hover:text-zinc-200 hover:bg-zinc-900/30"
-                  }`}
-                >
-                  <span
-                    className="w-1 h-1 rounded-full shrink-0 transition-all"
-                    style={{
-                      background: isActive ? group.dot : "#3f3f46",
-                      boxShadow: isActive ? `0 0 6px ${group.dot}` : "none",
-                    }}
-                  />
-                  <span className="truncate">{sec.title}</span>
-                </button>
-              );
+            {group.slugs.map((slugItem, idx) => {
+              if (typeof slugItem === "string") {
+                const sec = interviewData.find(s => s.slug === slugItem);
+                if (!sec) return null;
+                const isActive = activeSectionId === sec.id && !searchQuery;
+                return (
+                  <button
+                    key={sec.id}
+                    onClick={() => handleNav(sec.id)}
+                    className={`w-full text-left px-3 py-1.5 rounded text-[12.5px] transition-all flex items-center gap-2 group/item ${
+                      isActive
+                        ? "text-orange-400 font-semibold bg-zinc-900/80"
+                        : "text-zinc-500 hover:text-zinc-200 hover:bg-zinc-900/30"
+                    }`}
+                  >
+                    <span
+                      className="w-1 h-1 rounded-full shrink-0 transition-all"
+                      style={{
+                        background: isActive ? group.dot : "#3f3f46",
+                        boxShadow: isActive ? `0 0 6px ${group.dot}` : "none",
+                      }}
+                    />
+                    <span className="truncate">{sec.title}</span>
+                  </button>
+                );
+              } else {
+                const nestedKey = `${group.key}-nested-${idx}`;
+                const nestedIsOpen = !sidebarCollapsed[nestedKey];
+                return (
+                  <div key={nestedKey} className="pt-1 pb-1">
+                    <button
+                      onClick={() => toggleGroup(nestedKey)}
+                      className="w-full text-left px-3 py-1.5 rounded flex items-center justify-between group/nested hover:bg-zinc-900/50 transition-colors"
+                      aria-expanded={nestedIsOpen}
+                    >
+                      <div className="flex items-center gap-2">
+                        <span className="w-1 h-1 rounded-full bg-zinc-700 shrink-0" />
+                        <span className="text-[12px] font-semibold text-zinc-400 group-hover/nested:text-zinc-300">{slugItem.label}</span>
+                      </div>
+                      <ChevronDown
+                        className="w-3 h-3 text-zinc-500 transition-transform duration-200"
+                        style={{ transform: nestedIsOpen ? "rotate(0deg)" : "rotate(-90deg)" }}
+                      />
+                    </button>
+                    {nestedIsOpen && (
+                      <div className="pl-4 mt-0.5 space-y-0.5 border-l border-zinc-800/30 ml-3.5">
+                        {slugItem.slugs.map(subSlug => {
+                          const sec = interviewData.find(s => s.slug === subSlug);
+                          if (!sec) return null;
+                          const isActive = activeSectionId === sec.id && !searchQuery;
+                          return (
+                            <button
+                              key={sec.id}
+                              onClick={() => handleNav(sec.id)}
+                              className={`w-full text-left px-3 py-1.5 rounded text-[11.5px] transition-all flex items-center gap-2 ${
+                                isActive
+                                  ? "text-orange-400 font-semibold bg-zinc-900/80"
+                                  : "text-zinc-500 hover:text-zinc-300 hover:bg-zinc-900/30"
+                              }`}
+                            >
+                              <span className="truncate">{sec.title}</span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                );
+              }
             })}
           </div>
         )}
@@ -1224,6 +1519,10 @@ export default function Home() {
               </div>
             </section>
 
+          ) : activeSection?.slug === "leapfrog-overall" ? (
+            <LeapfrogOverallPrepView />
+          ) : activeSection?.slug.startsWith("leapfrog-overall-day-") ? (
+            <LeapfrogDayPrepView dayNum={parseInt(activeSection.slug.replace("leapfrog-overall-day-", ""), 10)} />
           ) : activeSection ? (
             /* ── SECTION VIEW ───────────────────────────── */
             <section className="animate-fade-up max-w-4xl pb-32">

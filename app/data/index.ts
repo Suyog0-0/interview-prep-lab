@@ -5,6 +5,7 @@ import { s03_bigo } from "./s03_bigo";
 import { s04_oop } from "./s04_oop";
 import { s05_solid } from "./s05_solid";
 import { s06_f1soft } from "./s06_f1soft";
+import { leapfrogDaysSections } from "./leapfrog_prep_data";
 import {
   core_mcqs,
   ds_mcqs,
@@ -323,6 +324,15 @@ s04_oop.mcqs = oop_mcqs;
 s05_solid.mcqs = solid_mcqs;
 s06_f1soft.mcqs = f1soft_mcqs;
  
+export const leapfrog_overall: InterviewSection = {
+  id: 22,
+  slug: "leapfrog-overall",
+  title: "Overall Prep",
+  subtitle: "3-Week Study Plan · Coding Exam → HR Interview",
+  color: "#3b82f6",
+  questions: [],
+};
+
 export const leapfrog_coding: InterviewSection = {
   id: 17,
   slug: "leapfrog-coding",
@@ -385,6 +395,8 @@ export const interviewData: InterviewSection[] = [
   s14_node,
   s15_problem,
   s06_f1soft,
+  ...leapfrogDaysSections,
+  leapfrog_overall,
   leapfrog_coding,
   leapfrog_virtual,
   leapfrog_onsite,
