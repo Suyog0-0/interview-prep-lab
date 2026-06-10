@@ -39,6 +39,7 @@ import {
 } from "./data/leapfrog_prep_data";
 import type { InterviewSection, InterviewQuestion, MCQQuestion, SimRound, SimRating, SimulationQuestion } from "../types";
 
+
 type ViewMode = "flashcards" | "mcqs" | "notes" | "simulation";
 type SimPhase = "setup" | "interview" | "result";
 
@@ -989,9 +990,13 @@ function LeapfrogOverallPrepView() {
     </div>
   );
 }
+
+
 // ══════════════════════════════════════════════════════════════
 function LeapfrogDayPrepView({ dayNum }: { dayNum: number }) {
-  // Find the day data
+  const [activeTab, setActiveTab] = useState<"schedule" | "mcqs" | "coding">("schedule");
+  const [mcqStates, setMcqStates] = useState<Record<string, { selectedIndex: number | null }>>({});
+
   let targetDay = null;
   let targetWeekNum = 0;
   for (const week of prepWeeks) {
@@ -1005,57 +1010,406 @@ function LeapfrogDayPrepView({ dayNum }: { dayNum: number }) {
 
   if (!targetDay) return null;
 
+  const revSet = targetDay.revisionSet;
+
+  const selectMCQ = (qId: string, idx: number) => {
+    setMcqStates(prev => {
+      if (prev[qId]?.selectedIndex !== null && prev[qId]?.selectedIndex !== undefined) return prev;
+      return { ...prev, [qId]: { selectedIndex: idx } };
+    });
+  };
+
+  const answeredCount = Object.values(mcqStates).filter(
+    s => s.selectedIndex !== null && s.selectedIndex !== undefined
+  ).length;
+
+  const correctCount = revSet?.mcqs.filter(
+    m => mcqStates[m.id]?.selectedIndex === m.correctAnswerIndex
+  ).length ?? 0;
+
+  const LETTERS = ["A", "B", "C", "D"];
+
   return (
-    <div className="space-y-8 animate-fade-up max-w-4xl pb-32">
-      <div className="breadcrumb mb-2 text-zinc-500">Leapfrog Prep / Overall Prep Schedule / <span className="text-zinc-300">Day {dayNum}</span></div>
-      
-      <div className="mb-6 p-6 rounded-2xl bg-zinc-950/60 border border-zinc-900 relative overflow-hidden">
+    <div className="space-y-6 animate-fade-up max-w-4xl pb-32">
+      <div className="breadcrumb mb-2 text-zinc-500">
+        Leapfrog Prep / Overall Prep Schedule /{" "}
+        <span className="text-zinc-300">Day {dayNum}</span>
+      </div>
+
+      {/* Header card */}
+      <div className="mb-4 p-6 rounded-2xl bg-zinc-950/60 border border-zinc-900 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-transparent pointer-events-none" />
-        
         <div className="text-[11px] font-mono text-blue-500 uppercase tracking-widest mb-2 flex items-center gap-2">
           <Calendar className="w-3 h-3" /> Week {targetWeekNum} · {targetDay.label}
         </div>
-        
-        <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight mb-2">Day {targetDay.dayNum}: {targetDay.topic.split('—')[0].trim()}</h1>
-        <p className="text-zinc-400 text-sm leading-relaxed max-w-2xl">{targetDay.topic.split('—')[1]?.trim() || targetDay.topic}</p>
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight mb-2">
+          Day {targetDay.dayNum}: {targetDay.topic.split("—")[0].trim()}
+        </h1>
+        <p className="text-zinc-400 text-sm leading-relaxed max-w-2xl">
+          {targetDay.topic.split("—")[1]?.trim() || targetDay.topic}
+        </p>
+        {revSet && (
+          <div className="flex gap-3 mt-4 flex-wrap">
+            <div className="px-3 py-1.5 rounded-lg bg-zinc-900 border border-zinc-800 text-[11px] font-mono text-zinc-400">
+              <span className="text-orange-400 font-bold">{revSet.mcqs.length}</span> MCQs
+            </div>
+            <div className="px-3 py-1.5 rounded-lg bg-zinc-900 border border-zinc-800 text-[11px] font-mono text-zinc-400">
+              <span className="text-emerald-400 font-bold">{revSet.codingQuestions.length}</span> Coding Questions
+            </div>
+            {answeredCount > 0 && (
+              <div className="px-3 py-1.5 rounded-lg bg-zinc-900 border border-zinc-800 text-[11px] font-mono text-zinc-400">
+                Score:{" "}
+                <span className="text-amber-400 font-bold">
+                  {correctCount}/{answeredCount}
+                </span>{" "}
+                ({Math.round((correctCount / answeredCount) * 100)}%)
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
-      <section>
-        <h2 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
-          <Target className="w-5 h-5 text-emerald-400" /> Today's Schedule
-        </h2>
-        <div className="space-y-4">
-          {targetDay.blocks.map((block, i) => (
-            <div key={i} className="p-4 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-zinc-700 transition-all flex flex-col sm:flex-row sm:items-start gap-3 sm:gap-6">
-              <div className="text-zinc-500 font-mono text-sm whitespace-nowrap sm:w-28 flex-shrink-0 flex items-center sm:items-start gap-2">
-                <div className="w-1.5 h-1.5 rounded-full bg-blue-500 mt-1.5" />
-                {block.time}
-              </div>
-              <div className="flex-1">
-                <p className="text-zinc-200 leading-relaxed mb-2">{block.task}</p>
-                <span className={`text-[10px] px-2 py-0.5 rounded font-mono uppercase tracking-wider ${
-                  block.tag === "JS" ? "bg-yellow-500/10 text-yellow-500 border border-yellow-500/20" :
-                  block.tag === "DSA" ? "bg-red-500/10 text-red-500 border border-red-500/20" :
-                  block.tag === "PROJECT" ? "bg-emerald-500/10 text-emerald-500 border border-emerald-500/20" :
-                  block.tag === "REVIEW" ? "bg-purple-500/10 text-purple-500 border border-purple-500/20" :
-                  block.tag === "INTERVIEW" ? "bg-orange-500/10 text-orange-500 border border-orange-500/20" :
-                  "bg-zinc-800 text-zinc-400 border border-zinc-700"
-                }`}>
-                  {block.tag}
+      {/* Tab selector */}
+      <div className="flex flex-wrap gap-2 border-b border-zinc-900 pb-4">
+        <button
+          onClick={() => setActiveTab("schedule")}
+          className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-mono font-semibold border transition-all ${
+            activeTab === "schedule"
+              ? "bg-blue-500/15 border-blue-500/40 text-blue-400"
+              : "bg-zinc-900 border-zinc-800 text-zinc-500 hover:text-zinc-200 hover:border-zinc-700"
+          }`}
+        >
+          <Calendar className="w-3.5 h-3.5" />
+          Today's Schedule
+        </button>
+        {revSet && (
+          <>
+            <button
+              onClick={() => setActiveTab("mcqs")}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-mono font-semibold border transition-all ${
+                activeTab === "mcqs"
+                  ? "bg-emerald-500/15 border-emerald-500/40 text-emerald-400"
+                  : "bg-zinc-900 border-zinc-800 text-zinc-500 hover:text-zinc-200 hover:border-zinc-700"
+              }`}
+            >
+              <CheckCircle className="w-3.5 h-3.5" />
+              Daily MCQs ({revSet.mcqs.length})
+              {answeredCount > 0 && (
+                <span className="ml-1 px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-400 text-[9px]">
+                  {answeredCount} done
                 </span>
+              )}
+            </button>
+            <button
+              onClick={() => setActiveTab("coding")}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-mono font-semibold border transition-all ${
+                activeTab === "coding"
+                  ? "bg-violet-500/15 border-violet-500/40 text-violet-400"
+                  : "bg-zinc-900 border-zinc-800 text-zinc-500 hover:text-zinc-200 hover:border-zinc-700"
+              }`}
+            >
+              <Code2 className="w-3.5 h-3.5" />
+              Coding Practice ({revSet.codingQuestions.length})
+            </button>
+          </>
+        )}
+      </div>
+
+      {/* ── SCHEDULE TAB ── */}
+      {activeTab === "schedule" && (
+        <div className="space-y-4 animate-fade-up">
+          <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+            <Target className="w-5 h-5 text-emerald-400" /> Today's Schedule
+          </h2>
+          <div className="space-y-3">
+            {targetDay.blocks.map((block, i) => (
+              <div
+                key={i}
+                className="p-4 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-zinc-700 transition-all flex flex-col sm:flex-row sm:items-start gap-3 sm:gap-6"
+              >
+                <div className="text-zinc-500 font-mono text-sm whitespace-nowrap sm:w-28 flex-shrink-0 flex items-center sm:items-start gap-2">
+                  <div className="w-1.5 h-1.5 rounded-full bg-blue-500 mt-1.5" />
+                  {block.time}
+                </div>
+                <div className="flex-1">
+                  <p className="text-zinc-200 leading-relaxed mb-2">{block.task}</p>
+                  <span
+                    className={`text-[10px] px-2 py-0.5 rounded font-mono uppercase tracking-wider ${
+                      block.tag === "JS"
+                        ? "bg-yellow-500/10 text-yellow-500 border border-yellow-500/20"
+                        : block.tag === "DSA"
+                        ? "bg-red-500/10 text-red-500 border border-red-500/20"
+                        : block.tag === "PROJECT"
+                        ? "bg-emerald-500/10 text-emerald-500 border border-emerald-500/20"
+                        : block.tag === "REVIEW"
+                        ? "bg-purple-500/10 text-purple-500 border border-purple-500/20"
+                        : block.tag === "INTERVIEW"
+                        ? "bg-orange-500/10 text-orange-500 border border-orange-500/20"
+                        : "bg-zinc-800 text-zinc-400 border border-zinc-700"
+                    }`}
+                  >
+                    {block.tag}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="p-5 rounded-xl bg-zinc-900/50 border border-amber-500/20 flex items-start gap-4 mt-6">
+            <Lightbulb className="w-6 h-6 text-amber-500 flex-shrink-0" />
+            <div>
+              <h3 className="text-zinc-200 font-bold mb-1">Remember the Rhythm</h3>
+              <p className="text-sm text-zinc-400 leading-relaxed">
+                Study 50 minutes, break 10 minutes. For every DSA problem, write
+                your approach in plain language first. Solve every problem out loud.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── MCQ TAB ── */}
+      {activeTab === "mcqs" && revSet && (
+        <div className="space-y-6 animate-fade-up">
+          {/* Score bar */}
+          {answeredCount > 0 && (
+            <div className="p-4 rounded-xl bg-zinc-950/60 border border-zinc-900 flex items-center gap-4 flex-wrap">
+              <div className="flex items-center gap-2 text-sm">
+                <Trophy className="w-4 h-4 text-amber-400" />
+                <span className="font-bold text-white">{correctCount}</span>
+                <span className="text-zinc-500">/ {answeredCount} correct</span>
+              </div>
+              <div className="flex-1 min-w-[100px] h-1.5 bg-zinc-900 rounded-full overflow-hidden">
+                <div
+                  className={`h-full rounded-full transition-all ${
+                    answeredCount > 0 && correctCount / answeredCount >= 0.7
+                      ? "bg-emerald-500"
+                      : "bg-red-500"
+                  }`}
+                  style={{
+                    width:
+                      answeredCount > 0
+                        ? (correctCount / answeredCount) * 100 + "%"
+                        : "0%",
+                  }}
+                />
+              </div>
+              <span className="text-sm font-mono font-bold text-amber-400">
+                {Math.round((correctCount / answeredCount) * 100)}%
+              </span>
+            </div>
+          )}
+
+          {/* Topic badge */}
+          <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-zinc-900 border border-zinc-800 w-fit">
+            <Brain className="w-4 h-4 text-blue-400" />
+            <span className="text-[12px] font-mono text-zinc-300">{revSet.topic}</span>
+          </div>
+
+          {revSet.mcqs.map((m, idx) => {
+            const state = mcqStates[m.id];
+            const answered =
+              state?.selectedIndex !== null &&
+              state?.selectedIndex !== undefined;
+            const correct =
+              answered && state.selectedIndex === m.correctAnswerIndex;
+
+            return (
+              <div
+                key={m.id}
+                className={`concept-card ${
+                  answered
+                    ? correct
+                      ? "!border-emerald-500/30"
+                      : "!border-red-500/30"
+                    : ""
+                }`}
+              >
+                <div className="flex gap-4">
+                  <div
+                    className={`w-8 h-8 rounded-lg border flex items-center justify-center font-mono text-xs shrink-0 mt-0.5 ${
+                      answered
+                        ? correct
+                          ? "bg-emerald-500/20 border-emerald-500 text-emerald-400"
+                          : "bg-red-500/20 border-red-500 text-red-400"
+                        : "bg-zinc-900 border-zinc-800 text-zinc-500"
+                    }`}
+                  >
+                    {idx + 1}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-[15px] font-semibold text-white mb-5 leading-snug whitespace-pre-wrap">
+                      {m.question}
+                    </h3>
+
+                    <div className="space-y-2.5">
+                      {m.options.map((opt, oIdx) => {
+                        let cls = "mcq-option-btn";
+                        if (answered) {
+                          cls += " cursor-default";
+                          if (oIdx === m.correctAnswerIndex)
+                            cls += " correct animate-pop-in";
+                          else if (state.selectedIndex === oIdx)
+                            cls += " incorrect animate-shake";
+                        }
+                        return (
+                          <button
+                            key={oIdx}
+                            disabled={answered}
+                            onClick={() => selectMCQ(m.id, oIdx)}
+                            className={cls}
+                          >
+                            <div
+                              className={`w-6 h-6 rounded-full border flex items-center justify-center text-[11px] font-bold shrink-0 ${
+                                answered &&
+                                oIdx === m.correctAnswerIndex
+                                  ? "bg-emerald-500 border-emerald-500 text-black"
+                                  : answered &&
+                                    state.selectedIndex === oIdx
+                                  ? "bg-red-500 border-red-500 text-white"
+                                  : "border-zinc-700 text-zinc-400"
+                              }`}
+                            >
+                              {answered &&
+                              oIdx === m.correctAnswerIndex
+                                ? "✓"
+                                : answered &&
+                                  state.selectedIndex === oIdx
+                                ? "✕"
+                                : LETTERS[oIdx]}
+                            </div>
+                            <span className="text-[14px] leading-relaxed">
+                              {opt}
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </div>
+
+                    {answered && (
+                      <div className="animate-fade-up mt-5 pt-4 border-t border-zinc-800">
+                        <div className="text-[10px] font-mono uppercase tracking-widest mb-2 font-bold flex items-center gap-1.5 text-zinc-400">
+                          <Lightbulb className="w-3 h-3" /> Explanation
+                        </div>
+                        <p className="text-zinc-300 text-[14px] leading-relaxed">
+                          {m.explanation}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {/* ── CODING TAB ── */}
+      {activeTab === "coding" && revSet && (
+        <div className="space-y-8 animate-fade-up">
+          <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-zinc-900 border border-zinc-800 w-fit">
+            <Brain className="w-4 h-4 text-violet-400" />
+            <span className="text-[12px] font-mono text-zinc-300">
+              {revSet.topic}
+            </span>
+          </div>
+
+          {revSet.codingQuestions.map((cq, idx) => (
+            <div
+              key={cq.id}
+              className="concept-card border-violet-500/10 hover:border-violet-500/30"
+            >
+              {/* Title row */}
+              <div className="flex items-start justify-between gap-3 mb-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-violet-500/10 border border-violet-500/20 flex items-center justify-center font-mono text-xs text-violet-400 shrink-0">
+                    {idx + 1}
+                  </div>
+                  <div>
+                    <h3 className="text-[16px] font-bold text-white">
+                      {cq.title}
+                    </h3>
+                    <span
+                      className={`text-[10px] font-mono px-2 py-0.5 rounded mt-1 inline-block ${
+                        cq.difficulty === "Easy"
+                          ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
+                          : "bg-amber-500/10 text-amber-400 border border-amber-500/20"
+                      }`}
+                    >
+                      {cq.difficulty}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Description */}
+              <p className="text-zinc-300 text-[14px] leading-relaxed mb-5 whitespace-pre-wrap">
+                {cq.description}
+              </p>
+
+              {/* Examples */}
+              <div className="mb-5">
+                <div className="text-[10px] font-mono uppercase tracking-widest text-zinc-500 mb-3 font-bold">
+                  Examples
+                </div>
+                <div className="space-y-3">
+                  {cq.examples.map((ex, eIdx) => (
+                    <div
+                      key={eIdx}
+                      className="p-3 rounded-lg bg-zinc-900/80 border border-zinc-800 font-mono text-[13px]"
+                    >
+                      <div className="text-zinc-400">
+                        <span className="text-zinc-600">Input: </span>
+                        <span className="text-cyan-400">{ex.input}</span>
+                      </div>
+                      <div className="text-zinc-400 mt-1">
+                        <span className="text-zinc-600">Output: </span>
+                        <span className="text-emerald-400">{ex.output}</span>
+                      </div>
+                      {ex.explanation && (
+                        <div className="text-zinc-500 text-[11px] mt-1 italic">
+                          {ex.explanation}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Constraints */}
+              <div className="mb-5">
+                <div className="text-[10px] font-mono uppercase tracking-widest text-zinc-500 mb-2 font-bold">
+                  Constraints
+                </div>
+                <ul className="space-y-1">
+                  {cq.constraints.map((c, cIdx) => (
+                    <li
+                      key={cIdx}
+                      className="text-zinc-400 text-[13px] flex items-start gap-2"
+                    >
+                      <span className="text-violet-500 mt-1 shrink-0">•</span>
+                      <span>{c}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Hint */}
+              <div className="p-4 rounded-lg bg-amber-500/5 border border-amber-500/15 flex items-start gap-3">
+                <Lightbulb className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
+                <div>
+                  <div className="text-[10px] font-mono uppercase tracking-wider text-amber-500 font-bold mb-1">
+                    Hint
+                  </div>
+                  <p className="text-zinc-300 text-[13px] leading-relaxed">
+                    {cq.hint}
+                  </p>
+                </div>
               </div>
             </div>
           ))}
         </div>
-      </section>
-
-      <div className="p-5 rounded-xl bg-zinc-900/50 border border-amber-500/20 flex items-start gap-4">
-        <Lightbulb className="w-6 h-6 text-amber-500 flex-shrink-0" />
-        <div>
-          <h3 className="text-zinc-200 font-bold mb-1">Remember the Rhythm</h3>
-          <p className="text-sm text-zinc-400 leading-relaxed">Study 50 minutes, break 10 minutes. For every DSA problem, write your approach in plain language first. Solve every problem out loud, as if someone is watching.</p>
-        </div>
-      </div>
+      )}
     </div>
   );
 }
