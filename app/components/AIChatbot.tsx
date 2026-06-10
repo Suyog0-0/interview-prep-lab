@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { Send, Bot, User, Mic, MicOff, Volume2, VolumeX } from "lucide-react";
+import { Send, Bot, User, Mic, MicOff, Volume2 } from "lucide-react";
 
 const BEHAVIORAL_PROMPTS = [
   "Tell me about a time you had a conflict with a teammate. How did you resolve it?",
@@ -20,7 +20,6 @@ export default function AIChatbot() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [promptIndex, setPromptIndex] = useState(0);
-  const [voiceEnabled, setVoiceEnabled] = useState(true);
   const [isListening, setIsListening] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   
@@ -30,7 +29,7 @@ export default function AIChatbot() {
   const recognitionRef = useRef<any>(null);
 
   const speak = (text: string) => {
-    if (!voiceEnabled || typeof window === 'undefined' || !('speechSynthesis' in window)) return;
+    if (typeof window === 'undefined' || !('speechSynthesis' in window)) return;
     const cleanText = text.replace(/\*\*(.*?)\*\*/g, '$1').replace(/###/g, '').replace(/✅/g, '').replace(/❌/g, '');
     const utterance = new SpeechSynthesisUtterance(cleanText);
     utterance.rate = 1.0;
@@ -45,7 +44,6 @@ export default function AIChatbot() {
           { role: "system", content: "AI Interviewer connected. I will ask you behavioral questions. Please use the STAR method (Situation, Task, Action, Result) in your responses." },
           { role: "ai", content: BEHAVIORAL_PROMPTS[0] }
         ]);
-        speak(BEHAVIORAL_PROMPTS[0]);
       }, 0);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -65,15 +63,22 @@ export default function AIChatbot() {
       if (SpeechRecognition) {
         recognitionRef.current = new SpeechRecognition();
         recognitionRef.current.continuous = true;
-        recognitionRef.current.interimResults = true;
+        recognitionRef.current.interimResults = false;
         
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         recognitionRef.current.onresult = (event: any) => {
           let currentTranscript = '';
           for (let i = event.resultIndex; i < event.results.length; i++) {
-            currentTranscript += event.results[i][0].transcript;
+            if (event.results[i].isFinal) {
+              currentTranscript += event.results[i][0].transcript;
+            }
           }
-          setInput(prev => prev + " " + currentTranscript);
+          if (currentTranscript) {
+            setInput(prev => {
+              const space = prev.length > 0 && !prev.endsWith(' ') ? ' ' : '';
+              return prev + space + currentTranscript;
+            });
+          }
         };
 
         recognitionRef.current.onend = () => {
@@ -146,7 +151,6 @@ export default function AIChatbot() {
     setTimeout(() => {
       const feedback = analyzeSTAR(userMessage);
       setMessages(prev => [...prev, { role: "ai", content: feedback }]);
-      speak(feedback);
 
       // Move to next prompt
       setTimeout(() => {
@@ -155,10 +159,8 @@ export default function AIChatbot() {
           setPromptIndex(nextIndex);
           const nextPrompt = `**Next Question:**\n${BEHAVIORAL_PROMPTS[nextIndex]}`;
           setMessages(prev => [...prev, { role: "ai", content: nextPrompt }]);
-          speak("Next Question: " + BEHAVIORAL_PROMPTS[nextIndex]);
         } else {
           setMessages(prev => [...prev, { role: "system", content: "Interview complete. Review your feedback to improve your behavioral responses!" }]);
-          speak("Interview complete. Great job!");
         }
       }, 5000);
 
@@ -169,25 +171,14 @@ export default function AIChatbot() {
     <div className="flex flex-col h-[600px] bg-zinc-950 border border-purple-500/30 rounded-2xl overflow-hidden shadow-2xl animate-fade-up">
       <div className="bg-zinc-900 border-b border-zinc-800 p-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-purple-500/20 rounded-lg relative">
+          <div className="p-2 bg-purple-500/20 rounded-lg">
             <Bot className="w-6 h-6 text-purple-400" />
-            {voiceEnabled && <div className="absolute top-0 right-0 w-2 h-2 bg-green-500 rounded-full animate-ping" />}
           </div>
           <div>
             <h2 className="text-white font-bold">Simulated AI Interviewer</h2>
             <p className="text-xs text-zinc-400 font-mono">STAR Method Evaluator</p>
           </div>
         </div>
-        <button 
-          onClick={() => {
-            if (voiceEnabled) window.speechSynthesis.cancel();
-            setVoiceEnabled(!voiceEnabled);
-          }}
-          className={`p-2 rounded-lg transition-colors ${voiceEnabled ? 'bg-purple-500/20 text-purple-400' : 'bg-zinc-800 text-zinc-500 hover:text-white'}`}
-          title={voiceEnabled ? "Mute AI Voice" : "Enable AI Voice"}
-        >
-          {voiceEnabled ? <Volume2 className="w-5 h-5" /> : <VolumeX className="w-5 h-5" />}
-        </button>
       </div>
 
       <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 space-y-4">
@@ -213,6 +204,15 @@ export default function AIChatbot() {
                       <br />
                     </span>
                   ))}
+                  {msg.role === 'ai' && (
+                    <button 
+                      onClick={() => speak(msg.content)} 
+                      className="mt-3 flex items-center gap-1.5 text-[10px] uppercase font-bold tracking-wider text-purple-400 hover:text-purple-300 transition-colors"
+                      title="Read aloud"
+                    >
+                      <Volume2 className="w-3.5 h-3.5" /> Read Aloud
+                    </button>
+                  )}
                 </div>
               </div>
             )}
