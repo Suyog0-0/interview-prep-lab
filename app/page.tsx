@@ -1814,6 +1814,45 @@ export default function Home() {
                 </p>
               </div>
 
+              {/* Gamification Level */}
+              <div className="p-6 rounded-2xl bg-zinc-950/60 border border-zinc-900 flex flex-col sm:flex-row items-center gap-6">
+                <div className="relative flex items-center justify-center w-24 h-24 shrink-0">
+                  <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                    <circle cx="50" cy="50" r="45" className="stroke-zinc-800" strokeWidth="8" fill="none" />
+                    <circle 
+                      cx="50" cy="50" r="45" 
+                      className="stroke-orange-500 transition-all duration-1000 ease-out" 
+                      strokeWidth="8" fill="none" 
+                      strokeDasharray="283" 
+                      strokeDashoffset={283 - (283 * (((correctMCQs * 10 + completedFlashcards * 5) % 100) / 100))} 
+                      strokeLinecap="round" 
+                    />
+                  </svg>
+                  <div className="absolute flex flex-col items-center justify-center">
+                    <span className="text-2xl font-black text-white">{Math.floor((correctMCQs * 10 + completedFlashcards * 5) / 100) + 1}</span>
+                  </div>
+                </div>
+                <div className="flex-1 text-center sm:text-left">
+                  <div className="flex items-center justify-center sm:justify-start gap-2 mb-1">
+                    <h2 className="text-xl font-bold text-white">Developer Level {Math.floor((correctMCQs * 10 + completedFlashcards * 5) / 100) + 1}</h2>
+                    <Flame className="w-5 h-5 text-orange-500" />
+                  </div>
+                  <p className="text-sm text-zinc-400 mb-3">
+                    Earn XP by completing flashcards (+5 XP) and correctly answering MCQs (+10 XP).
+                  </p>
+                  <div className="w-full bg-zinc-900 rounded-full h-2.5 overflow-hidden">
+                    <div 
+                      className="bg-gradient-to-r from-orange-600 to-amber-500 h-2.5 rounded-full transition-all duration-1000"
+                      style={{ width: `${((correctMCQs * 10 + completedFlashcards * 5) % 100)}%` }}
+                    ></div>
+                  </div>
+                  <div className="flex justify-between text-xs font-mono text-zinc-500 mt-2">
+                    <span>{correctMCQs * 10 + completedFlashcards * 5} Total XP</span>
+                    <span>{100 - ((correctMCQs * 10 + completedFlashcards * 5) % 100)} XP to next level</span>
+                  </div>
+                </div>
+              </div>
+
               {/* Stats row */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                 {[
