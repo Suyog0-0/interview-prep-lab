@@ -2,6 +2,89 @@ import { InterviewQuestion } from "../../types";
 
 export function getDayQuestionsP2(dayNum: number): InterviewQuestion[] {
   switch (dayNum) {
+    case 7:
+      return [
+        {
+          id: "lf-rev-d7-1",
+          q: "What is the Temporal Dead Zone (TDZ)?",
+          hint: "let and const are hoisted but not initialized.",
+          answer: "The period between entering block scope and the variable declaration where accessing a let/const variable throws a ReferenceError.",
+          category: "JS Core",
+          language: "javascript"
+        },
+        {
+          id: "lf-rev-d7-2",
+          q: "Explain Closure.",
+          hint: "Access to outer scope after return.",
+          answer: "A closure is the combination of a function bundled together (enclosed) with references to its surrounding state (the lexical environment). It gives you access to an outer function's scope from an inner function.",
+          category: "JS Core",
+          language: "javascript"
+        },
+        {
+          id: "lf-rev-d7-3",
+          q: "Arrow function 'this' vs regular function 'this'?",
+          hint: "Lexical vs Dynamic binding.",
+          answer: "Arrow functions do not have their own 'this' binding; they inherit it lexically from the enclosing scope. Regular functions determine 'this' dynamically based on how they are called.",
+          category: "JS Core",
+          language: "javascript"
+        },
+        {
+          id: "lf-rev-d7-4",
+          q: "Deep copy vs Shallow copy?",
+          hint: "Nested objects shared or independent.",
+          answer: "Shallow copy copies the top-level properties; nested objects share the same reference. Deep copy recursively copies all levels, creating fully independent objects.",
+          category: "JS Core",
+          language: "javascript"
+        },
+        {
+          id: "lf-rev-d7-5",
+          q: "What is Event Delegation?",
+          hint: "Single listener on parent.",
+          answer: "A technique involving adding a single event listener to a parent element to manage events for its children, leveraging event bubbling.",
+          category: "DOM",
+          language: "javascript"
+        },
+        {
+          id: "lf-rev-d7-6",
+          q: "Debounce vs Throttle?",
+          hint: "Delay until pause vs Enforce maximum rate.",
+          answer: "Debounce delays function execution until after a certain period of inactivity. Throttle ensures the function is called at most once in a specified time period.",
+          category: "JS Core",
+          language: "javascript"
+        },
+        {
+          id: "lf-rev-d7-7",
+          q: "Prototypal Inheritance?",
+          hint: "Objects inheriting from objects.",
+          answer: "JavaScript's mechanism where objects inherit properties and methods from other objects via the prototype chain (__proto__).",
+          category: "JS Core",
+          language: "javascript"
+        },
+        {
+          id: "lf-rev-d7-8",
+          q: "Promise.all() behaviour?",
+          hint: "Wait for all or fail fast.",
+          answer: "It takes an array of promises and resolves when ALL of them resolve (returning an array of results), or rejects immediately if ANY of them reject.",
+          category: "Async JS",
+          language: "javascript"
+        },
+        {
+          id: "lf-rev-d7-9",
+          q: "How does the microtask queue differ from the macrotask queue?",
+          hint: "Promises vs setTimeout.",
+          answer: "The microtask queue (Promises) has higher priority. After the call stack empties, the event loop drains the ENTIRE microtask queue before processing a single macrotask (setTimeout).",
+          category: "Async JS",
+          language: "javascript"
+        },
+        {
+          id: "lf-rev-d7-10",
+          q: "map() vs forEach()?",
+          hint: "Returns new array vs returns undefined.",
+          answer: "map() transforms an array and returns a NEW array. forEach() iterates for side effects and returns undefined.",
+          category: "JS Arrays",
+          language: "javascript"
+        }
+      ];
     case 11:
       return [
         {

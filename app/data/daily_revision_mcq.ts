@@ -17,6 +17,7 @@
 
 import type { MCQQuestion } from "../../types";
 import type { CodingQuestion, DailyRevisionSet } from "./leapfrog_prep_data";
+import { day7_mcqs, day7_coding } from "./daily_revision_mcq_day7";
 
 // ─── Coding Question type ─────────────────────────────────────────────────────
 
@@ -1542,6 +1543,12 @@ export const dailyRevisionSets: DailyRevisionSet[] = [
     topic: "Debounce · Throttle · Prototype Chain · Inheritance",
     mcqs: day6_mcqs,
     codingQuestions: day6_coding,
+  },
+  {
+    dayNum: 7,
+    topic: "JS Core I & II, Arrays/Objects, Async JS, DOM, Debounce/Throttle, Prototype",
+    mcqs: day7_mcqs,
+    codingQuestions: day7_coding,
   },
 ];
 
