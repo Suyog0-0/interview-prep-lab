@@ -1,4 +1,6 @@
 import type { InterviewSection } from "../../types";
+import { getDayQuestions } from "./leapfrog_daily_content";
+import { getDayMCQs } from "./leapfrog_mcq_content";
 
 export type PrepTag = "JS" | "DSA" | "PROJECT" | "REVIEW" | "INTERVIEW" | "BREAK";
 
@@ -523,7 +525,11 @@ export const leapfrogDaysSections: InterviewSection[] = prepWeeks.flatMap(week =
     title: `Day ${day.dayNum}: ${day.topic.split('—')[0].trim()}`,
     subtitle: `Week ${week.weekNum} · ${day.label}`,
     color: "#3b82f6",
-    questions: [],
-    // We can store the day data in notes or a custom property, but we can just find it in page.tsx by slug
+    questions: getDayQuestions(day.dayNum),
+    mcqs: getDayMCQs(day.dayNum),
+    notes: day.blocks.map(b => ({
+      title: `${b.time} [${b.tag}]`,
+      content: b.task
+    }))
   }))
 );

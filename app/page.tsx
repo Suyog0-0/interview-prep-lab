@@ -990,77 +990,7 @@ function LeapfrogOverallPrepView() {
   );
 }
 // ══════════════════════════════════════════════════════════════
-function LeapfrogDayPrepView({ dayNum }: { dayNum: number }) {
-  // Find the day data
-  let targetDay = null;
-  let targetWeekNum = 0;
-  for (const week of prepWeeks) {
-    const day = week.days.find(d => d.dayNum === dayNum);
-    if (day) {
-      targetDay = day;
-      targetWeekNum = week.weekNum;
-      break;
-    }
-  }
 
-  if (!targetDay) return null;
-
-  return (
-    <div className="space-y-8 animate-fade-up max-w-4xl pb-32">
-      <div className="breadcrumb mb-2 text-zinc-500">Leapfrog Prep / Overall Prep Schedule / <span className="text-zinc-300">Day {dayNum}</span></div>
-      
-      <div className="mb-6 p-6 rounded-2xl bg-zinc-950/60 border border-zinc-900 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-transparent pointer-events-none" />
-        
-        <div className="text-[11px] font-mono text-blue-500 uppercase tracking-widest mb-2 flex items-center gap-2">
-          <Calendar className="w-3 h-3" /> Week {targetWeekNum} · {targetDay.label}
-        </div>
-        
-        <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight mb-2">Day {targetDay.dayNum}: {targetDay.topic.split('—')[0].trim()}</h1>
-        <p className="text-zinc-400 text-sm leading-relaxed max-w-2xl">{targetDay.topic.split('—')[1]?.trim() || targetDay.topic}</p>
-      </div>
-
-      <section>
-        <h2 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
-          <Target className="w-5 h-5 text-emerald-400" /> Today's Schedule
-        </h2>
-        <div className="space-y-4">
-          {targetDay.blocks.map((block, i) => (
-            <div key={i} className="p-4 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-zinc-700 transition-all flex flex-col sm:flex-row sm:items-start gap-3 sm:gap-6">
-              <div className="text-zinc-500 font-mono text-sm whitespace-nowrap sm:w-28 flex-shrink-0 flex items-center sm:items-start gap-2">
-                <div className="w-1.5 h-1.5 rounded-full bg-blue-500 mt-1.5" />
-                {block.time}
-              </div>
-              <div className="flex-1">
-                <p className="text-zinc-200 leading-relaxed mb-2">{block.task}</p>
-                <span className={`text-[10px] px-2 py-0.5 rounded font-mono uppercase tracking-wider ${
-                  block.tag === "JS" ? "bg-yellow-500/10 text-yellow-500 border border-yellow-500/20" :
-                  block.tag === "DSA" ? "bg-red-500/10 text-red-500 border border-red-500/20" :
-                  block.tag === "PROJECT" ? "bg-emerald-500/10 text-emerald-500 border border-emerald-500/20" :
-                  block.tag === "REVIEW" ? "bg-purple-500/10 text-purple-500 border border-purple-500/20" :
-                  block.tag === "INTERVIEW" ? "bg-orange-500/10 text-orange-500 border border-orange-500/20" :
-                  "bg-zinc-800 text-zinc-400 border border-zinc-700"
-                }`}>
-                  {block.tag}
-                </span>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <div className="p-5 rounded-xl bg-zinc-900/50 border border-amber-500/20 flex items-start gap-4">
-        <Lightbulb className="w-6 h-6 text-amber-500 flex-shrink-0" />
-        <div>
-          <h3 className="text-zinc-200 font-bold mb-1">Remember the Rhythm</h3>
-          <p className="text-sm text-zinc-400 leading-relaxed">Study 50 minutes, break 10 minutes. For every DSA problem, write your approach in plain language first. Solve every problem out loud, as if someone is watching.</p>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// ══════════════════════════════════════════════════════════════
 export default function Home() {
   // -1 = interview simulation, 0 = dashboard, >0 = module section
   const [activeSectionId, setActiveSectionId] = useState<number>(0);
@@ -1526,8 +1456,6 @@ export default function Home() {
 
           ) : activeSection?.slug === "leapfrog-overall" ? (
             <LeapfrogOverallPrepView />
-          ) : activeSection?.slug.startsWith("leapfrog-overall-day-") ? (
-            <LeapfrogDayPrepView dayNum={parseInt(activeSection.slug.replace("leapfrog-overall-day-", ""), 10)} />
           ) : activeSection ? (
             /* ── SECTION VIEW ───────────────────────────── */
             <section className="animate-fade-up max-w-4xl pb-32">
