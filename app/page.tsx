@@ -41,7 +41,7 @@ import {
 import type { InterviewSection, InterviewQuestion, MCQQuestion, SimRound, SimRating, SimulationQuestion } from "../types";
 
 
-type ViewMode = "flashcards" | "mcqs" | "notes" | "simulation";
+type ViewMode = "flashcards" | "mcqs" | "notes" | "simulation" | "coding";
 type SimPhase = "setup" | "interview" | "result";
 
 // ─── Option letter badge ───────────────────────────────────────
@@ -1979,6 +1979,17 @@ export default function Home() {
                   <CheckCircle className="w-3.5 h-3.5" />
                   MCQ Test ({activeSection.mcqs?.length ?? 0})
                 </button>
+                {activeSection.codingQuestions && activeSection.codingQuestions.length > 0 && (
+                  <button
+                    onClick={() => setViewMode("coding")}
+                    className={"flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-mono font-semibold border transition-all " + (viewMode === "coding"
+                      ? "bg-blue-500/15 border-blue-500/40 text-blue-400"
+                      : "bg-zinc-900 border-zinc-800 text-zinc-500 hover:text-zinc-200 hover:border-zinc-700")}
+                  >
+                    <Code2 className="w-3.5 h-3.5" />
+                    Coding Practice ({activeSection.codingQuestions.length})
+                  </button>
+                )}
                 {(() => {
                   const isF1SoftMock = activeSection.slug.startsWith("f1soft-");
                   const isLeapfrogMock = activeSection.slug.startsWith("leapfrog-");
@@ -2006,6 +2017,54 @@ export default function Home() {
                     onExit={() => setViewMode("flashcards")} 
                     initialRound={activeSection.slug.startsWith("f1soft-") ? "f1soft" : activeSection.slug.startsWith("leapfrog-") ? "leapfrog" : "hr"} 
                   />
+                </div>
+              )}
+
+              {/* ── CODING VIEW ──────────────────────────────── */}
+              {viewMode === "coding" && activeSection.codingQuestions && (
+                <div className="space-y-6 animate-fade-up">
+                  {activeSection.codingQuestions.map((q, idx) => (
+                    <div key={q.id} className="p-6 rounded-2xl bg-zinc-950/80 border border-zinc-800 relative overflow-hidden">
+                      <div className="flex items-center gap-3 mb-4">
+                        <span className="flex items-center justify-center w-7 h-7 rounded-full bg-zinc-900 text-blue-400 font-mono text-[11px] font-bold border border-zinc-800">
+                          {idx + 1}
+                        </span>
+                        <h3 className="text-lg font-bold text-white">{q.title}</h3>
+                        <span className={`px-2 py-1 rounded text-[9px] font-mono uppercase tracking-wider ${q.difficulty === 'Easy' ? 'bg-emerald-500/20 text-emerald-400' : q.difficulty === 'Medium' ? 'bg-amber-500/20 text-amber-400' : 'bg-red-500/20 text-red-400'}`}>
+                          {q.difficulty}
+                        </span>
+                      </div>
+                      <div className="text-sm text-zinc-300 leading-relaxed whitespace-pre-wrap mb-4">
+                        {renderMarkdown(q.description)}
+                      </div>
+                      <div className="space-y-3 mb-4">
+                        {q.examples.map((ex, i) => (
+                          <div key={i} className="p-3 rounded-lg bg-zinc-900 border border-zinc-800/80 text-[13px] font-mono text-zinc-300">
+                            <div className="text-zinc-500 mb-1">Example {i + 1}:</div>
+                            <div className="flex flex-col gap-1">
+                              <div><span className="text-blue-400">Input:</span> {ex.input}</div>
+                              <div><span className="text-emerald-400">Output:</span> {ex.output}</div>
+                              {ex.explanation && <div><span className="text-zinc-500">Explanation:</span> {ex.explanation}</div>}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                      {q.constraints && q.constraints.length > 0 && (
+                        <div className="mb-4 text-[13px]">
+                          <strong className="text-zinc-400 mb-2 block">Constraints:</strong>
+                          <ul className="list-disc list-inside text-zinc-300 font-mono space-y-1">
+                            {q.constraints.map((c, i) => <li key={i}>{c}</li>)}
+                          </ul>
+                        </div>
+                      )}
+                      {q.hint && (
+                        <div className="mt-4 p-3 rounded-lg bg-blue-500/10 border border-blue-500/20 text-[13px] text-blue-300 flex gap-2 items-start">
+                          <Lightbulb className="w-4 h-4 mt-0.5 shrink-0" />
+                          <span>{q.hint}</span>
+                        </div>
+                      )}
+                    </div>
+                  ))}
                 </div>
               )}
 

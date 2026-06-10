@@ -25,6 +25,16 @@ export interface NoteSection {
   tip?: string;
 }
 
+export interface CodingQuestion {
+  id: string;
+  title: string;
+  difficulty: "Easy" | "Medium" | "Hard";
+  description: string;
+  examples: { input: string; output: string; explanation?: string }[];
+  constraints: string[];
+  hint: string;
+}
+
 export interface InterviewSection {
   id: number;        // 01–15
   slug: string;      // e.g. "core-programming"
@@ -34,6 +44,7 @@ export interface InterviewSection {
   questions: InterviewQuestion[];
   mcqs?: MCQQuestion[]; // 20 MCQs for the test — injected after creation for some modules
   notes?: NoteSection[]; // Learning notes for the module
+  codingQuestions?: CodingQuestion[]; // Practical coding questions
 }
 
 // ─── Interview Simulation ──────────────────────────────────────────────────

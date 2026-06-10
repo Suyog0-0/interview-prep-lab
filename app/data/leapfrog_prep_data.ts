@@ -15,17 +15,7 @@ export interface TimeBlock {
 }
 
 // Add this near the top of leapfrog_prep_data.ts
-import type { MCQQuestion } from "../../types";
-
-export interface CodingQuestion {
-  id: string;
-  title: string;
-  difficulty: "Easy" | "Medium";
-  description: string;
-  examples: { input: string; output: string; explanation?: string }[];
-  constraints: string[];
-  hint: string;
-}
+import type { MCQQuestion, CodingQuestion } from "../../types";
 export interface DailyRevisionSet {
   dayNum: number;
   topic: string;
@@ -560,7 +550,8 @@ export const leapfrogDaysSections: InterviewSection[] = prepWeeks.flatMap(week =
     subtitle: `Week ${week.weekNum} · ${day.label}`,
     color: "#3b82f6",
     questions: getDayQuestions(day.dayNum),
-    mcqs: getDayMCQs(day.dayNum),
+    mcqs: [...(getDayMCQs(day.dayNum) || []), ...(day.revisionSet?.mcqs || [])],
+    codingQuestions: day.revisionSet?.codingQuestions || [],
     notes: day.blocks.map(b => ({
       title: `${b.time} [${b.tag}]`,
       content: b.task
