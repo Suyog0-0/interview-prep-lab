@@ -1501,6 +1501,29 @@ export default function Home() {
                 </div>
               </div>
 
+              {/* Daily Rhythm Tips for Leapfrog Prep Days */}
+              {activeSection.slug.startsWith("leapfrog-overall-day-") && (
+                <div className="mb-6">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Zap className="w-4 h-4 text-orange-400" />
+                    <span className="text-[11px] font-mono font-bold text-zinc-300 uppercase tracking-widest">Daily Rhythm Tips</span>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+                    {rhythmTips.map(tip => (
+                      <div key={tip.num} className="p-3 rounded-xl bg-zinc-950/40 border border-zinc-900/80 hover:border-zinc-800 transition-colors">
+                        <div className="flex items-center gap-2 mb-1.5">
+                          <div className="w-4 h-4 rounded bg-orange-500/10 border border-orange-500/20 flex items-center justify-center shrink-0 text-[9px] font-mono text-orange-400 font-bold">
+                            {tip.num}
+                          </div>
+                          <div className="text-[10px] font-mono text-zinc-300 uppercase font-bold truncate">{tip.title}</div>
+                        </div>
+                        <div className="text-[10px] text-zinc-500 leading-relaxed">{tip.body}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {/* ── TAB SELECTOR ─────────────────────────────── */}
               <div className="flex flex-wrap gap-2 pt-2 pb-4 border-b border-zinc-900 mb-6">
                 {activeSection.notes && activeSection.notes.length > 0 && (
