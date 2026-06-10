@@ -5,6 +5,7 @@ import { s03_bigo } from "./s03_bigo";
 import { s04_oop } from "./s04_oop";
 import { s05_solid } from "./s05_solid";
 import { s06_f1soft } from "./s06_f1soft";
+import { s16_system_design } from "./s16_system_design";
 import { leapfrogDaysSections } from "./leapfrog_prep_data";
 export { dailyRevisionSetsWeek3 } from "./daily_revision_mcq_week3";
 import {
@@ -369,6 +370,7 @@ export const interviewData: InterviewSection[] = [
   s13_sql,
   s14_node,
   s15_problem,
+  s16_system_design,
   s06_f1soft,
   ...leapfrogDaysSections,
   leapfrog_overall,
