@@ -16,26 +16,9 @@
  */
 
 import type { MCQQuestion } from "../../types";
-
+import type { CodingQuestion, DailyRevisionSet } from "./leapfrog_prep_data";
 
 // ─── Coding Question type ─────────────────────────────────────────────────────
-export interface CodingQuestion {
-  id: string;
-  title: string;
-  difficulty: "Easy" | "Medium";
-  description: string;
-  examples: { input: string; output: string; explanation?: string }[];
-  constraints: string[];
-  hint: string;
-}
-
-// ─── Daily Revision Block type ────────────────────────────────────────────────
-export interface DailyRevisionSet {
-  dayNum: number;
-  topic: string;
-  mcqs: MCQQuestion[];
-  codingQuestions: CodingQuestion[];
-}
 
 // =============================================================================
 // DAY 1 — var / let / const · Scope · Hoisting · TDZ
