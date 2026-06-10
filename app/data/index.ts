@@ -6,6 +6,7 @@ import { s04_oop } from "./s04_oop";
 import { s05_solid } from "./s05_solid";
 import { s06_f1soft } from "./s06_f1soft";
 import { leapfrogDaysSections } from "./leapfrog_prep_data";
+export { dailyRevisionSetsWeek3 } from "./daily_revision_mcq_week3";
 import {
   core_mcqs,
   ds_mcqs,
