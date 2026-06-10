@@ -12,6 +12,7 @@ import {
   EyeOff,
   Lightbulb,
   Trophy,
+  FileText,
   Target,
   Zap,
   Code2,
@@ -48,11 +49,20 @@ import type { InterviewSection, InterviewQuestion, MCQQuestion, SimRound, SimRat
 import type { GeneratedExam } from "./data/exams";
 import ExamView from "./components/ExamView";
 import AIChatbot from "./components/AIChatbot";
+import CheatSheetView from "./components/CheatSheetView";
 import Editor from "@monaco-editor/react";
 
 
 type ViewMode = "flashcards" | "mcqs" | "notes" | "simulation" | "coding" | "exam" | "chat" | "cheat-sheet";
 type SimPhase = "setup" | "interview" | "result";
+type SRSStatus = "Easy" | "Medium" | "Hard";
+
+interface QuizState {
+  showAnswer: boolean;
+  showHint?: boolean;
+  srsStatus?: SRSStatus;
+  nextReview?: number;
+}
 
 // ─── Option letter badge ───────────────────────────────────────
 const LETTERS = ["A", "B", "C", "D"];
@@ -1510,9 +1520,24 @@ export default function Home() {
   const [viewMode, setViewMode] = useState<ViewMode>("flashcards");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
-  const [quizStates, setQuizStates] = useState<Record<string, { showAnswer: boolean; showHint?: boolean }>>({});
+  const [quizStates, setQuizStates] = useState<Record<string, QuizState>>({});
   const [mcqStates, setMcqStates] = useState<Record<string, { selectedIndex: number | null }>>({});
   const [activeF1SoftCategory, setActiveF1SoftCategory] = useState<string>("JS Core");
+
+  useEffect(() => {
+    const savedQuiz = localStorage.getItem("quizStates");
+    const savedMcq = localStorage.getItem("mcqStates");
+    if (savedQuiz) setQuizStates(JSON.parse(savedQuiz));
+    if (savedMcq) setMcqStates(JSON.parse(savedMcq));
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("quizStates", JSON.stringify(quizStates));
+  }, [quizStates]);
+
+  useEffect(() => {
+    localStorage.setItem("mcqStates", JSON.stringify(mcqStates));
+  }, [mcqStates]);
 
   // Sidebar accordion state — one entry per group key
   const [sidebarCollapsed, setSidebarCollapsed] = useState<Record<string, boolean>>({
@@ -1904,9 +1929,15 @@ export default function Home() {
                 <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight">
                   Interview Prep Lab &amp; <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-amber-500">Interactive MCQ Engine</span>
                 </h1>
-                <p className="text-zinc-400 max-w-xl text-sm leading-relaxed mt-3">
+                <p className="text-zinc-400 max-w-xl text-sm leading-relaxed mt-3 mb-6">
                   A comprehensive, single-page preparation hub for Junior Frontend &amp; Full-Stack roles. Study with interactive Flashcards, validate with MCQs, and simulate a real interview round.
                 </p>
+                <button 
+                  onClick={() => handleNav('cheat-sheet')}
+                  className="px-5 py-2.5 bg-zinc-100 hover:bg-white text-black font-bold text-sm rounded-lg transition-colors flex items-center gap-2"
+                >
+                  <FileText className="w-4 h-4" /> Generate "Day-Before" Cheat Sheet
+                </button>
               </div>
 
               {/* Gamification Level */}
@@ -2031,6 +2062,8 @@ export default function Home() {
             <ExamView exam={activeExam} />
           ) : viewMode === "chat" ? (
             <AIChatbot />
+          ) : viewMode === "cheat-sheet" ? (
+            <CheatSheetView />
           ) : activeSection ? (
             /* ── SECTION VIEW ───────────────────────────── */
             <section className="animate-fade-up max-w-7xl pb-32">
@@ -2327,13 +2360,33 @@ export default function Home() {
                                   )}
                                 </div>
 
-                                {/* Floating close button */}
-                                <button
-                                  onClick={() => toggleFlashcard(q.id)}
-                                  className="absolute bottom-5 left-1/2 -translate-x-1/2 flex items-center gap-2 px-5 py-2.5 rounded-full bg-zinc-900 border border-zinc-700 text-[11px] font-mono font-semibold text-zinc-400 hover:text-white hover:border-zinc-500 hover:bg-zinc-800 transition-all shadow-2xl hover:scale-105 active:scale-95"
-                                >
-                                  <EyeOff className="w-3.5 h-3.5" /> Hide Answer
-                                </button>
+                                {/* SRS Buttons */}
+                                <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex items-center gap-2">
+                                  <button
+                                    onClick={() => {
+                                      setQuizStates(prev => ({...prev, [q.id]: { ...prev[q.id], showAnswer: false, srsStatus: 'Hard', nextReview: Date.now() }}));
+                                    }}
+                                    className="px-4 py-2 rounded-full bg-zinc-900 border border-red-500/30 text-[11px] font-mono font-bold text-red-400 hover:bg-red-500/20 transition-all shadow-xl hover:scale-105 active:scale-95"
+                                  >
+                                    Hard (Due Now)
+                                  </button>
+                                  <button
+                                    onClick={() => {
+                                      setQuizStates(prev => ({...prev, [q.id]: { ...prev[q.id], showAnswer: false, srsStatus: 'Medium', nextReview: Date.now() + 86400000 }}));
+                                    }}
+                                    className="px-4 py-2 rounded-full bg-zinc-900 border border-amber-500/30 text-[11px] font-mono font-bold text-amber-400 hover:bg-amber-500/20 transition-all shadow-xl hover:scale-105 active:scale-95"
+                                  >
+                                    Medium (1d)
+                                  </button>
+                                  <button
+                                    onClick={() => {
+                                      setQuizStates(prev => ({...prev, [q.id]: { ...prev[q.id], showAnswer: false, srsStatus: 'Easy', nextReview: Date.now() + 259200000 }}));
+                                    }}
+                                    className="px-4 py-2 rounded-full bg-zinc-900 border border-emerald-500/30 text-[11px] font-mono font-bold text-emerald-400 hover:bg-emerald-500/20 transition-all shadow-xl hover:scale-105 active:scale-95"
+                                  >
+                                    Easy (3d)
+                                  </button>
+                                </div>
                               </div>
                             )}
                           </div>
