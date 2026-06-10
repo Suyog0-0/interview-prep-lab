@@ -1,7 +1,7 @@
 import type { InterviewSection } from "../../types";
 
 export const s16_system_design: InterviewSection = {
-  id: 16,
+  id: "system-design",
   slug: "system-design",
   title: "System Design & Architecture",
   subtitle: "Scalability, Databases, Microservices",
