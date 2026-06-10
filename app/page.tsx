@@ -73,7 +73,7 @@ const SIDEBAR_GROUPS: {
     key: "backend",
     label: "Backend & APIs",
     dot: "#34d399",
-    slugs: ["rest-soap", "cors", "jwt", "sql", "node"],
+    slugs: ["rest-soap", "cors", "jwt", "sql", "node", "system-design"],
   },
   {
     key: "softskills",
