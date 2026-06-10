@@ -43,7 +43,6 @@ import {
 } from "./data/leapfrog_prep_data";
 import { buildQuestionPool } from "./data/simulation";
 import type { InterviewSection, InterviewQuestion, MCQQuestion, SimRound, SimRating, SimulationQuestion } from "../types";
-import type { GeneratedExam } from "./data/exams";
 import ExamView from "./components/ExamView";
 import AIChatbot from "./components/AIChatbot";
 import CheatSheetView from "./components/CheatSheetView";
@@ -468,7 +467,7 @@ function SimulationView({ onExit, initialRound }: { onExit: () => void; initialR
   // Auto-start if initialRound is provided
   useEffect(() => {
     if (initialRound && phase === "setup" && questions.length === 0) {
-      startInterview(initialRound);
+      setTimeout(() => startInterview(initialRound), 0);
     }
   }, [initialRound, phase, questions.length, startInterview]);
 
@@ -1027,6 +1026,7 @@ function LeapfrogOverallPrepView() {
 
 
 // ══════════════════════════════════════════════════════════════
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function LeapfrogDayPrepView({ dayNum }: { dayNum: number }) {
   const [activeTab, setActiveTab] = useState<"schedule" | "mcqs" | "coding">("schedule");
   const [mcqStates, setMcqStates] = useState<Record<string, { selectedIndex: number | null }>>({});
@@ -1114,7 +1114,7 @@ function LeapfrogDayPrepView({ dayNum }: { dayNum: number }) {
           }`}
         >
           <Calendar className="w-3.5 h-3.5" />
-          Today's Schedule
+          Today&apos;s Schedule
         </button>
         {revSet && (
           <>
@@ -1153,7 +1153,7 @@ function LeapfrogDayPrepView({ dayNum }: { dayNum: number }) {
       {activeTab === "schedule" && (
         <div className="space-y-4 animate-fade-up">
           <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-            <Target className="w-5 h-5 text-emerald-400" /> Today's Schedule
+            <Target className="w-5 h-5 text-emerald-400" /> Today&apos;s Schedule
           </h2>
           <div className="space-y-3">
             {targetDay.blocks.map((block, i) => (
@@ -1470,8 +1470,12 @@ const Scratchpad = ({ defaultCode }: { defaultCode?: string }) => {
       } else {
         setOutput(logs.join('\\n'));
       }
-    } catch (err: any) {
-      setOutput(`Error: ${err.message}`);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setOutput(`Error: ${err.message}`);
+      } else {
+        setOutput(`Error: ${String(err)}`);
+      }
     } finally {
       console.log = originalConsoleLog;
     }
@@ -1524,8 +1528,12 @@ export default function Home() {
   useEffect(() => {
     const savedQuiz = localStorage.getItem("quizStates");
     const savedMcq = localStorage.getItem("mcqStates");
-    if (savedQuiz) setQuizStates(JSON.parse(savedQuiz));
-    if (savedMcq) setMcqStates(JSON.parse(savedMcq));
+    if (savedQuiz || savedMcq) {
+      setTimeout(() => {
+        if (savedQuiz) setQuizStates(JSON.parse(savedQuiz));
+        if (savedMcq) setMcqStates(JSON.parse(savedMcq));
+      }, 0);
+    }
   }, []);
 
   useEffect(() => {
@@ -1604,11 +1612,12 @@ export default function Home() {
   useEffect(() => {
     if (activeSection) {
       if (activeSection.questions.length === 0 && activeSection.notes && activeSection.notes.length > 0) {
-        setViewMode("notes");
+        setTimeout(() => setViewMode("notes"), 0);
       } else if (activeSection.questions.length > 0 && viewMode === "notes") {
-        setViewMode("flashcards");
+        setTimeout(() => setViewMode("flashcards"), 0);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeSection?.id]);
   // ── State toggles ──────────────────────────────────────────
   const toggleFlashcard = (id: string) =>
@@ -1944,7 +1953,7 @@ export default function Home() {
                   onClick={() => handleNav('cheat-sheet')}
                   className="px-5 py-2.5 bg-zinc-100 hover:bg-white text-black font-bold text-sm rounded-lg transition-colors flex items-center gap-2"
                 >
-                  <FileText className="w-4 h-4" /> Generate "Day-Before" Cheat Sheet
+                  <FileText className="w-4 h-4" /> Generate &quot;Day-Before&quot; Cheat Sheet
                 </button>
               </div>
 
