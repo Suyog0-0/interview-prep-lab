@@ -36,7 +36,7 @@ export interface CodingQuestion {
 }
 
 export interface InterviewSection {
-  id: number;        // 01–15
+  id: number | string;        // 01–15, or strings for generated/special modules
   slug: string;      // e.g. "core-programming"
   title: string;     // e.g. "Core Programming"
   subtitle: string;  // e.g. "Loops, Conditionals, Basics"

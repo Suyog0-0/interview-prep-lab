@@ -32,17 +32,25 @@ import {
   ExternalLink,
   Minus,
 } from "lucide-react";
-import { interviewData } from "./data";
-import { buildQuestionPool } from "./data/simulation";
 import {
-  rhythmTips, prepWeeks, priorityProblems, jsTheoryQuestions,
-  prepStages, smartQuestions, prepResources,
-} from "./data/leapfrog_prep_data";
+  interviewData,
+  examsData,
+  rhythmTips,
+  prepWeeks,
+  priorityProblems,
+  jsTheoryQuestions,
+  prepStages,
+  smartQuestions,
+  prepResources,
+} from "./data";
+import { buildQuestionPool } from "./data/simulation";
 import type { InterviewSection, InterviewQuestion, MCQQuestion, SimRound, SimRating, SimulationQuestion } from "../types";
+import type { GeneratedExam } from "./data/exams";
+import ExamView from "./components/ExamView";
 import Editor from "@monaco-editor/react";
 
 
-type ViewMode = "flashcards" | "mcqs" | "notes" | "simulation" | "coding";
+type ViewMode = "flashcards" | "mcqs" | "notes" | "simulation" | "coding" | "exam" | "chat" | "cheat-sheet";
 type SimPhase = "setup" | "interview" | "result";
 
 // ─── Option letter badge ───────────────────────────────────────
@@ -110,6 +118,20 @@ const SIDEBAR_GROUPS: {
   "leapfrog-remote-assignments",
   "leapfrog-simulation"
 ],
+  },
+  {
+    key: "exams",
+    label: "Exam Simulator",
+    dot: "#eab308",
+    icon: <Trophy className="w-4 h-4 text-yellow-500" />,
+    slugs: examsData.map(e => e.id),
+  },
+  {
+    key: "ai",
+    label: "AI Interview Chatbot",
+    dot: "#a855f7",
+    icon: <Zap className="w-4 h-4 text-purple-500" />,
+    slugs: ["ai-chat"],
   }
 ];
 
@@ -1482,8 +1504,8 @@ const Scratchpad = ({ defaultCode }: { defaultCode?: string }) => {
 
 // ══════════════════════════════════════════════════════════════
 export default function Home() {
-  // -1 = interview simulation, 0 = dashboard, >0 = module section
-  const [activeSectionId, setActiveSectionId] = useState<number>(0);
+  // -1 = interview simulation, 0 = dashboard, >0 = module section, strings = exams/chat/etc
+  const [activeSectionId, setActiveSectionId] = useState<number | string>(0);
   const [viewMode, setViewMode] = useState<ViewMode>("flashcards");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
@@ -1534,15 +1556,24 @@ export default function Home() {
   const mcqProgress = totalMCQs > 0 ? Math.round((completedMCQs / totalMCQs) * 100) : 0;
 
   // ── Navigation ─────────────────────────────────────────────
-  const handleNav = (id: number, mode?: ViewMode) => {
+  const handleNav = (id: number | string, mode?: ViewMode) => {
     setActiveSectionId(id);
-    if (mode) setViewMode(mode);
+    if (mode) {
+      setViewMode(mode);
+    } else if (typeof id === 'string' && id.startsWith('exam-')) {
+      setViewMode('exam');
+    } else if (id === 'ai-chat') {
+      setViewMode('chat');
+    } else if (id === 'cheat-sheet') {
+      setViewMode('cheat-sheet');
+    }
     setMobileMenuOpen(false);
     setSearchQuery("");
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const activeSection = interviewData.find((s) => s.id === activeSectionId);
+  const activeExam = examsData.find((e) => e.id === activeSectionId);
 
   useEffect(() => {
     if (activeSection) {
@@ -1995,6 +2026,8 @@ export default function Home() {
 
           ) : activeSection?.slug === "leapfrog-overall" ? (
             <LeapfrogOverallPrepView />
+          ) : viewMode === "exam" && activeExam ? (
+            <ExamView exam={activeExam} />
           ) : activeSection ? (
             /* ── SECTION VIEW ───────────────────────────── */
             <section className="animate-fade-up max-w-7xl pb-32">

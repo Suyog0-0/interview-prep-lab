@@ -8,6 +8,7 @@ import { s06_f1soft } from "./s06_f1soft";
 import { s16_system_design } from "./s16_system_design";
 import { leapfrogDaysSections } from "./leapfrog_prep_data";
 export { dailyRevisionSetsWeek3 } from "./daily_revision_mcq_week3";
+export { generateExams } from "./exams";
 import {
   core_mcqs,
   ds_mcqs,
@@ -379,6 +380,8 @@ export const interviewData: InterviewSection[] = [
   leapfrog_onsite,
   leapfrog_hr,
   leapfrog_remote,
-  leapfrogRemoteAssignmentsSection,
-  leapfrog_simulation,
+  leapfrog_remote_assignments,
+  leapfrog_simulation
 ];
+
+export const examsData = generateExams(interviewData);
