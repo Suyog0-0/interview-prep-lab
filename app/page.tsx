@@ -30,6 +30,7 @@ import {
   Link as LinkIcon,
   MessageSquare,
   ExternalLink,
+  Minus,
 } from "lucide-react";
 import { interviewData } from "./data";
 import { buildQuestionPool } from "./data/simulation";
@@ -605,10 +606,10 @@ function SimulationView({ onExit, initialRound }: { onExit: () => void; initialR
   // ── RESULT PHASE ───────────────────────────────────────────────
   if (phase === "result") {
     const grade =
-      score >= 80 ? { label: "Excellent!", color: "#4ade80", icon: "🏆" } :
-      score >= 60 ? { label: "Good job!", color: "#fbbf24", icon: "⭐" } :
-      score >= 40 ? { label: "Keep going!", color: "#fb923c", icon: "💪" } :
-      { label: "More practice needed", color: "#f87171", icon: "📚" };
+      score >= 80 ? { label: "Excellent!", color: "#4ade80", icon: <Trophy className="w-12 h-12" /> } :
+      score >= 60 ? { label: "Good job!", color: "#fbbf24", icon: <Star className="w-12 h-12" /> } :
+      score >= 40 ? { label: "Keep going!", color: "#fb923c", icon: <Flame className="w-12 h-12" /> } :
+      { label: "More practice needed", color: "#f87171", icon: <BookOpen className="w-12 h-12" /> };
 
     return (
       <section className="animate-fade-up max-w-3xl pb-24">
@@ -617,7 +618,7 @@ function SimulationView({ onExit, initialRound }: { onExit: () => void; initialR
         {/* Score hero */}
         <div className="mb-6 p-8 rounded-2xl bg-zinc-950/60 border border-zinc-900 relative overflow-hidden text-center">
           <div className="absolute inset-0 bg-gradient-to-b from-orange-500/5 to-transparent pointer-events-none" />
-          <div className="text-5xl mb-3">{grade.icon}</div>
+          <div className="mb-3 flex justify-center" style={{ color: grade.color }}>{grade.icon}</div>
           <div className="text-[11px] font-mono uppercase tracking-widest text-zinc-500 mb-2">
             Round Complete — {round.toUpperCase()}
           </div>
@@ -637,11 +638,12 @@ function SimulationView({ onExit, initialRound }: { onExit: () => void; initialR
         {/* Breakdown */}
         <div className="grid grid-cols-3 gap-4 mb-6">
           {[
-            { label: "Got It", count: gotItCount, css: "sim-score-got", color: "#4ade80", icon: "✓" },
-            { label: "Partial", count: partialCount, css: "sim-score-part", color: "#fbbf24", icon: "~" },
-            { label: "Missed", count: missedCount, css: "sim-score-miss", color: "#f87171", icon: "✕" },
+            { label: "Got It", count: gotItCount, css: "sim-score-got", color: "#4ade80", icon: <CheckCircle className="w-5 h-5 mx-auto mb-1" /> },
+            { label: "Partial", count: partialCount, css: "sim-score-part", color: "#fbbf24", icon: <Minus className="w-5 h-5 mx-auto mb-1" /> },
+            { label: "Missed", count: missedCount, css: "sim-score-miss", color: "#f87171", icon: <X className="w-5 h-5 mx-auto mb-1" /> },
           ].map((s) => (
             <div key={s.label} className={`p-5 rounded-xl text-center ${s.css}`}>
+              <div style={{ color: s.color }}>{s.icon}</div>
               <div className="text-2xl font-extrabold" style={{ color: s.color }}>{s.count}</div>
               <div className="text-[10px] font-mono uppercase tracking-wider text-zinc-500 mt-1">{s.label}</div>
             </div>
@@ -750,8 +752,8 @@ function SimulationView({ onExit, initialRound }: { onExit: () => void; initialR
                 {currentQ.q}
               </h2>
               {!showIdeal && (
-                <p className="text-[11px] text-zinc-600 font-mono mt-3 italic">
-                  💡 Hint: {currentQ.hint}
+                <p className="text-[11px] text-zinc-600 font-mono mt-3 italic flex items-center">
+                  <Lightbulb className="w-3 h-3 text-yellow-500 mr-1" /> Hint: {currentQ.hint}
                 </p>
               )}
             </div>
@@ -817,15 +819,15 @@ function SimulationView({ onExit, initialRound }: { onExit: () => void; initialR
               </div>
               <div className="flex gap-3">
                 <button className="sim-rating-btn got-it" onClick={() => handleRate("got-it")}>
-                  <span className="text-xl">✓</span>
+                  <CheckCircle className="w-5 h-5" />
                   <span>Got It</span>
                 </button>
                 <button className="sim-rating-btn partial" onClick={() => handleRate("partial")}>
-                  <span className="text-xl">~</span>
+                  <Minus className="w-5 h-5" />
                   <span>Partial</span>
                 </button>
                 <button className="sim-rating-btn missed" onClick={() => handleRate("missed")}>
-                  <span className="text-xl">✕</span>
+                  <X className="w-5 h-5" />
                   <span>Missed</span>
                 </button>
               </div>
@@ -1741,7 +1743,7 @@ export default function Home() {
 
           {/* ── SEARCH RESULTS ──────────────────────────── */}
           {searchQuery && filteredData !== null ? (
-            <section className="animate-fade-up max-w-4xl">
+            <section className="animate-fade-up max-w-7xl">
               <div className="breadcrumb mb-2">Interview Prep Lab / Search</div>
               <h1 className="text-2xl font-bold tracking-tight text-white mb-6">
                 Search Results <span className="text-zinc-500 font-mono text-lg font-normal">({filteredData.length})</span>
@@ -1787,7 +1789,7 @@ export default function Home() {
 
           ) : activeSectionId === 0 ? (
             /* ── DASHBOARD ──────────────────────────────── */
-            <section className="animate-fade-up space-y-8 max-w-5xl">
+            <section className="animate-fade-up space-y-8 max-w-7xl">
               {/* Hero */}
               <div className="p-8 rounded-2xl bg-zinc-950/60 border border-zinc-900 relative overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-r from-orange-500/5 to-transparent pointer-events-none" />
@@ -1880,11 +1882,9 @@ export default function Home() {
 
           ) : activeSection?.slug === "leapfrog-overall" ? (
             <LeapfrogOverallPrepView />
-          ) : activeSection?.slug.startsWith("leapfrog-overall-day-") ? (
-            <LeapfrogDayPrepView dayNum={parseInt(activeSection.slug.replace("leapfrog-overall-day-", ""), 10)} />
           ) : activeSection ? (
             /* ── SECTION VIEW ───────────────────────────── */
-            <section className="animate-fade-up max-w-4xl pb-32">
+            <section className="animate-fade-up max-w-7xl pb-32">
 
               {/* Section header */}
               <div className="breadcrumb mb-2">Interview Prep Lab / {activeSection.title}</div>
@@ -1924,6 +1924,29 @@ export default function Home() {
                   </div>
                 </div>
               </div>
+
+              {/* Daily Rhythm Tips for Leapfrog Prep Days */}
+              {activeSection.slug.startsWith("leapfrog-overall-day-") && (
+                <div className="mb-6">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Zap className="w-4 h-4 text-orange-400" />
+                    <span className="text-[11px] font-mono font-bold text-zinc-300 uppercase tracking-widest">Daily Rhythm Tips</span>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+                    {rhythmTips.map(tip => (
+                      <div key={tip.num} className="p-3 rounded-xl bg-zinc-950/40 border border-zinc-900/80 hover:border-zinc-800 transition-colors">
+                        <div className="flex items-center gap-2 mb-1.5">
+                          <div className="w-4 h-4 rounded bg-orange-500/10 border border-orange-500/20 flex items-center justify-center shrink-0 text-[9px] font-mono text-orange-400 font-bold">
+                            {tip.num}
+                          </div>
+                          <div className="text-[10px] font-mono text-zinc-300 uppercase font-bold truncate">{tip.title}</div>
+                        </div>
+                        <div className="text-[10px] text-zinc-500 leading-relaxed">{tip.body}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               {/* ── TAB SELECTOR ─────────────────────────────── */}
               <div className="flex flex-wrap gap-2 pt-2 pb-4 border-b border-zinc-900 mb-6">
@@ -2168,7 +2191,7 @@ export default function Home() {
                                     className={cls}
                                   >
                                     <div className={"w-6 h-6 rounded-full border flex items-center justify-center text-[11px] font-bold shrink-0 " + (answered && oIdx === m.correctAnswerIndex ? "bg-emerald-500 border-emerald-500 text-black" : answered && state.selectedIndex === oIdx ? "bg-red-500 border-red-500 text-white" : "border-zinc-700 text-zinc-400")}>
-                                      {answered && oIdx === m.correctAnswerIndex ? "✓" : answered && state.selectedIndex === oIdx ? "✕" : LETTERS[oIdx]}
+                                      {answered && oIdx === m.correctAnswerIndex ? <CheckCircle className="w-3.5 h-3.5" /> : answered && state.selectedIndex === oIdx ? <X className="w-3.5 h-3.5" /> : LETTERS[oIdx]}
                                     </div>
                                     <span className="text-[14px] leading-relaxed">{opt}</span>
                                   </button>
