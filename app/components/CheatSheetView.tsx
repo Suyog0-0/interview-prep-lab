@@ -57,8 +57,10 @@ export default function CheatSheetView() {
       }
     });
 
-    setHardQA(qa);
-    setWrongMCQs(mcqs);
+    setTimeout(() => {
+      setHardQA(qa);
+      setWrongMCQs(mcqs);
+    }, 0);
   }, []);
 
   return (
