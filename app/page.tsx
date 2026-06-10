@@ -39,6 +39,7 @@ import {
   prepStages, smartQuestions, prepResources,
 } from "./data/leapfrog_prep_data";
 import type { InterviewSection, InterviewQuestion, MCQQuestion, SimRound, SimRating, SimulationQuestion } from "../types";
+import Editor from "@monaco-editor/react";
 
 
 type ViewMode = "flashcards" | "mcqs" | "notes" | "simulation" | "coding";
@@ -1417,6 +1418,68 @@ function LeapfrogDayPrepView({ dayNum }: { dayNum: number }) {
   );
 }
 
+// ─── Scratchpad Component ───────────────────────────────────────
+const Scratchpad = ({ defaultCode }: { defaultCode?: string }) => {
+  const [code, setCode] = useState(defaultCode || "// Write your JS code here...\n// You can use console.log() to view outputs.\n\n");
+  const [output, setOutput] = useState("");
+
+  const runCode = () => {
+    let logs: string[] = [];
+    const originalConsoleLog = console.log;
+    console.log = (...args) => {
+      logs.push(args.map(a => typeof a === 'object' ? JSON.stringify(a) : String(a)).join(' '));
+      originalConsoleLog(...args);
+    };
+
+    try {
+      // eslint-disable-next-line no-new-func
+      const fn = new Function(code);
+      fn();
+      if (logs.length === 0) {
+        setOutput("Code executed successfully (no output).");
+      } else {
+        setOutput(logs.join('\\n'));
+      }
+    } catch (err: any) {
+      setOutput(`Error: ${err.message}`);
+    } finally {
+      console.log = originalConsoleLog;
+    }
+  };
+
+  return (
+    <div className="mt-6 rounded-xl overflow-hidden border border-zinc-800 bg-zinc-950">
+      <div className="flex justify-between items-center bg-zinc-900 px-4 py-3 border-b border-zinc-800">
+        <span className="text-xs font-mono text-zinc-400 flex items-center gap-2">
+          <Code2 className="w-3.5 h-3.5" /> Interactive Scratchpad
+        </span>
+        <button
+          onClick={runCode}
+          className="bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500 hover:text-white px-3 py-1.5 text-xs font-bold rounded flex items-center gap-1.5 transition-all"
+        >
+          <Zap className="w-3.5 h-3.5" /> Run Code
+        </button>
+      </div>
+      <div className="h-[250px] w-full bg-[#1e1e1e]">
+        <Editor
+          height="100%"
+          defaultLanguage="javascript"
+          theme="vs-dark"
+          value={code}
+          onChange={(val) => setCode(val || "")}
+          options={{ minimap: { enabled: false }, fontSize: 13, padding: { top: 12 } }}
+        />
+      </div>
+      {output && (
+        <div className="bg-black/80 p-4 border-t border-zinc-800 font-mono text-[13px] text-zinc-300 whitespace-pre-wrap">
+          <div className="text-zinc-500 text-[10px] mb-2 uppercase tracking-wider font-bold">Console Output</div>
+          {output}
+        </div>
+      )}
+    </div>
+  );
+};
+
 // ══════════════════════════════════════════════════════════════
 export default function Home() {
   // -1 = interview simulation, 0 = dashboard, >0 = module section
@@ -2113,6 +2176,8 @@ export default function Home() {
                           <span>{q.hint}</span>
                         </div>
                       )}
+                      
+                      <Scratchpad defaultCode={`// Title: ${q.title}\n\n// Write your solution below:\n\n`} />
                     </div>
                   ))}
                 </div>
