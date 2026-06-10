@@ -1589,6 +1589,9 @@ export default function Home() {
       setViewMode('chat');
     } else if (id === 'cheat-sheet') {
       setViewMode('cheat-sheet');
+    } else {
+      // If navigating back to a normal module from an exclusive view, reset to flashcards
+      setViewMode((prev) => ["exam", "chat", "cheat-sheet"].includes(prev) ? "flashcards" : prev);
     }
     setMobileMenuOpen(false);
     setSearchQuery("");
