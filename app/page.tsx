@@ -30,6 +30,7 @@ import {
   Link as LinkIcon,
   MessageSquare,
   ExternalLink,
+  Minus,
 } from "lucide-react";
 import { interviewData } from "./data";
 import { buildQuestionPool } from "./data/simulation";
@@ -604,10 +605,10 @@ function SimulationView({ onExit, initialRound }: { onExit: () => void; initialR
   // ── RESULT PHASE ───────────────────────────────────────────────
   if (phase === "result") {
     const grade =
-      score >= 80 ? { label: "Excellent!", color: "#4ade80", icon: "🏆" } :
-      score >= 60 ? { label: "Good job!", color: "#fbbf24", icon: "⭐" } :
-      score >= 40 ? { label: "Keep going!", color: "#fb923c", icon: "💪" } :
-      { label: "More practice needed", color: "#f87171", icon: "📚" };
+      score >= 80 ? { label: "Excellent!", color: "#4ade80", icon: <Trophy className="w-12 h-12" /> } :
+      score >= 60 ? { label: "Good job!", color: "#fbbf24", icon: <Star className="w-12 h-12" /> } :
+      score >= 40 ? { label: "Keep going!", color: "#fb923c", icon: <Flame className="w-12 h-12" /> } :
+      { label: "More practice needed", color: "#f87171", icon: <BookOpen className="w-12 h-12" /> };
 
     return (
       <section className="animate-fade-up max-w-3xl pb-24">
@@ -616,7 +617,7 @@ function SimulationView({ onExit, initialRound }: { onExit: () => void; initialR
         {/* Score hero */}
         <div className="mb-6 p-8 rounded-2xl bg-zinc-950/60 border border-zinc-900 relative overflow-hidden text-center">
           <div className="absolute inset-0 bg-gradient-to-b from-orange-500/5 to-transparent pointer-events-none" />
-          <div className="text-5xl mb-3">{grade.icon}</div>
+          <div className="mb-3 flex justify-center" style={{ color: grade.color }}>{grade.icon}</div>
           <div className="text-[11px] font-mono uppercase tracking-widest text-zinc-500 mb-2">
             Round Complete — {round.toUpperCase()}
           </div>
@@ -636,11 +637,12 @@ function SimulationView({ onExit, initialRound }: { onExit: () => void; initialR
         {/* Breakdown */}
         <div className="grid grid-cols-3 gap-4 mb-6">
           {[
-            { label: "Got It", count: gotItCount, css: "sim-score-got", color: "#4ade80", icon: "✓" },
-            { label: "Partial", count: partialCount, css: "sim-score-part", color: "#fbbf24", icon: "~" },
-            { label: "Missed", count: missedCount, css: "sim-score-miss", color: "#f87171", icon: "✕" },
+            { label: "Got It", count: gotItCount, css: "sim-score-got", color: "#4ade80", icon: <CheckCircle className="w-5 h-5 mx-auto mb-1" /> },
+            { label: "Partial", count: partialCount, css: "sim-score-part", color: "#fbbf24", icon: <Minus className="w-5 h-5 mx-auto mb-1" /> },
+            { label: "Missed", count: missedCount, css: "sim-score-miss", color: "#f87171", icon: <X className="w-5 h-5 mx-auto mb-1" /> },
           ].map((s) => (
             <div key={s.label} className={`p-5 rounded-xl text-center ${s.css}`}>
+              <div style={{ color: s.color }}>{s.icon}</div>
               <div className="text-2xl font-extrabold" style={{ color: s.color }}>{s.count}</div>
               <div className="text-[10px] font-mono uppercase tracking-wider text-zinc-500 mt-1">{s.label}</div>
             </div>
@@ -749,8 +751,8 @@ function SimulationView({ onExit, initialRound }: { onExit: () => void; initialR
                 {currentQ.q}
               </h2>
               {!showIdeal && (
-                <p className="text-[11px] text-zinc-600 font-mono mt-3 italic">
-                  💡 Hint: {currentQ.hint}
+                <p className="text-[11px] text-zinc-600 font-mono mt-3 italic flex items-center">
+                  <Lightbulb className="w-3 h-3 text-yellow-500 mr-1" /> Hint: {currentQ.hint}
                 </p>
               )}
             </div>
@@ -816,15 +818,15 @@ function SimulationView({ onExit, initialRound }: { onExit: () => void; initialR
               </div>
               <div className="flex gap-3">
                 <button className="sim-rating-btn got-it" onClick={() => handleRate("got-it")}>
-                  <span className="text-xl">✓</span>
+                  <CheckCircle className="w-5 h-5" />
                   <span>Got It</span>
                 </button>
                 <button className="sim-rating-btn partial" onClick={() => handleRate("partial")}>
-                  <span className="text-xl">~</span>
+                  <Minus className="w-5 h-5" />
                   <span>Partial</span>
                 </button>
                 <button className="sim-rating-btn missed" onClick={() => handleRate("missed")}>
-                  <span className="text-xl">✕</span>
+                  <X className="w-5 h-5" />
                   <span>Missed</span>
                 </button>
               </div>
@@ -1742,7 +1744,7 @@ export default function Home() {
                                     className={cls}
                                   >
                                     <div className={"w-6 h-6 rounded-full border flex items-center justify-center text-[11px] font-bold shrink-0 " + (answered && oIdx === m.correctAnswerIndex ? "bg-emerald-500 border-emerald-500 text-black" : answered && state.selectedIndex === oIdx ? "bg-red-500 border-red-500 text-white" : "border-zinc-700 text-zinc-400")}>
-                                      {answered && oIdx === m.correctAnswerIndex ? "✓" : answered && state.selectedIndex === oIdx ? "✕" : LETTERS[oIdx]}
+                                      {answered && oIdx === m.correctAnswerIndex ? <CheckCircle className="w-3.5 h-3.5" /> : answered && state.selectedIndex === oIdx ? <X className="w-3.5 h-3.5" /> : LETTERS[oIdx]}
                                     </div>
                                     <span className="text-[14px] leading-relaxed">{opt}</span>
                                   </button>

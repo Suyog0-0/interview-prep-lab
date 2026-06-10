@@ -172,11 +172,11 @@ dog.speak(); // "Rex makes a sound."
       hint: "One listener on the parent instead of many on children.",
       answer:
         "Event delegation uses JavaScript's event bubbling — events propagate up from child to parent.\n\nInstead of attaching click listeners to 100 list items, attach ONE listener to the parent <ul> and use event.target to find which child was clicked.\n\nBenefits:\n1. Memory efficient — one listener instead of N.\n2. Works for dynamically added elements — no need to re-attach.\n3. Less DOM interaction on setup.\n\nUsed heavily in frameworks and virtual DOM implementations.",
-      code: `// ✗ Bad — 100 listeners
+      code: `// [Bad] — 100 listeners
 document.querySelectorAll('li').forEach(li =>
   li.addEventListener('click', handler));
 
-// ✓ Good — 1 listener via delegation
+// [Good] — 1 listener via delegation
 document.querySelector('ul').addEventListener('click', e => {
   if (e.target.tagName === 'LI') handler(e.target);
 });`,
@@ -708,10 +708,10 @@ LIMIT 5;`,
       hint: "Malicious SQL in user input. Prevent with parameterized queries.",
       answer:
         "SQL Injection: An attacker inserts malicious SQL code into an input field, which is then executed by the database.\n\nExample: username input: admin'-- — this comments out the password check.\n\nPrevention:\n1. Parameterized queries / prepared statements — NEVER concatenate user input into SQL strings.\n2. ORM (Sequelize, Prisma, Hibernate) — handles parameterization automatically.\n3. Input validation — whitelist expected formats.\n4. Principle of least privilege — DB user should only have SELECT/INSERT on needed tables.\n\nFor FinTech: SQL injection on a payment DB could drain accounts or expose millions of user records.",
-      code: `// ✗ DANGEROUS — SQL injection vulnerable
+      code: `// [DANGEROUS] — SQL injection vulnerable
 const query = "SELECT * FROM users WHERE email = '" + email + "'";
 
-// ✓ SAFE — parameterized query (pg library example)
+// [SAFE] — parameterized query (pg library example)
 const result = await pool.query(
   'SELECT * FROM users WHERE email = $1',
   [email]

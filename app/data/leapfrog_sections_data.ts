@@ -719,8 +719,8 @@ Interview signal: draw the contrast clearly, give a one-liner example of each.`,
   regularFn: function() { console.log(this.name); }, // "Leapfrog"
   arrowFn:   () => { console.log(this);         },   // outer 'this' (window/undefined)
 };
-obj.regularFn(); // ✓ Leapfrog
-obj.arrowFn();   // ✗ undefined — arrow captures outer this`,
+obj.regularFn(); // [Good] Leapfrog
+obj.arrowFn();   // [Bad] undefined — arrow captures outer this`,
     },
     {
       id: "lfv-q02",
@@ -856,8 +856,8 @@ let y = 10;
 
 // const immutable binding
 const obj = { a: 1 };
-obj.a = 2;     // ✓ mutation allowed
-obj = {};      // ✗ TypeError: Assignment to constant variable`,
+obj.a = 2;     // [Good] mutation allowed
+obj = {};      // [Error] TypeError: Assignment to constant variable`,
     },
     {
       id: "lfv-q06",
@@ -1465,8 +1465,8 @@ class Circle extends Shape {
   area() { return Math.PI * this.r ** 2; }
 }
 
-// new Shape(); // ✗ Error
-console.log(new Circle(5).area()); // ✓ 78.53...`,
+// new Shape(); // [Error]
+console.log(new Circle(5).area()); // [Good] 78.53...`,
     },
     {
       id: "lfo-q05",
@@ -2705,9 +2705,9 @@ function renderUsers(users) {
     .map(u => \`
       <div class="user-card">
         <h3>\${u.name}</h3>
-        <p>📧 \${u.email}</p>
-        <p>🌐 \${u.website}</p>
-        <p>🏢 \${u.company.name}</p>
+        <p>Email: \${u.email}</p>
+        <p>Web: \${u.website}</p>
+        <p>Company: \${u.company.name}</p>
       </div>
     \`)
     .join('');
@@ -2790,7 +2790,7 @@ function render() {
   list.innerHTML = todos.map(t => \`
     <li class="\${t.completed ? 'done' : ''}">
       <span onclick="toggleTodo(\${t.id})">\${t.text}</span>
-      <button onclick="deleteTodo(\${t.id})">✕</button>
+      <button onclick="deleteTodo(\${t.id})">Delete</button>
     </li>
   \`).join('');
 
@@ -2839,8 +2839,8 @@ function renderState(state, data = []) {
 
   const states = {
     loading: '<div class="loading"><span class="spinner"></span> Loading...</div>',
-    error:   '<div class="error">⚠️ Failed to load. <button id="retry">Retry</button></div>',
-    empty:   '<div class="empty">🔍 No results found.</div>',
+    error:   '<div class="error">[!] Failed to load. <button id="retry">Retry</button></div>',
+    empty:   '<div class="empty">[Search] No results found.</div>',
     success: data.map(item => \`<div class="card">\${item.name}</div>\`).join(''),
   };
 
