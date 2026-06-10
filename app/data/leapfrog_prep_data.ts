@@ -1,4 +1,7 @@
 import type { InterviewSection } from "../../types";
+import { dailyRevisionSets as week1Sets } from "./daily_revision_mcq";
+import { dailyRevisionSets as week2Sets } from "./daily_revision_mcq_week2";
+import { dailyRevisionSetsWeek3 as week3Sets } from "./daily_revision_mcq_week3";
 
 export type PrepTag = "JS" | "DSA" | "PROJECT" | "REVIEW" | "INTERVIEW" | "BREAK";
 
@@ -6,6 +9,26 @@ export interface TimeBlock {
   time: string;
   task: string;
   tag: PrepTag;
+  
+}
+
+// Add this near the top of leapfrog_prep_data.ts
+import type { MCQQuestion } from "../../types";
+
+export interface CodingQuestion {
+  id: string;
+  title: string;
+  difficulty: "Easy" | "Medium";
+  description: string;
+  examples: { input: string; output: string; explanation?: string }[];
+  constraints: string[];
+  hint: string;
+}
+export interface DailyRevisionSet {
+  dayNum: number;
+  topic: string;
+  mcqs: MCQQuestion[];
+  codingQuestions: CodingQuestion[];
 }
 
 export interface PrepDay {
@@ -14,6 +37,7 @@ export interface PrepDay {
   date: string; // ISO YYYY-MM-DD
   topic: string;
   blocks: TimeBlock[];
+  revisionSet?: DailyRevisionSet;
 }
 
 export interface PrepWeek {
@@ -514,6 +538,16 @@ export const prepResources: PrepResource[] = [
     description: "Visual problem reference from your notes",
   },
 ];
+
+// Attach revision sets to their matching days
+const allRevisionSets = [...week1Sets, ...week2Sets, ...week3Sets];
+
+prepWeeks.forEach(week => {
+  week.days.forEach(day => {
+    const match = allRevisionSets.find(r => r.dayNum === day.dayNum);
+    if (match) day.revisionSet = match;
+  });
+});
 
 // ─── Generated Day Sections ───────────────────────────────────
 export const leapfrogDaysSections: InterviewSection[] = prepWeeks.flatMap(week => 
