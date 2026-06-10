@@ -2076,7 +2076,7 @@ export default function Home() {
           ) : activeSection?.slug === "leapfrog-overall" ? (
             <LeapfrogOverallPrepView />
           ) : viewMode === "exam" && activeExam ? (
-            <ExamView exam={activeExam} />
+            <ExamView key={activeExam.id} exam={activeExam} />
           ) : viewMode === "chat" ? (
             <AIChatbot />
           ) : viewMode === "cheat-sheet" ? (
