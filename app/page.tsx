@@ -47,6 +47,7 @@ import { buildQuestionPool } from "./data/simulation";
 import type { InterviewSection, InterviewQuestion, MCQQuestion, SimRound, SimRating, SimulationQuestion } from "../types";
 import type { GeneratedExam } from "./data/exams";
 import ExamView from "./components/ExamView";
+import AIChatbot from "./components/AIChatbot";
 import Editor from "@monaco-editor/react";
 
 
@@ -2028,6 +2029,8 @@ export default function Home() {
             <LeapfrogOverallPrepView />
           ) : viewMode === "exam" && activeExam ? (
             <ExamView exam={activeExam} />
+          ) : viewMode === "chat" ? (
+            <AIChatbot />
           ) : activeSection ? (
             /* ── SECTION VIEW ───────────────────────────── */
             <section className="animate-fade-up max-w-7xl pb-32">
