@@ -13,8 +13,8 @@ export default function CheatSheetView() {
     const savedQuiz = localStorage.getItem("quizStates");
     const savedMcq = localStorage.getItem("mcqStates");
     
-    let hardIds = new Set<string>();
-    let wrongIds = new Set<string>();
+    const hardIds = new Set<string>();
+    const wrongIds = new Set<string>();
 
     if (savedQuiz) {
       const qStates = JSON.parse(savedQuiz);
@@ -83,7 +83,7 @@ export default function CheatSheetView() {
           <div className="text-center py-20 text-gray-500 flex flex-col items-center">
             <AlertTriangle className="w-16 h-16 text-yellow-500 mb-4" />
             <h2 className="text-2xl font-bold">Nothing to review!</h2>
-            <p className="mt-2">Mark flashcards as 'Hard' or answer MCQs incorrectly to populate this cheat sheet.</p>
+            <p className="mt-2">Mark flashcards as &apos;Hard&apos; or answer MCQs incorrectly to populate this cheat sheet.</p>
           </div>
         )}
 

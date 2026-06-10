@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { CheckCircle, Clock, XCircle, Award } from "lucide-react";
+import { Clock, Award } from "lucide-react";
 import type { GeneratedExam } from "../data/exams";
 
 export default function ExamView({ exam }: { exam: GeneratedExam }) {
@@ -10,11 +10,12 @@ export default function ExamView({ exam }: { exam: GeneratedExam }) {
   const [mcqAnswers, setMcqAnswers] = useState<Record<string, number>>({});
   const [qaScores, setQaScores] = useState<Record<string, number>>({});
   const [codingScores, setCodingScores] = useState<Record<string, number>>({});
-  const [showAnswers, setShowAnswers] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     if (isSubmitted || timeLeft <= 0) {
-      if (!isSubmitted) setIsSubmitted(true);
+      if (!isSubmitted && timeLeft <= 0) {
+        setTimeout(() => setIsSubmitted(true), 0);
+      }
       return;
     }
     const timer = setInterval(() => {

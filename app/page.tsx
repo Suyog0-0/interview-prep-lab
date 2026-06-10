@@ -487,7 +487,7 @@ function SimulationView({ onExit, initialRound }: { onExit: () => void; initialR
       });
     }, 1000);
     return () => { if (timerRef.current) clearInterval(timerRef.current); };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+   
   }, [phase, currentIndex, showIdeal]);
 
   const handleSubmitAnswer = () => {
@@ -1454,7 +1454,7 @@ const Scratchpad = ({ defaultCode }: { defaultCode?: string }) => {
   const [output, setOutput] = useState("");
 
   const runCode = () => {
-    let logs: string[] = [];
+    const logs: string[] = [];
     const originalConsoleLog = console.log;
     console.log = (...args) => {
       logs.push(args.map(a => typeof a === 'object' ? JSON.stringify(a) : String(a)).join(' '));
@@ -1462,7 +1462,7 @@ const Scratchpad = ({ defaultCode }: { defaultCode?: string }) => {
     };
 
     try {
-      // eslint-disable-next-line no-new-func
+       
       const fn = new Function(code);
       fn();
       if (logs.length === 0) {
@@ -1605,12 +1605,11 @@ export default function Home() {
     if (activeSection) {
       if (activeSection.questions.length === 0 && activeSection.notes && activeSection.notes.length > 0) {
         setViewMode("notes");
-      } else if (activeSection.questions.length > 0 && viewMode === "notes" && (!activeSection.notes || activeSection.notes.length === 0)) {
+      } else if (activeSection.questions.length > 0 && viewMode === "notes") {
         setViewMode("flashcards");
       }
     }
   }, [activeSection?.id]);
-
   // ── State toggles ──────────────────────────────────────────
   const toggleFlashcard = (id: string) =>
     setQuizStates((prev) => ({ ...prev, [id]: { ...prev[id], showAnswer: !prev[id]?.showAnswer } }));
