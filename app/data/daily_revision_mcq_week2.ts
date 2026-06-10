@@ -16,25 +16,8 @@
  */
 
 import type { MCQQuestion } from "../../types";
-
+import type { CodingQuestion, DailyRevisionSet } from "./leapfrog_prep_data";
 // ─── Coding Question type ─────────────────────────────────────────────────────
-export interface CodingQuestion {
-  id: string;
-  title: string;
-  difficulty: "Easy" | "Medium";
-  description: string;
-  examples: { input: string; output: string; explanation?: string }[];
-  constraints: string[];
-  hint: string;
-}
-
-// ─── Daily Revision Block type ────────────────────────────────────────────────
-export interface DailyRevisionSet {
-  dayNum: number;
-  topic: string;
-  mcqs: MCQQuestion[];
-  codingQuestions: CodingQuestion[];
-}
 
 // =============================================================================
 // DAY 1 — var / let / const · Scope · Hoisting · TDZ
@@ -1524,37 +1507,37 @@ const day6_coding: CodingQuestion[] = [
 // =============================================================================
 export const dailyRevisionSets: DailyRevisionSet[] = [
   {
-    dayNum: 1,
+    dayNum: 8,
     topic: "var / let / const · Scope · Hoisting · TDZ",
     mcqs: day1_mcqs,
     codingQuestions: day1_coding,
   },
   {
-    dayNum: 2,
+    dayNum: 9,
     topic: "Closures · 'this' · Arrow Functions · call / apply / bind",
     mcqs: day2_mcqs,
     codingQuestions: day2_coding,
   },
   {
-    dayNum: 3,
+    dayNum: 10,
     topic: "Arrays & Objects · map / filter / reduce · Deep Copy · Flatten",
     mcqs: day3_mcqs,
     codingQuestions: day3_coding,
   },
   {
-    dayNum: 4,
+    dayNum: 11,
     topic: "Event Loop · Promises · async/await · Fetch API",
     mcqs: day4_mcqs,
     codingQuestions: day4_coding,
   },
   {
-    dayNum: 5,
+    dayNum: 12,
     topic: "DOM · Events · Bubbling / Capturing · Event Delegation",
     mcqs: day5_mcqs,
     codingQuestions: day5_coding,
   },
   {
-    dayNum: 6,
+    dayNum: 13,
     topic: "Debounce · Throttle · Prototype Chain · Inheritance",
     mcqs: day6_mcqs,
     codingQuestions: day6_coding,
