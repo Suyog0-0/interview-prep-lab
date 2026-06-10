@@ -1670,7 +1670,16 @@ export default function Home() {
           <div className="nav-group-children space-y-0.5 mt-1">
             {group.slugs.map((slugItem, idx) => {
               if (typeof slugItem === "string") {
-                const sec = interviewData.find(s => s.slug === slugItem);
+                let sec;
+                if (slugItem.startsWith("exam-")) {
+                  const exam = examsData.find(e => e.id === slugItem);
+                  if (exam) sec = { id: exam.id, title: exam.title, slug: exam.id };
+                } else if (slugItem === "ai-chat") {
+                  sec = { id: "ai-chat", title: "AI Behavioral Interview", slug: "ai-chat" };
+                } else {
+                  sec = interviewData.find(s => s.slug === slugItem);
+                }
+                
                 if (!sec) return null;
                 const isActive = activeSectionId === sec.id && !searchQuery;
                 return (
