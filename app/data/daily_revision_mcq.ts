@@ -15,8 +15,8 @@
  *   Day 6 — Debounce, Throttle, Prototype chain, Inheritance + BFA advanced arrays
  */
 
-import type { MCQQuestion } from "../../types";
-import type { CodingQuestion, DailyRevisionSet } from "./leapfrog_prep_data";
+import type { MCQQuestion, CodingQuestion } from "../../types";
+import type { DailyRevisionSet } from "./leapfrog_prep_data";
 import { day7_mcqs, day7_coding } from "./daily_revision_mcq_day7";
 
 // ─── Coding Question type ─────────────────────────────────────────────────────
