@@ -36,14 +36,11 @@ import {
 import {
   interviewData,
   examsData,
-  rhythmTips,
-  prepWeeks,
-  priorityProblems,
-  jsTheoryQuestions,
-  prepStages,
-  smartQuestions,
-  prepResources,
-} from "./data";
+} from "./data/index";
+import {
+  rhythmTips, prepWeeks, priorityProblems, jsTheoryQuestions,
+  prepStages, smartQuestions, prepResources,
+} from "./data/leapfrog_prep_data";
 import { buildQuestionPool } from "./data/simulation";
 import type { InterviewSection, InterviewQuestion, MCQQuestion, SimRound, SimRating, SimulationQuestion } from "../types";
 import type { GeneratedExam } from "./data/exams";
