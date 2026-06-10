@@ -380,7 +380,7 @@ export const interviewData: InterviewSection[] = [
   leapfrog_onsite,
   leapfrog_hr,
   leapfrog_remote,
-  leapfrog_remote_assignments,
+  leapfrogRemoteAssignmentsSection,
   leapfrog_simulation
 ];
 
