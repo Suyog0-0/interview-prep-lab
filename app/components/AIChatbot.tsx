@@ -24,7 +24,9 @@ export default function AIChatbot() {
   const [isListening, setIsListening] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore - SpeechRecognition is not fully typed
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const recognitionRef = useRef<any>(null);
 
   const speak = (text: string) => {
@@ -38,12 +40,15 @@ export default function AIChatbot() {
 
   useEffect(() => {
     if (messages.length === 0) {
-      setMessages([
-        { role: "system", content: "AI Interviewer connected. I will ask you behavioral questions. Please use the STAR method (Situation, Task, Action, Result) in your responses." },
-        { role: "ai", content: BEHAVIORAL_PROMPTS[0] }
-      ]);
-      speak(BEHAVIORAL_PROMPTS[0]);
+      setTimeout(() => {
+        setMessages([
+          { role: "system", content: "AI Interviewer connected. I will ask you behavioral questions. Please use the STAR method (Situation, Task, Action, Result) in your responses." },
+          { role: "ai", content: BEHAVIORAL_PROMPTS[0] }
+        ]);
+        speak(BEHAVIORAL_PROMPTS[0]);
+      }, 0);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -54,13 +59,15 @@ export default function AIChatbot() {
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      // @ts-ignore
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-expect-error
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
       if (SpeechRecognition) {
         recognitionRef.current = new SpeechRecognition();
         recognitionRef.current.continuous = true;
         recognitionRef.current.interimResults = true;
         
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         recognitionRef.current.onresult = (event: any) => {
           let currentTranscript = '';
           for (let i = event.resultIndex; i < event.results.length; i++) {
@@ -245,7 +252,7 @@ export default function AIChatbot() {
           </div>
         </div>
         <div className="text-[10px] text-zinc-500 text-center mt-2 font-mono">
-          Pro tip: Enable mic for voice dictation. Voice synthesis will read the AI's feedback aloud.
+          Pro tip: Enable mic for voice dictation. Voice synthesis will read the AI&apos;s feedback aloud.
         </div>
       </div>
     </div>
