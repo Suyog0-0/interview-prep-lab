@@ -1319,7 +1319,7 @@ export default function Home() {
 
           {/* ── SEARCH RESULTS ──────────────────────────── */}
           {searchQuery && filteredData !== null ? (
-            <section className="animate-fade-up max-w-4xl">
+            <section className="animate-fade-up max-w-7xl">
               <div className="breadcrumb mb-2">Interview Prep Lab / Search</div>
               <h1 className="text-2xl font-bold tracking-tight text-white mb-6">
                 Search Results <span className="text-zinc-500 font-mono text-lg font-normal">({filteredData.length})</span>
@@ -1365,7 +1365,7 @@ export default function Home() {
 
           ) : activeSectionId === 0 ? (
             /* ── DASHBOARD ──────────────────────────────── */
-            <section className="animate-fade-up space-y-8 max-w-5xl">
+            <section className="animate-fade-up space-y-8 max-w-7xl">
               {/* Hero */}
               <div className="p-8 rounded-2xl bg-zinc-950/60 border border-zinc-900 relative overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-r from-orange-500/5 to-transparent pointer-events-none" />
@@ -1460,7 +1460,7 @@ export default function Home() {
             <LeapfrogOverallPrepView />
           ) : activeSection ? (
             /* ── SECTION VIEW ───────────────────────────── */
-            <section className="animate-fade-up max-w-4xl pb-32">
+            <section className="animate-fade-up max-w-7xl pb-32">
 
               {/* Section header */}
               <div className="breadcrumb mb-2">Interview Prep Lab / {activeSection.title}</div>
