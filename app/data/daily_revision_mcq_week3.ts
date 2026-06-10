@@ -14,8 +14,8 @@
  *   Day 18 — Remote Assignment: Fetch API, filter/search UI, clean code patterns
  */
 
-import type { MCQQuestion } from "../../types";
-import type { CodingQuestion, DailyRevisionSet } from "./leapfrog_prep_data";
+import type { MCQQuestion, CodingQuestion } from "../../types";
+import type { DailyRevisionSet } from "./leapfrog_prep_data";
 
 
 // =============================================================================
