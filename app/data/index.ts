@@ -324,6 +324,7 @@ import {
   leapfrog_hr,
   leapfrog_remote,
 } from "./leapfrog_sections_data";
+import { leapfrogRemoteAssignmentsSection } from "./leapfrog_remote_assignments";
  
 s01_core.mcqs = core_mcqs;
 s02_ds.mcqs = ds_mcqs;
@@ -376,5 +377,6 @@ export const interviewData: InterviewSection[] = [
   leapfrog_onsite,
   leapfrog_hr,
   leapfrog_remote,
+  leapfrogRemoteAssignmentsSection,
   leapfrog_simulation,
 ];

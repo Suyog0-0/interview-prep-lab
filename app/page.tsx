@@ -106,6 +106,7 @@ const SIDEBAR_GROUPS: {
   "leapfrog-onsite",
   "leapfrog-hr",
   "leapfrog-remote",
+  "leapfrog-remote-assignments",
   "leapfrog-simulation"
 ],
   }
@@ -1479,6 +1480,16 @@ export default function Home() {
   };
 
   const activeSection = interviewData.find((s) => s.id === activeSectionId);
+
+  useEffect(() => {
+    if (activeSection) {
+      if (activeSection.questions.length === 0 && activeSection.notes && activeSection.notes.length > 0) {
+        setViewMode("notes");
+      } else if (activeSection.questions.length > 0 && viewMode === "notes" && (!activeSection.notes || activeSection.notes.length === 0)) {
+        setViewMode("flashcards");
+      }
+    }
+  }, [activeSection?.id]);
 
   // ── State toggles ──────────────────────────────────────────
   const toggleFlashcard = (id: string) =>
