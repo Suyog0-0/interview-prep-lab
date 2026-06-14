@@ -693,6 +693,13 @@ const day3_mcqs: MCQQuestion[] = [
     explanation:
       "Objects in JavaScript are assigned by reference, not by value. const b = a means b and a point to the SAME object in memory. Changing b.x also changes a.x. This is a fundamental concept: primitives are copied by value, objects by reference.",
   },
+  {
+    id: "rev-wk2-16",
+    question: "When rewriting a class component as a functional component, what typically replaces lifecycle methods like componentDidMount?",
+    options: ["useReducer", "useState", "useEffect with an empty dependency array", "useContext"],
+    correctAnswerIndex: 2,
+    explanation: "useEffect(() => { ... }, []) runs only once after the initial render, making it the functional equivalent to componentDidMount.",
+  },
 ];
 
 const day3_coding: CodingQuestion[] = [
