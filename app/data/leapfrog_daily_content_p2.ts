@@ -476,6 +476,14 @@ console.log(findMin([3,4,5,1,2])); // 1`,
 // db.query('SELECT * FROM users WHERE id = $1', [id]);`,
           category: "Web Security",
           language: "javascript"
+        },
+        {
+          id: "lf-p12-11",
+          q: "What is a Component-based architecture in React?",
+          hint: "Reusability and isolation.",
+          answer: "It breaks the UI into independent, reusable pieces (components). Each component manages its own state and props, making the UI easier to build, test, and maintain systematically.",
+          category: "React",
+          language: "javascript"
         }
       ];
     case 13:
@@ -667,6 +675,22 @@ console.log(sum); // 6`,
 // Result: { name: 'Alice', age: 26, city: null } 
 // (Replaces entire resource, omits unspecified fields)`,
           category: "Backend Theory",
+          language: "javascript"
+        },
+        {
+          id: "lf-p13-11",
+          q: "What systematic decisions are made during application architecture?",
+          hint: "State, routing, performance.",
+          answer: "Decisions include: global vs local state management (Context/Redux), component hierarchy, folder structure, routing strategies, and performance optimizations (lazy loading).",
+          category: "Architecture",
+          language: "javascript"
+        },
+        {
+          id: "lf-p13-12",
+          q: "What principles are used for robust application development?",
+          hint: "SOLID, DRY, KISS.",
+          answer: "Common principles include DRY (Don't Repeat Yourself), KISS (Keep It Simple, Stupid), SOLID (for OOP/component design), and Separation of Concerns (UI logic separate from business logic).",
+          category: "Architecture",
           language: "javascript"
         }
       ];
@@ -871,6 +895,14 @@ console.log(sum); // 6`,
 // ANY server can validate the JWT payload mathematically.
 // Easy to scale horizontally across many servers.`,
           category: "System Design",
+          language: "javascript"
+        },
+        {
+          id: "lf-p14-11",
+          q: "When is the Two Pointer technique most effective?",
+          hint: "Sorted arrays, searching pairs.",
+          answer: "It is highly effective for searching pairs in sorted arrays, reversing arrays in-place, or sliding window optimizations, reducing O(n^2) time complexity down to O(n).",
+          category: "DSA",
           language: "javascript"
         }
       ];
@@ -1311,6 +1343,20 @@ const handleSubmit = () => {
 }`,
           category: "DSA",
           language: "javascript"
+        },
+        {
+          id: "lf-p16-11",
+          q: "What is a Binary Tree?",
+          hint: "At most two children.",
+          answer: "A tree data structure where each node has at most two children, referred to as the left child and the right child. It forms the basis for Binary Search Trees (BST).",
+          code: `class TreeNode {
+  constructor(val) {
+    this.val = val;
+    this.left = this.right = null;
+  }
+}`,
+          category: "DSA",
+          language: "javascript"
         }
       ];
     case 17:
@@ -1525,6 +1571,22 @@ const list = [
 // Now the DB uses a B-Tree data structure internally
 // to find the email in O(log n) time. Very fast!`,
           category: "Database Theory",
+          language: "javascript"
+        },
+        {
+          id: "lf-p17-11",
+          q: "What is the '3W' Methodology in interviews?",
+          hint: "Why this, Why doing this, Why not others.",
+          answer: "When explaining technical choices, answer: 1. Why use this tool/pattern? 2. Why are we doing this specific implementation? 3. Why NOT use other alternative approaches? It demonstrates deep systematic thinking.",
+          category: "Interview Strategy",
+          language: "javascript"
+        },
+        {
+          id: "lf-p17-12",
+          q: "How do you handle Scenario-based questions?",
+          hint: "STAR method.",
+          answer: "Use the STAR method (Situation, Task, Action, Result) but tailor it to technical trade-offs. Discuss the constraints of the scenario and the systematic decisions you made to resolve it.",
+          category: "Interview Strategy",
           language: "javascript"
         }
       ];
@@ -1768,6 +1830,14 @@ const arr = btn.arrowClick;   // Extracts arrow function
 // reg(); // TypeError: Cannot read property 'name' of undefined (lost 'this')
 arr(); // 'Btn' (Arrow functions lexically preserve 'this' from where they were defined)`,
           category: "JS Theory",
+          language: "javascript"
+        },
+        {
+          id: "lf-p18-11",
+          q: "How does an ATS Machine search resumes?",
+          hint: "Keyword matching.",
+          answer: "An Applicant Tracking System (ATS) parses resumes for specific keywords (e.g., 'React', 'Binary Search', 'Component-based') matching the job description. Formatting must be simple so the parser doesn't fail.",
+          category: "Job Prep",
           language: "javascript"
         }
       ];
@@ -2210,6 +2280,14 @@ git rebase origin/main
 git push --force-with-lease origin feature-branch`,
           category: "Tools",
           language: "bash"
+        },
+        {
+          id: "lf-p20-11",
+          q: "What are common Assessment strategies in tech interviews?",
+          hint: "DSA, System Design, Behavioral.",
+          answer: "Assessments typically cover 3 areas: 1. Algorithmic thinking (DSA/Whiteboarding), 2. Practical coding (Take-home or live React components), 3. Behavioral/Cultural fit (Scenario-based questions).",
+          category: "Assessment",
+          language: "javascript"
         }
       ];
     case 21:
