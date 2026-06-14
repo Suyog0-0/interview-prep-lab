@@ -188,7 +188,17 @@ show();`,
 console.log(a, b); // 2 1
 
 // Old way: let temp = a; a = b; b = temp;`,
-          category: "Coding",
+        },
+        {
+          id: "lf-p1-11",
+          q: "What edge cases should you consider for Two Sum?",
+          hint: "Negative numbers, duplicates, no solution.",
+          answer: "Consider negative numbers, duplicate numbers that form the target (e.g. 3+3=6), and cases where no solution exists. A hash map correctly handles negative values and duplicates automatically if implemented properly.",
+          code: `// Handles negative numbers and zeroes smoothly:
+console.log(twoSum([-3, 4, 3, 90], 0)); // [0, 2]
+// Handles duplicate components (3 + 3 = 6):
+console.log(twoSum([3, 2, 4, 3], 6));   // [0, 3]`,
+          category: "DSA",
           language: "javascript"
         }
       ];
@@ -577,6 +587,41 @@ function flatten(arr) {
 }
 console.log(flatten(nested)); // [1, 2, 3, 4, 5]`,
           category: "Coding",
+          language: "javascript"
+        },
+        {
+          id: "lf-p3-11",
+          q: "When should you use Linear Search over Binary Search?",
+          hint: "Array sorting status.",
+          answer: "Use Linear Search (O(n)) when the array is NOT sorted or when searching through a very small array. Binary Search (O(log n)) REQUIRES the array to be sorted first.",
+          code: `// Unsorted array: must use linear search
+const arr = [5, 2, 9, 1];
+const index = arr.indexOf(9); // Linear search
+
+// Sorted array: binary search is optimal
+const sorted = [1, 2, 5, 9];
+console.log(binarySearch(sorted, 9));`,
+          category: "DSA",
+          language: "javascript"
+        },
+        {
+          id: "lf-p3-12",
+          q: "Why is writing test cases crucial for algorithm questions?",
+          hint: "Edge cases and correctness.",
+          answer: "Writing test cases proves your code handles expected inputs, edge cases (empty arrays, negative numbers, large inputs), and invalid inputs. It demonstrates system thinking and reliability to interviewers.",
+          code: `function testBinarySearch() {
+  // Standard cases
+  console.assert(binarySearch([1,2,3], 2) === 1, "Standard");
+  // Edge cases: empty array
+  console.assert(binarySearch([], 2) === -1, "Empty array");
+  // Edge cases: target not found
+  console.assert(binarySearch([1,2,3], 5) === -1, "Not found");
+  // Edge cases: single element
+  console.assert(binarySearch([5], 5) === 0, "Single Match");
+  console.log("Tests done");
+}
+testBinarySearch();`,
+          category: "Theory",
           language: "javascript"
         }
       ];
@@ -1954,6 +1999,25 @@ console.log(map.get('key')); // O(1)
 console.log(majorityElement([3, 2, 3]));       // 3
 console.log(majorityElement([2,2,1,1,1,2,2])); // 2`,
           category: "DSA",
+          language: "javascript"
+        },
+        {
+          id: "lf-p10-11",
+          q: "How can React Components be viewed as a Data Structure?",
+          hint: "DOM Trees.",
+          answer: "React components form a Tree data structure (the Virtual DOM). Props flow down the tree (like a Directed Acyclic Graph), and traversing the component tree is conceptually identical to traversing a generic N-ary tree.",
+          code: `// React Component Tree === N-ary Tree
+function App() {
+  return (
+    <Parent>      {/* Root Node */}
+      <Child1 />  {/* Leaf Node */}
+      <Child2>    {/* Internal Node */}
+        <SubChild /> {/* Leaf Node */}
+      </Child2>
+    </Parent>
+  );
+}`,
+          category: "React / DSA",
           language: "javascript"
         }
       ];
