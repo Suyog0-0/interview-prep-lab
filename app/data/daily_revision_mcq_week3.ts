@@ -272,6 +272,18 @@ const day14_mcqs: MCQQuestion[] = [
     explanation:
       "Interviewers and hiring managers look at GitHub contribution graphs and recent commits as a signal of consistency and genuine passion for coding. Regular commits during prep also show your projects are actively maintained, not just created once.",
   },
+  {
+    id: "rev-d14-21",
+    question: "What is the primary role of the '3W' Methodology (Why this, Why doing this, Why not others)?",
+    options: [
+      "To extend the interview length.",
+      "To test your memory of framework documentation.",
+      "To demonstrate systematic decision-making and deep understanding of trade-offs.",
+      "To avoid writing code during an interview."
+    ],
+    correctAnswerIndex: 2,
+    explanation: "By actively discussing why you chose a specific approach and why you rejected others, you show senior-level engineering thought processes.",
+  },
 ];
 
 const day14_coding: CodingQuestion[] = [
