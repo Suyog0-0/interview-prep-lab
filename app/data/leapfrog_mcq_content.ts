@@ -88,6 +88,13 @@ export function getDayMCQs(dayNum: number): MCQQuestion[] {
           options: ["Negative numbers can never be palindromes because of the minus sign.", "The minus sign is placed at the end.", "You should ignore the minus sign.", "Convert it to absolute value first."],
           correctAnswerIndex: 0,
           explanation: "A negative number like -123 reversed becomes 321-, which does not equal -123, so negative numbers are never palindromes."
+        },
+        {
+          id: "lf-mcq-1-11",
+          question: "When dealing with Two Sum duplicates, what does a Hash Map naturally do?",
+          options: ["Crashes the program.", "Overwrites previous indices but still allows correct complement lookup.", "Throws an error.", "Sorts the array."],
+          correctAnswerIndex: 1,
+          explanation: "If you have [3, 3] and target 6, storing the second '3' overwrites the first in the map, but it won't matter because during iteration the first '3' will find the second '3' correctly."
         }
       ];
     case 2:
@@ -284,6 +291,13 @@ export function getDayMCQs(dayNum: number): MCQQuestion[] {
           options: ["Map", "Object", "Set", "JSON"],
           correctAnswerIndex: 2,
           explanation: "A Set only allows unique values. Passing an array into a Set constructor instantly removes duplicates."
+        },
+        {
+          id: "lf-mcq-3-11",
+          question: "Why does Binary Search require the array to be sorted first?",
+          options: ["Because sorting is fast.", "To allow it to predictably eliminate half the search space at each step.", "Because 'while' loops require sorted arrays.", "It is just a convention, not a requirement."],
+          correctAnswerIndex: 1,
+          explanation: "If the array isn't sorted, you can't guarantee whether the target is to the left or right of the midpoint."
         }
       ];
     case 4:
@@ -629,6 +643,13 @@ export function getDayMCQs(dayNum: number): MCQQuestion[] {
           options: ["map()", "filter()", "reduce()", "forEach()"],
           correctAnswerIndex: 1,
           explanation: "filter() uses a boolean return value to decide whether to keep an element in the new array."
+        },
+        {
+          id: `lf-mcq-${dayNum}-11`,
+          question: "When solving algorithm problems, what technique reduces nested loops to linear time for sorted arrays?",
+          options: ["Recursion.", "Two Pointers.", "Bubble Sort.", "Linked Lists."],
+          correctAnswerIndex: 1,
+          explanation: "Two Pointers effectively parse through elements from opposite ends, drastically reducing time complexity."
         }
       ];
     case 8:
@@ -884,6 +905,13 @@ export function getDayMCQs(dayNum: number): MCQQuestion[] {
           options: ["Because it requires extra memory space.", "Because it is difficult to write.", "Because arrays don't work with them.", "Because lookup can suddenly become O(n^2)."],
           correctAnswerIndex: 0,
           explanation: "The trade-off for O(1) speed is increased Space Complexity. In extreme memory-constrained environments, in-place algorithms are preferred."
+        },
+        {
+          id: "lf-mcq-10-11",
+          question: "How does React conceptually relate to standard Data Structures?",
+          options: ["It relies heavily on Linked Lists.", "The Component architecture naturally forms an N-ary Tree (Virtual DOM).", "It uses only Hash Maps.", "It doesn't use Data Structures."],
+          correctAnswerIndex: 1,
+          explanation: "React components nest inside one another, creating a Tree structure that algorithms traverse to render UI."
         }
       ];
     case 11:
@@ -1030,6 +1058,13 @@ export function getDayMCQs(dayNum: number): MCQQuestion[] {
           options: ["1", "2", "3", "Unlimited"],
           correctAnswerIndex: 1,
           explanation: "The problem states a person can bribe at most 2 people. If an element has moved forward more than 2 spaces from its original position, it's Too chaotic."
+        },
+        {
+          id: "lf-mcq-12-11",
+          question: "What makes a React Component truly 'Component-based'?",
+          options: ["Global variables.", "Encapsulation of its own state, logic, and UI.", "Using classes.", "Connecting to a database directly."],
+          correctAnswerIndex: 1,
+          explanation: "Component-based architecture thrives on isolating responsibilities so components can be reused without side-effects."
         }
       ];
     case 13:
@@ -1103,6 +1138,13 @@ export function getDayMCQs(dayNum: number): MCQQuestion[] {
           options: ["display: none", "visibility: hidden", "overflow: hidden", "opacity: 0"],
           correctAnswerIndex: 2,
           explanation: "overflow: hidden prevents the inner content from showing when the max-height is set to 0."
+        },
+        {
+          id: "lf-mcq-13-11",
+          question: "What is a primary principle of robust Application Architecture?",
+          options: ["Writing everything in one file.", "Separation of Concerns (UI separate from Business Logic).", "Duplicating code for safety.", "Ignoring performance."],
+          correctAnswerIndex: 1,
+          explanation: "Separation of Concerns ensures that changes to logic do not break UI elements and vice versa."
         }
       ];
     case 15:
@@ -1249,6 +1291,13 @@ export function getDayMCQs(dayNum: number): MCQQuestion[] {
           options: ["Because GitHub requires it.", "So interviewers don't have to guess or troubleshoot how to start your app.", "To make the README longer.", "It is only required for Python."],
           correctAnswerIndex: 1,
           explanation: "If an interviewer can't start your project in 30 seconds, they will close it and move on."
+        },
+        {
+          id: "lf-mcq-16-11",
+          question: "What defines a Binary Tree?",
+          options: ["Nodes have an unlimited number of children.", "Nodes have at most two children.", "It only contains 1s and 0s.", "It is always balanced."],
+          correctAnswerIndex: 1,
+          explanation: "Binary trees enforce a strict rule that no node can have more than two descendants (left and right)."
         }
       ];
     case 17:
@@ -1322,6 +1371,13 @@ export function getDayMCQs(dayNum: number): MCQQuestion[] {
           options: ["Leave the meeting immediately.", "Ask smart, prepared questions about the team, culture, or role.", "Ask for feedback on your performance.", "Ask about salary right away."],
           correctAnswerIndex: 1,
           explanation: "Having prepared questions shows you are engaged, curious, and taking the opportunity seriously."
+        },
+        {
+          id: "lf-mcq-17-11",
+          question: "In the 3W Methodology, what is the most important element to demonstrate systematic thinking?",
+          options: ["Why you did it.", "Why you didn't use other alternatives.", "What it looks like.", "Who told you to do it."],
+          correctAnswerIndex: 1,
+          explanation: "Explaining why you rejected alternatives proves you considered trade-offs rather than just copying a tutorial."
         }
       ];
     case 18:
@@ -1395,6 +1451,13 @@ export function getDayMCQs(dayNum: number): MCQQuestion[] {
           options: ["The Promise is automatically rejected.", "The browser crashes.", "The Promise resolves normally, but res.ok will be false.", "It throws a syntax error."],
           correctAnswerIndex: 2,
           explanation: "Fetch only rejects on network failures. 404 and 500 status codes still resolve normally, so you MUST check res.ok manually."
+        },
+        {
+          id: "lf-mcq-18-11",
+          question: "How does an ATS Machine primarily filter resumes?",
+          options: ["Looking at the design.", "Keyword matching against the job description.", "Evaluating the GitHub links.", "Calling references."],
+          correctAnswerIndex: 1,
+          explanation: "ATS systems parse the text for exact keywords. Missing key terms means a human may never see your resume."
         }
       ];
     case 19:
@@ -1541,6 +1604,13 @@ export function getDayMCQs(dayNum: number): MCQQuestion[] {
           options: ["Cram all night.", "Learn a new framework.", "Rest your brain, eat well, and sleep early.", "Rewrite your resume."],
           correctAnswerIndex: 2,
           explanation: "Mental fatigue causes careless bugs. Rest is the most productive thing you can do the night before."
+        },
+        {
+          id: "lf-mcq-20-11",
+          question: "What do technical assessments generally evaluate besides just code correctness?",
+          options: ["Typing speed.", "How many frameworks you know.", "Algorithmic thinking, edge cases, and cultural fit.", "Nothing else."],
+          correctAnswerIndex: 2,
+          explanation: "Code correctness is the baseline. Handling edge cases and communicating effectively seal the deal."
         }
       ];
     default:
