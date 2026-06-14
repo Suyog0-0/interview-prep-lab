@@ -695,6 +695,13 @@ const day3_mcqs: MCQQuestion[] = [
     explanation:
       "Objects in JavaScript are assigned by reference, not by value. const b = a means b and a point to the SAME object in memory. Changing b.x also changes a.x. This is a fundamental concept: primitives are copied by value, objects by reference.",
   },
+  {
+    id: "rev-d3-16",
+    question: "When writing test cases for a Binary Search, what is a crucial edge case to include?",
+    options: ["An array of size 1,000,000.", "An array containing only negative numbers.", "An empty array.", "An array of strings."],
+    correctAnswerIndex: 2,
+    explanation: "An empty array is a classic edge case that can cause infinite loops or out-of-bounds errors if the left and right pointers are not properly initialized.",
+  },
 ];
 
 const day3_coding: CodingQuestion[] = [
