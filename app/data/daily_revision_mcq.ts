@@ -1581,7 +1581,7 @@ export {
   day6_mcqs, day6_coding,
 };
 // --- INJECTED EXTRA CODING QUESTIONS ---
-day1_coding.push(...[
+day1_coding.push(...([
   {
     id: "code-d1-tdz",
     title: "Temporal Dead Zone (TDZ) Trap",
@@ -1632,9 +1632,9 @@ day1_coding.push(...[
     hint: "Negative numbers are never palindromes. Build the reversed number using modulo 10 and division by 10.",
     solution: "function isPalindrome(x) {\n  if (x < 0 || (x % 10 === 0 && x !== 0)) return false;\n  let reversed = 0;\n  let original = x;\n  while (x > 0) {\n    reversed = (reversed * 10) + (x % 10);\n    x = Math.floor(x / 10);\n  }\n  return original === reversed;\n}"
   }
-]);
+] as CodingQuestion[]));
 
-day2_coding.push(...[
+day2_coding.push(...([
   {
     id: "code-d2-arrowthis",
     title: "Arrow Functions & 'this' Trap",
@@ -1675,9 +1675,9 @@ day2_coding.push(...[
     hint: "Sort the array first, then check adjacent elements.",
     solution: "function containsDuplicate(nums) {\n  nums.sort((a, b) => a - b);\n  for (let i = 1; i < nums.length; i++) {\n    if (nums[i] === nums[i - 1]) return true;\n  }\n  return false;\n}"
   }
-]);
+] as CodingQuestion[]));
 
-day3_coding.push(...[
+day3_coding.push(...([
   {
     id: "code-d3-custommap",
     title: "Custom Map with 'thisArg'",
@@ -1738,9 +1738,9 @@ day3_coding.push(...[
     hint: "Use three pointers: p1 at m-1, p2 at n-1, and p at m+n-1.",
     solution: "function merge(nums1, m, nums2, n) {\n  let p1 = m - 1;\n  let p2 = n - 1;\n  let p = m + n - 1;\n  while (p2 >= 0) {\n    if (p1 >= 0 && nums1[p1] > nums2[p2]) {\n      nums1[p] = nums1[p1];\n      p1--;\n    } else {\n      nums1[p] = nums2[p2];\n      p2--;\n    }\n    p--;\n  }\n}"
   }
-]);
+] as CodingQuestion[]));
 
-day4_coding.push(...[
+day4_coding.push(...([
   {
     id: "code-d4-eventloop",
     title: "Tricky Event Loop Output",
@@ -1771,9 +1771,9 @@ day4_coding.push(...[
     hint: "The event is called 'unhandledrejection'.",
     solution: "window.addEventListener('unhandledrejection', function(event) {\n  console.log('Caught global error:', event.reason);\n  event.preventDefault();\n});"
   }
-]);
+] as CodingQuestion[]));
 
-day5_coding.push(...[
+day5_coding.push(...([
   {
     id: "code-d5-delegation",
     title: "Event Delegation Puzzle",
@@ -1794,9 +1794,9 @@ day5_coding.push(...[
     hint: "Use array methods like filter() or the spread operator.",
     solution: "function toggleDarkMode(classList, isDark) {\n  const filtered = classList.filter(c => c !== 'dark-mode');\n  return isDark ? [...filtered, 'dark-mode'] : filtered;\n}"
   }
-]);
+] as CodingQuestion[]));
 
-day6_coding.push(...[
+day6_coding.push(...([
   {
     id: "code-d6-throttle",
     title: "Implement Throttle (Leading & Trailing)",
@@ -1817,4 +1817,4 @@ day6_coding.push(...[
     hint: "Initialize reduce with an empty object {}. Push items to the corresponding key's array.",
     solution: "function groupBy(arr, prop) {\n  return arr.reduce((acc, obj) => {\n    const key = obj[prop];\n    if (!acc[key]) acc[key] = [];\n    acc[key].push(obj);\n    return acc;\n  }, {});\n}"
   }
-]);
+] as CodingQuestion[]));

@@ -1677,7 +1677,7 @@ export {
   day18_mcqs, day18_coding,
 };
 // --- INJECTED EXTRA CODING QUESTIONS ---
-day15_coding.push(...[
+day15_coding.push(...([
   {
     id: "code-d15-closurestrick",
     title: "Tricky Closures Output",
@@ -1688,9 +1688,9 @@ day15_coding.push(...[
     hint: "`var` is function-scoped (or global here), so by the time the timeout runs, `i` is 3. `let` is block-scoped, creating a new binding per iteration.",
     solution: "function getOutput() { return '3,3,3,0,1,2'; }"
   }
-]);
+] as CodingQuestion[]));
 
-day16_coding.push(...[
+day16_coding.push(...([
   {
     id: "code-d16-btraversal",
     title: "Binary Tree Inorder Traversal (Iterative)",
@@ -1701,9 +1701,9 @@ day16_coding.push(...[
     hint: "Use a stack. Go left as far as possible, pushing nodes to the stack. Then pop, visit, and go right.",
     solution: "function inorderTraversal(root) {\n  const result = [];\n  const stack = [];\n  let curr = root;\n  while (curr !== null || stack.length > 0) {\n    while (curr !== null) {\n      stack.push(curr);\n      curr = curr.left;\n    }\n    curr = stack.pop();\n    result.push(curr.val);\n    curr = curr.right;\n  }\n  return result;\n}"
   }
-]);
+] as CodingQuestion[]));
 
-day17_coding.push(...[
+day17_coding.push(...([
   {
     id: "code-d17-clonegraph",
     title: "Clone Graph",
@@ -1714,9 +1714,9 @@ day17_coding.push(...[
     hint: "Use a Hash Map or `Map` to keep track of nodes you have already cloned (`map.set(originalNode, clonedNode)`).",
     solution: "function cloneGraph(node) {\n  if (!node) return null;\n  const map = new Map();\n  function dfs(curr) {\n    if (map.has(curr)) return map.get(curr);\n    const clone = new _Node(curr.val, []);\n    map.set(curr, clone);\n    for (let neighbor of curr.neighbors) {\n      clone.neighbors.push(dfs(neighbor));\n    }\n    return clone;\n  }\n  return dfs(node);\n}"
   }
-]);
+] as CodingQuestion[]));
 
-day18_coding.push(...[
+day18_coding.push(...([
   {
     id: "code-d18-ats",
     title: "ATS Machine - Resume Keyword Search",
@@ -1727,8 +1727,8 @@ day18_coding.push(...[
     hint: "Use a regex with word boundaries `\\b`, or split the resume into a Set of lowercased words and check intersection.",
     solution: "function atsMatchScore(resume, keywords) {\n  const words = new Set(resume.toLowerCase().match(/\\w+/g));\n  let score = 0;\n  for (let kw of keywords) {\n    if (words.has(kw.toLowerCase())) score++;\n  }\n  return score;\n}"
   }
-]);
+] as CodingQuestion[]));
 
-day19_coding.push(...[]);
-day20_coding.push(...[]);
-day21_coding.push(...[]);
+day19_coding.push(...([] as CodingQuestion[]));
+day20_coding.push(...([] as CodingQuestion[]));
+day21_coding.push(...([] as CodingQuestion[]));

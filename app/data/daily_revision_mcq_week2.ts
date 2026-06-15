@@ -1602,7 +1602,7 @@ export {
   day6_mcqs, day6_coding,
 };
 // --- INJECTED EXTRA CODING QUESTIONS ---
-day8_coding.push(...[
+day8_coding.push(...([
   {
     id: "code-d8-triplets",
     title: "Compare the Triplets",
@@ -1623,9 +1623,9 @@ day8_coding.push(...[
     hint: "Left-to-Right diagonal index is [i][i]. Right-to-Left diagonal index is [i][n - 1 - i].",
     solution: "function diagonalDifference(arr) {\n  let sum1 = 0, sum2 = 0;\n  const n = arr.length;\n  for (let i = 0; i < n; i++) {\n    sum1 += arr[i][i];\n    sum2 += arr[i][n - 1 - i];\n  }\n  return Math.abs(sum1 - sum2);\n}"
   }
-]);
+] as CodingQuestion[]));
 
-day9_coding.push(...[
+day9_coding.push(...([
   {
     id: "code-d9-sales",
     title: "Sales by Match",
@@ -1646,9 +1646,9 @@ day9_coding.push(...[
     hint: "Keep track of altitude. If altitude reaches 0 AND the last step was 'U', you just climbed out of a valley.",
     solution: "function countingValleys(steps, path) {\n  let altitude = 0;\n  let valleys = 0;\n  for (let step of path) {\n    if (step === 'U') {\n      altitude++;\n      if (altitude === 0) valleys++;\n    } else {\n      altitude--;\n    }\n  }\n  return valleys;\n}"
   }
-]);
+] as CodingQuestion[]));
 
-day10_coding.push(...[
+day10_coding.push(...([
   {
     id: "code-d10-ransom",
     title: "Ransom Note Hash Map",
@@ -1669,9 +1669,9 @@ day10_coding.push(...[
     hint: "Generate all substrings, sort each one alphabetically, and store the count in a hash map. For a frequency n, it contributes n*(n-1)/2 pairs.",
     solution: "function sherlockAndAnagrams(s) {\n  const map = {};\n  for (let i = 0; i < s.length; i++) {\n    for (let j = i + 1; j <= s.length; j++) {\n      const sub = s.slice(i, j).split('').sort().join('');\n      map[sub] = (map[sub] || 0) + 1;\n    }\n  }\n  let pairs = 0;\n  for (let key in map) {\n    const n = map[key];\n    pairs += (n * (n - 1)) / 2;\n  }\n  return pairs;\n}"
   }
-]);
+] as CodingQuestion[]));
 
-day11_coding.push(...[
+day11_coding.push(...([
   {
     id: "code-d11-balanced",
     title: "Balanced Brackets",
@@ -1702,9 +1702,9 @@ day11_coding.push(...[
     hint: "Iterate row from 0 to 3, col from 0 to 3. Sum the 7 positions.",
     solution: "function hourglassSum(arr) {\n  let max = -Infinity;\n  for (let r = 0; r <= 3; r++) {\n    for (let c = 0; c <= 3; c++) {\n      let sum = arr[r][c] + arr[r][c+1] + arr[r][c+2] \n                + arr[r+1][c+1] \n                + arr[r+2][c] + arr[r+2][c+1] + arr[r+2][c+2];\n      max = Math.max(max, sum);\n    }\n  }\n  return max;\n}"
   }
-]);
+] as CodingQuestion[]));
 
-day12_coding.push(...[
+day12_coding.push(...([
   {
     id: "code-d12-leftrot",
     title: "Left Rotation",
@@ -1735,9 +1735,9 @@ day12_coding.push(...[
     hint: "Use binary search. At least one half of the array will always be perfectly sorted. Check which half is sorted, then check if the target lies within that half.",
     solution: "function search(nums, target) {\n  let left = 0, right = nums.length - 1;\n  while (left <= right) {\n    let mid = Math.floor((left + right) / 2);\n    if (nums[mid] === target) return mid;\n    if (nums[left] <= nums[mid]) {\n      if (target >= nums[left] && target < nums[mid]) right = mid - 1;\n      else left = mid + 1;\n    } else {\n      if (target > nums[mid] && target <= nums[right]) left = mid + 1;\n      else right = mid - 1;\n    }\n  }\n  return -1;\n}"
   }
-]);
+] as CodingQuestion[]));
 
-day13_coding.push(...[
+day13_coding.push(...([
   {
     id: "code-d13-minswaps",
     title: "Minimum Swaps 2",
@@ -1758,4 +1758,4 @@ day13_coding.push(...[
     hint: "Difference Array technique: Add `value` at `start_index`, and subtract `value` at `end_index + 1`. Then compute the prefix sum.",
     solution: "function arrayManipulation(n, queries) {\n  const arr = new Array(n + 2).fill(0);\n  for (let q of queries) {\n    arr[q[0]] += q[2];\n    arr[q[1] + 1] -= q[2];\n  }\n  let max = 0, current = 0;\n  for (let i = 1; i <= n; i++) {\n    current += arr[i];\n    if (current > max) max = current;\n  }\n  return max;\n}"
   }
-]);
+] as CodingQuestion[]));
