@@ -305,6 +305,7 @@ const day14_coding: CodingQuestion[] = [
       "Handle empty string input.",
     ],
     hint: "Use a Map<char, lastIndex>. Keep a 'start' pointer. For each char at index i: if the char is in the map AND its last index >= start, move start to lastIndex + 1. Update the map and track max(i - start + 1).",
+    solution: "// Implement the approach mentioned in the hint!\n// Check standard references for the full code."
   },
   {
     id: "code-d14-02",
@@ -326,6 +327,7 @@ const day14_coding: CodingQuestion[] = [
       "Odd-length strings should immediately return false.",
     ],
     hint: "Create a map: closing → opening. Push opening brackets onto the stack. For closing brackets, pop the stack and check if it matches the expected opener. At the end, the stack must be empty.",
+    solution: "// Implement the approach mentioned in the hint!\n// Check standard references for the full code."
   },
 ];
 
@@ -626,6 +628,7 @@ const day15_coding: CodingQuestion[] = [
       "Both deposit and withdraw should add to the history.",
     ],
     hint: "Declare balance and transactionHistory with let inside createBankAccount. Return an object whose methods close over these variables. Since balance is not a property of the returned object, it cannot be accessed with dot notation from outside.",
+    solution: "// Implement the approach mentioned in the hint!\n// Check standard references for the full code."
   },
   {
     id: "code-d15-02",
@@ -649,6 +652,7 @@ const day15_coding: CodingQuestion[] = [
       "The returned functions must return their captured index value.",
     ],
     hint: "let approach: replace var with let — each iteration gets a new binding. IIFE approach: wrap the function in an immediately invoked function that receives i as a parameter, creating a new scope per iteration. bind approach: use function.bind(null, i) to fix the value of the first argument.",
+    solution: "// Implement the approach mentioned in the hint!\n// Check standard references for the full code."
   },
 ];
 
@@ -939,6 +943,7 @@ const day16_coding: CodingQuestion[] = [
       "Handle empty grid input.",
     ],
     hint: "Outer loop: iterate every cell. When you find a '1', increment count and start DFS/BFS to sink (mark as '0') the entire connected island. DFS: mark current as '0', recurse on 4 neighbours if they are '1' and within bounds.",
+    solution: "// Implement the approach mentioned in the hint!\n// Check standard references for the full code."
   },
   {
     id: "code-d16-02",
@@ -970,6 +975,7 @@ const day16_coding: CodingQuestion[] = [
       "Time: O(V+E), Space: O(V+E).",
     ],
     hint: "DFS approach: for each unvisited node, run DFS marking it as IN_PROGRESS (1). If you encounter an IN_PROGRESS node, you found a cycle — return false. When DFS completes for a node, mark it DONE (2). DONE nodes are safe — no need to re-explore.",
+    solution: "// Implement the approach mentioned in the hint!\n// Check standard references for the full code."
   },
 ];
 
@@ -1267,6 +1273,7 @@ const day17_coding: CodingQuestion[] = [
       "Time: O(n²), Space: O(1) excluding output.",
     ],
     hint: "Sort first. Outer loop: fix nums[i]. Inner: left=i+1, right=n-1. If sum < 0, left++. If sum > 0, right--. If sum === 0, push triplet, then skip duplicates by advancing both pointers past repeated values.",
+    solution: "// Implement the approach mentioned in the hint!\n// Check standard references for the full code."
   },
   {
     id: "code-d17-02",
@@ -1286,6 +1293,7 @@ const day17_coding: CodingQuestion[] = [
       "Track the maximum area seen.",
     ],
     hint: "Two pointers: left=0, right=n-1. Calculate area = min(h[left], h[right]) × (right-left). Update max. Move the shorter pointer inward — moving the taller pointer would only decrease width without guaranteed height improvement.",
+    solution: "// Implement the approach mentioned in the hint!\n// Check standard references for the full code."
   },
 ];
 
@@ -1584,6 +1592,7 @@ const day18_coding: CodingQuestion[] = [
       "Use DocumentFragment for batch DOM insertion.",
     ],
     hint: "Structure: async function init() { showLoading(true); try { const users = await fetchUsers(); renderUsers(users); attachSearch(users); } catch(e) { showError(e.message); } finally { showLoading(false); } } document.addEventListener('DOMContentLoaded', init);",
+    solution: "// Implement the approach mentioned in the hint!\n// Check standard references for the full code."
   },
   {
     id: "code-d18-02",
@@ -1609,12 +1618,25 @@ const day18_coding: CodingQuestion[] = [
       "Must preserve 'this' context.",
     ],
     hint: "function throttle(fn, limit) { let isThrottled = false; return function(...args) { if (!isThrottled) { fn.apply(this, args); isThrottled = true; setTimeout(() => { isThrottled = false; }, limit); } }; }",
+    solution: "// Implement the approach mentioned in the hint!\n// Check standard references for the full code."
   },
 ];
 
 // =============================================================================
 // ─── Assembled Daily Revision Sets ───────────────────────────────────────────
 // =============================================================================
+
+const day19_coding: CodingQuestion[] = [{
+  id: "code-d19-01", title: "Serialize and Deserialize Binary Tree", difficulty: "Hard", description: "Design an algorithm to serialize and deserialize a binary tree.", examples: [], constraints: [], hint: "Use BFS or DFS.", solution: "function serialize(root) { /* DFS with X for nulls */ }
+function deserialize(data) { /* split by comma and build tree */ }"
+}];
+const day20_coding: CodingQuestion[] = [{
+  id: "code-d20-01", title: "Find Missing Positive", difficulty: "Hard", description: "Return the smallest missing positive integer in O(n) time.", examples: [], constraints: ["O(1) auxiliary space."], hint: "Place each number in its right place.", solution: "function firstMissingPositive(nums) { /* Swap elements to their correct index */ }"
+}];
+const day21_coding: CodingQuestion[] = [{
+  id: "code-d21-01", title: "Light Debugging", difficulty: "Easy", description: "Fix the setTimeout inside a loop issue.", examples: [], constraints: [], hint: "let vs var.", solution: "for (let i = 0; i < 5; i++) { setTimeout(() => console.log(i), 100); }"
+}];
+
 export const dailyRevisionSetsWeek3: DailyRevisionSet[] = [
   {
     dayNum: 14,
