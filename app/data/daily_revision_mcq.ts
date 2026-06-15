@@ -262,7 +262,7 @@ const day1_coding: CodingQuestion[] = [
     ],
     hint: "Clean the string first with a regex replace, then compare it to its reverse. Use a two-pointer approach as a bonus implementation.",
     solution: "// Implement the approach mentioned in the hint!\n// Check standard references for the full code."
-  },,
+  },
   {
     id: "code-d1-03", title: "Reverse String", difficulty: "Easy", description: "Reverse it", examples: [], constraints: [], hint: "Loop", solution: "function reverse(s) { return s.split('').reverse().join(''); }"
   }

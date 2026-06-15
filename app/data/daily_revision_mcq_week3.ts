@@ -1627,8 +1627,7 @@ const day18_coding: CodingQuestion[] = [
 // =============================================================================
 
 const day19_coding: CodingQuestion[] = [{
-  id: "code-d19-01", title: "Serialize and Deserialize Binary Tree", difficulty: "Hard", description: "Design an algorithm to serialize and deserialize a binary tree.", examples: [], constraints: [], hint: "Use BFS or DFS.", solution: "function serialize(root) { /* DFS with X for nulls */ }
-function deserialize(data) { /* split by comma and build tree */ }"
+  id: "code-d19-01", title: "Serialize and Deserialize Binary Tree", difficulty: "Hard", description: "Design an algorithm to serialize and deserialize a binary tree.", examples: [], constraints: [], hint: "Use BFS or DFS.", solution: `function serialize(root) { /* DFS with X for nulls */ }\nfunction deserialize(data) { /* split by comma and build tree */ }`
 }];
 const day20_coding: CodingQuestion[] = [{
   id: "code-d20-01", title: "Find Missing Positive", difficulty: "Hard", description: "Return the smallest missing positive integer in O(n) time.", examples: [], constraints: ["O(1) auxiliary space."], hint: "Place each number in its right place.", solution: "function firstMissingPositive(nums) { /* Swap elements to their correct index */ }"

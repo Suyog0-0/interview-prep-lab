@@ -1030,6 +1030,7 @@ function LeapfrogOverallPrepView() {
 function LeapfrogDayPrepView({ dayNum }: { dayNum: number }) {
   const [activeTab, setActiveTab] = useState<"schedule" | "mcqs" | "coding">("schedule");
   const [mcqStates, setMcqStates] = useState<Record<string, { selectedIndex: number | null }>>({});
+  const [codingStates, setCodingStates] = useState<Record<string, { showAnswer: boolean }>>({});
 
   let targetDay = null;
   let targetWeekNum = 0;
@@ -1447,18 +1448,18 @@ function LeapfrogDayPrepView({ dayNum }: { dayNum: number }) {
               {cq.solution && (
                 <div className="mt-4">
                   <button
-                    onClick={() => setQuizStates(prev => ({
+                    onClick={() => setCodingStates(prev => ({
                       ...prev,
                       [cq.id]: {
-                        ...(prev[cq.id] || { selectedOption: null, showExplanation: false }),
+                        ...(prev[cq.id] || { showAnswer: false }),
                         showAnswer: !prev[cq.id]?.showAnswer
                       }
                     }))}
                     className="text-xs font-bold text-violet-400 hover:text-violet-300 transition-colors flex items-center gap-1"
                   >
-                    {quizStates[cq.id]?.showAnswer ? "Hide Solution" : "Show Solution"}
+                    {codingStates[cq.id]?.showAnswer ? "Hide Solution" : "Show Solution"}
                   </button>
-                  {quizStates[cq.id]?.showAnswer && (
+                  {codingStates[cq.id]?.showAnswer && (
                     <div className="mt-3 p-4 rounded-lg bg-zinc-900 border border-zinc-800 text-sm font-mono text-zinc-300 whitespace-pre-wrap overflow-x-auto">
                       {cq.solution}
                     </div>
