@@ -188,7 +188,8 @@ export const day7_coding: CodingQuestion[] = [
       { input: "testScope()", output: "Console logs demonstrating hoisting and block scope" }
     ],
     constraints: ["Must demonstrate block scope vs function scope."],
-    hint: "Use blocks {} to show how `let` is contained while `var` leaks."
+    hint: "Use blocks {} to show how `let` is contained while `var` leaks.",
+    solution: "// Implement the approach mentioned in the hint!\n// Check standard references for the full code."
   },
   {
     id: "code-d7-rev-02",
@@ -199,7 +200,8 @@ export const day7_coding: CodingQuestion[] = [
       { input: "const acc = createBank(); acc.deposit(100); acc.getBalance();", output: "100" }
     ],
     constraints: ["Do not use ES6 classes with # private fields. Use closures."],
-    hint: "Declare `let balance = 0` inside `createBank` and return the methods."
+    hint: "Declare `let balance = 0` inside `createBank` and return the methods.",
+    solution: "// Implement the approach mentioned in the hint!\n// Check standard references for the full code."
   },
   {
     id: "code-d7-rev-03",
@@ -210,7 +212,8 @@ export const day7_coding: CodingQuestion[] = [
       { input: "customFilter([1, 2, 3, 4], n => n % 2 === 0)", output: "[2, 4]" }
     ],
     constraints: ["Do not use the native `.filter` method."],
-    hint: "Use a simple `for` loop and push to a result array if `cb(item)` is true."
+    hint: "Use a simple `for` loop and push to a result array if `cb(item)` is true.",
+    solution: "// Implement the approach mentioned in the hint!\n// Check standard references for the full code."
   },
   {
     id: "code-d7-rev-04",
@@ -221,7 +224,8 @@ export const day7_coding: CodingQuestion[] = [
       { input: "await delay(2000); console.log('Done!');", output: "Logs 'Done!' after 2 seconds" }
     ],
     constraints: ["Must use the `new Promise` constructor."],
-    hint: "Pass `resolve` into `setTimeout`."
+    hint: "Pass `resolve` into `setTimeout`.",
+    solution: "// Implement the approach mentioned in the hint!\n// Check standard references for the full code."
   },
   {
     id: "code-d7-rev-05",
@@ -232,7 +236,8 @@ export const day7_coding: CodingQuestion[] = [
       { input: "Clicking <li>Item 1</li> inside <ul>", output: "Logs 'Item 1'" }
     ],
     constraints: ["Do not attach listeners to individual `<li>` elements."],
-    hint: "Check `e.target.tagName === 'LI'` inside the `ul` click handler."
+    hint: "Check `e.target.tagName === 'LI'` inside the `ul` click handler.",
+    solution: "// Implement the approach mentioned in the hint!\n// Check standard references for the full code."
   },
   {
     id: "code-d7-rev-06",
@@ -243,7 +248,8 @@ export const day7_coding: CodingQuestion[] = [
       { input: "const throttled = throttle(() => console.log('Hi'), 1000);", output: "Function that enforces the rate limit." }
     ],
     constraints: ["Must maintain the original `this` context and arguments."],
-    hint: "Use a `lastRan` timestamp or a `timerId` flag to block execution."
+    hint: "Use a `lastRan` timestamp or a `timerId` flag to block execution.",
+    solution: "// Implement the approach mentioned in the hint!\n// Check standard references for the full code."
   },
   {
     id: "code-d7-rev-07",
@@ -254,6 +260,7 @@ export const day7_coding: CodingQuestion[] = [
       { input: "const d = new Dog(); d.speak();", output: "Dog barks" }
     ],
     constraints: ["Use `Object.create` to set up the prototype chain."],
-    hint: "`Dog.prototype = Object.create(Animal.prototype); Dog.prototype.constructor = Dog;`"
+    hint: "`Dog.prototype = Object.create(Animal.prototype); Dog.prototype.constructor = Dog;`",
+    solution: "// Implement the approach mentioned in the hint!\n// Check standard references for the full code."
   }
 ];
