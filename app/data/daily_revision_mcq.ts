@@ -262,11 +262,7 @@ const day1_coding: CodingQuestion[] = [
     ],
     hint: "Clean the string first with a regex replace, then compare it to its reverse. Use a two-pointer approach as a bonus implementation.",
     solution: "// Implement the approach mentioned in the hint!\n// Check standard references for the full code."
-  },
-  {
-    id: "code-d1-03", title: "Reverse String", difficulty: "Easy", description: "Reverse it", examples: [], constraints: [], hint: "Loop", solution: "function reverse(s) { return s.split('').reverse().join(''); }"
   }
-
 ];
 
 // =============================================================================
@@ -1584,3 +1580,241 @@ export {
   day5_mcqs, day5_coding,
   day6_mcqs, day6_coding,
 };
+// --- INJECTED EXTRA CODING QUESTIONS ---
+day1_coding.push(...[
+  {
+    id: "code-d1-tdz",
+    title: "Temporal Dead Zone (TDZ) Trap",
+    difficulty: "Medium",
+    description: "In an interview, you are asked to fix a function that throws a ReferenceError due to the Temporal Dead Zone. The function attempts to log a variable before it's initialized, but there's a trick: the variable is shadowed inside a block. Your task: Refactor the code so it logs the outer variable first, then initializes and logs the inner blocked variable correctly without changing the `let` declarations to `var`.",
+    examples: [{ input: "const x = 10; function trap() { console.log(x); let x = 20; }", output: "Throws ReferenceError" }],
+    constraints: ["You cannot change `let` to `var`.", "You must log 10, then 20."],
+    hint: "The block scope of the inner `let` shadows the outer `x`. Pass the outer variable into the block or rename the inner variable.",
+    solution: "const x = 10;\nfunction trap() {\n  console.log(x); // Logs 10\n  {\n    let x = 20;\n    console.log(x); // Logs 20\n  }\n}"
+  },
+  {
+    id: "code-d1-hoisting",
+    title: "Hoisting Prediction",
+    difficulty: "Hard",
+    description: "Write a function `hoistingPuzzle` that exactly replicates the behavior of JavaScript's hoisting with `var` and function declarations. Given an array of variable name strings and function name strings, return an object representing the initial creation phase state (what value they hold before execution).",
+    examples: [{ input: "['var a', 'function b() {}', 'let c']", output: "{ a: undefined, b: '[Function]', c: 'uninitialized' }" }],
+    constraints: ["Return exactly the string 'uninitialized' for let/const.", "Return undefined for var."],
+    hint: "Functions are hoisted with their definitions. `var` is initialized to `undefined`. `let`/`const` remain uninitialized.",
+    solution: "function hoistingPuzzle(declarations) {\n  const result = {};\n  for (let decl of declarations) {\n    if (decl.startsWith('var')) result[decl.split(' ')[1]] = undefined;\n    else if (decl.startsWith('function')) result[decl.split(' ')[1].replace('()', '')] = '[Function]';\n    else if (decl.startsWith('let') || decl.startsWith('const')) result[decl.split(' ')[1]] = 'uninitialized';\n  }\n  return result;\n}"
+  },
+  {
+    id: "code-d1-vowels",
+    title: "Count Vowels with a Twist",
+    difficulty: "Easy",
+    description: "Write a function that counts vowels in a string, but 'y' is considered a vowel ONLY if it is at the end of a word.",
+    examples: [{ input: "'yellow boy'", output: "3 (e, o, y)" }],
+    constraints: ["Use regex or iteration.", "Case insensitive."],
+    hint: "Check if 'y' is followed by a space or the end of the string.",
+    solution: "function countVowels(str) {\n  const vowels = new Set(['a', 'e', 'i', 'o', 'u']);\n  let count = 0;\n  const words = str.toLowerCase().split(' ');\n  for (let word of words) {\n    for (let i = 0; i < word.length; i++) {\n      if (vowels.has(word[i])) count++;\n      if (word[i] === 'y' && i === word.length - 1) count++;\n    }\n  }\n  return count;\n}"
+  },
+  {
+    id: "code-d1-twosum",
+    title: "Two Sum (Tricky)",
+    difficulty: "Medium",
+    description: "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target. TRICK: What if the array contains negative numbers and duplicates, and you must return the indices sorted descending?",
+    examples: [{ input: "nums = [3, 2, 4, 3], target = 6", output: "[3, 0]" }],
+    constraints: ["O(N) time complexity.", "Output array must be sorted descending."],
+    hint: "Use a Map. If the complement exists, return the current index and map.get(complement) sorted.",
+    solution: "function twoSum(nums, target) {\n  const map = new Map();\n  for (let i = 0; i < nums.length; i++) {\n    const complement = target - nums[i];\n    if (map.has(complement)) {\n      return [i, map.get(complement)].sort((a,b) => b - a);\n    }\n    map.set(nums[i], i);\n  }\n  return [];\n}"
+  },
+  {
+    id: "code-d1-palindromenum",
+    title: "Palindrome Number Without Strings",
+    difficulty: "Medium",
+    description: "Given an integer x, return true if x is a palindrome, and false otherwise. TRICK: You are NOT allowed to convert the integer to a string.",
+    examples: [{ input: "121", output: "true" }, { input: "-121", output: "false" }],
+    constraints: ["No string conversion.", "Handle negative numbers."],
+    hint: "Negative numbers are never palindromes. Build the reversed number using modulo 10 and division by 10.",
+    solution: "function isPalindrome(x) {\n  if (x < 0 || (x % 10 === 0 && x !== 0)) return false;\n  let reversed = 0;\n  let original = x;\n  while (x > 0) {\n    reversed = (reversed * 10) + (x % 10);\n    x = Math.floor(x / 10);\n  }\n  return original === reversed;\n}"
+  }
+]);
+
+day2_coding.push(...[
+  {
+    id: "code-d2-arrowthis",
+    title: "Arrow Functions & 'this' Trap",
+    difficulty: "Medium",
+    description: "You have an object `user = { name: 'Alice', greet: () => console.log(this.name) }`. It prints undefined. Fix the `greet` method so it prints 'Alice', but you must still use an arrow function inside it somewhere.",
+    examples: [{ input: "user.greet()", output: "'Alice'" }],
+    constraints: ["Must use an arrow function internally.", "Cannot change the outer greet to an arrow function."],
+    hint: "Make `greet` a regular function that returns the result of an arrow function. The arrow function inherits `this`.",
+    solution: "const user = {\n  name: 'Alice',\n  greet() {\n    const inner = () => this.name;\n    return inner();\n  }\n};"
+  },
+  {
+    id: "code-d2-callapplybind",
+    title: "Implement Bind from Scratch",
+    difficulty: "Hard",
+    description: "Write your own `myBind` method on the Function prototype that mimics the behavior of `Function.prototype.bind`. It must support partial application (currying).",
+    examples: [{ input: "const bound = func.myBind(context, arg1); bound(arg2);", output: "Executes func with context and [arg1, arg2]" }],
+    constraints: ["Do not use .bind().", "Use .apply() inside."],
+    hint: "Return a new function. Inside it, use `this.apply(context, [...boundArgs, ...innerArgs])`.",
+    solution: "Function.prototype.myBind = function(context, ...args1) {\n  const fn = this;\n  return function(...args2) {\n    return fn.apply(context, [...args1, ...args2]);\n  }\n};"
+  },
+  {
+    id: "code-d2-anagram",
+    title: "Valid Anagram (Unicode Support)",
+    difficulty: "Hard",
+    description: "Determine if string t is an anagram of string s. TRICK: The strings might contain emojis or multi-byte unicode characters. Standard `split('')` will break emojis into surrogate pairs. How do you handle it?",
+    examples: [{ input: "'👨‍👩‍👧', '👩‍👧👨‍'", output: "true" }],
+    constraints: ["Must handle unicode safely."],
+    hint: "Use `Array.from(str)` or the spread operator `[...str]` to safely split unicode characters.",
+    solution: "function isAnagram(s, t) {\n  const sArr = [...s];\n  const tArr = [...t];\n  if (sArr.length !== tArr.length) return false;\n  const count = {};\n  for (let char of sArr) count[char] = (count[char] || 0) + 1;\n  for (let char of tArr) {\n    if (!count[char]) return false;\n    count[char]--;\n  }\n  return true;\n}"
+  },
+  {
+    id: "code-d2-containsdup",
+    title: "Contains Duplicate (Space Optimized)",
+    difficulty: "Medium",
+    description: "Given an integer array nums, return true if any value appears at least twice. TRICK: Do this without using the `Set` object and with O(1) extra space.",
+    examples: [{ input: "[1,2,3,1]", output: "true" }],
+    constraints: ["O(1) space complexity.", "You may modify the input array."],
+    hint: "Sort the array first, then check adjacent elements.",
+    solution: "function containsDuplicate(nums) {\n  nums.sort((a, b) => a - b);\n  for (let i = 1; i < nums.length; i++) {\n    if (nums[i] === nums[i - 1]) return true;\n  }\n  return false;\n}"
+  }
+]);
+
+day3_coding.push(...[
+  {
+    id: "code-d3-custommap",
+    title: "Custom Map with 'thisArg'",
+    difficulty: "Medium",
+    description: "Implement `Array.prototype.myMap`. TRICK: It must fully support the optional `thisArg` parameter that native `.map` supports.",
+    examples: [{ input: "[1,2].myMap(function(n) { return n + this.val; }, {val: 10})", output: "[11, 12]" }],
+    constraints: ["Do not use native .map."],
+    hint: "Use `callback.call(thisArg, this[i], i, this)`.",
+    solution: "Array.prototype.myMap = function(callback, thisArg) {\n  const result = [];\n  for (let i = 0; i < this.length; i++) {\n    if (i in this) {\n      result[i] = callback.call(thisArg, this[i], i, this);\n    }\n  }\n  return result;\n};"
+  },
+  {
+    id: "code-d3-customfilter",
+    title: "Custom Filter (Sparse Arrays)",
+    difficulty: "Medium",
+    description: "Implement `myFilter`. TRICK: It must properly handle sparse arrays (e.g., `[1, , 3]`) by ignoring the empty slots, exactly like native filter.",
+    examples: [{ input: "const arr = [1]; arr[3] = 4; arr.myFilter(n => true);", output: "[1, 4]" }],
+    constraints: ["Handle empty slots correctly."],
+    hint: "Check `if (i in this)` before executing the callback.",
+    solution: "Array.prototype.myFilter = function(callback, thisArg) {\n  const result = [];\n  for (let i = 0; i < this.length; i++) {\n    if (i in this && callback.call(thisArg, this[i], i, this)) {\n      result.push(this[i]);\n    }\n  }\n  return result;\n};"
+  },
+  {
+    id: "code-d3-removedups",
+    title: "Remove Duplicates (In-Place)",
+    difficulty: "Easy",
+    description: "Remove duplicates from a sorted array in-place such that each element appears only once and returns the new length. TRICK: Do not allocate extra space for another array.",
+    examples: [{ input: "[1,1,2]", output: "2, nums = [1,2,_]" }],
+    constraints: ["O(1) space."],
+    hint: "Use two pointers: one for iteration, one to place the next unique element.",
+    solution: "function removeDuplicates(nums) {\n  if (nums.length === 0) return 0;\n  let i = 0;\n  for (let j = 1; j < nums.length; j++) {\n    if (nums[j] !== nums[i]) {\n      i++;\n      nums[i] = nums[j];\n    }\n  }\n  return i + 1;\n}"
+  },
+  {
+    id: "code-d3-missingn",
+    title: "Find Missing N (Bitwise XOR)",
+    difficulty: "Hard",
+    description: "Given an array containing n distinct numbers taken from 0, 1, 2, ..., n, find the one that is missing. TRICK: Solve it using Bitwise XOR instead of mathematical sum formulas to prevent integer overflow.",
+    examples: [{ input: "[3,0,1]", output: "2" }],
+    constraints: ["O(N) time, O(1) space, Use bitwise operations."],
+    hint: "XORing a number by itself is 0. XOR all indices and all values.",
+    solution: "function missingNumber(nums) {\n  let missing = nums.length;\n  for (let i = 0; i < nums.length; i++) {\n    missing ^= i ^ nums[i];\n  }\n  return missing;\n}"
+  },
+  {
+    id: "code-d3-mergeobjects",
+    title: "Deep Merge Objects",
+    difficulty: "Hard",
+    description: "Write a function `deepMerge` that merges two nested objects. TRICK: Arrays should be concatenated, objects recursively merged, and primitives overwritten by the second object.",
+    examples: [{ input: "deepMerge({a: [1], b: {c: 1}}, {a: [2], b: {d: 2}})", output: "{a: [1, 2], b: {c: 1, d: 2}}" }],
+    constraints: ["Must handle deeply nested objects and arrays."],
+    hint: "Check `Array.isArray()` first. Then check `typeof obj === 'object'`. Loop through keys of the source object.",
+    solution: "function deepMerge(target, source) {\n  for (const key in source) {\n    if (Array.isArray(source[key])) {\n      target[key] = (target[key] || []).concat(source[key]);\n    } else if (source[key] !== null && typeof source[key] === 'object') {\n      target[key] = target[key] || {};\n      deepMerge(target[key], source[key]);\n    } else {\n      target[key] = source[key];\n    }\n  }\n  return target;\n}"
+  },
+  {
+    id: "code-d3-mergesorted",
+    title: "Merge Sorted Arrays (Backwards)",
+    difficulty: "Medium",
+    description: "Given two sorted integer arrays nums1 and nums2, merge nums2 into nums1 as one sorted array. TRICK: Start merging from the back to avoid overwriting elements in nums1.",
+    examples: [{ input: "nums1 = [1,2,3,0,0,0], m = 3, nums2 = [2,5,6], n = 3", output: "[1,2,2,3,5,6]" }],
+    constraints: ["O(m+n) time, O(1) space."],
+    hint: "Use three pointers: p1 at m-1, p2 at n-1, and p at m+n-1.",
+    solution: "function merge(nums1, m, nums2, n) {\n  let p1 = m - 1;\n  let p2 = n - 1;\n  let p = m + n - 1;\n  while (p2 >= 0) {\n    if (p1 >= 0 && nums1[p1] > nums2[p2]) {\n      nums1[p] = nums1[p1];\n      p1--;\n    } else {\n      nums1[p] = nums2[p2];\n      p2--;\n    }\n    p--;\n  }\n}"
+  }
+]);
+
+day4_coding.push(...[
+  {
+    id: "code-d4-eventloop",
+    title: "Tricky Event Loop Output",
+    difficulty: "Hard",
+    description: "Write out the exact string output of the following execution: `Promise.resolve().then(()=>console.log('A')); setTimeout(()=>console.log('B'),0); console.log('C'); process.nextTick(()=>console.log('D'));` (Assume Node.js environment). Return the answer as a comma-separated string.",
+    examples: [{ input: "runCode()", output: "'C, D, A, B'" }],
+    constraints: ["Understand the difference between nextTick, Microtasks, and Macrotasks."],
+    hint: "Sync code runs first (C). nextTick has highest priority in microtasks (D). Then Promises (A). Finally setTimeout macrotask (B).",
+    solution: "function getOutput() {\n  return 'C, D, A, B';\n}"
+  },
+  {
+    id: "code-d4-promiserace",
+    title: "Implement Promise.race",
+    difficulty: "Medium",
+    description: "Implement a function `myPromiseRace(promises)` that mimics `Promise.race`. TRICK: How do you handle non-promise values inside the array?",
+    examples: [{ input: "myPromiseRace([new Promise(res => setTimeout(res, 100, 'A')), 'B'])", output: "'B' immediately" }],
+    constraints: ["Wrap values in Promise.resolve()."],
+    hint: "Iterate over the array and attach a .then() and .catch() to `Promise.resolve(p)`. The first one to resolve/reject settles the outer promise.",
+    solution: "function myPromiseRace(promises) {\n  return new Promise((resolve, reject) => {\n    for (let p of promises) {\n      Promise.resolve(p).then(resolve).catch(reject);\n    }\n  });\n}"
+  },
+  {
+    id: "code-d4-asyncerror",
+    title: "Async/Await Global Error Catching",
+    difficulty: "Medium",
+    description: "You have an async function that throws an error, but it was not wrapped in a try/catch. How do you catch unhandled promise rejections globally in the browser?",
+    examples: [{ input: "window.addEventListener('???', handler)", output: "Catches rejection" }],
+    constraints: ["Provide the event listener code."],
+    hint: "The event is called 'unhandledrejection'.",
+    solution: "window.addEventListener('unhandledrejection', function(event) {\n  console.log('Caught global error:', event.reason);\n  event.preventDefault();\n});"
+  }
+]);
+
+day5_coding.push(...[
+  {
+    id: "code-d5-delegation",
+    title: "Event Delegation Puzzle",
+    difficulty: "Medium",
+    description: "You have a list of 10,000 `<li>` items. Attaching an event listener to each is slow. Write code to attach ONE event listener to the `<ul>` that correctly alerts the text of the clicked `<li>`. TRICK: The `<li>` might contain a `<span>` or `<i>` tag inside it. If you click the span, you still want to get the `<li>`'s text.",
+    examples: [{ input: "<ul><li><span>Hi</span></li></ul> -> click span", output: "Alerts 'Hi'" }],
+    constraints: ["Use Event Delegation.", "Handle nested elements."],
+    hint: "Use `event.target.closest('li')` to find the nearest `<li>` ancestor.",
+    solution: "document.querySelector('ul').addEventListener('click', function(e) {\n  const li = e.target.closest('li');\n  if (li && this.contains(li)) {\n    alert(li.innerText);\n  }\n});"
+  },
+  {
+    id: "code-d5-darkmode",
+    title: "Toggle Dark Mode Class",
+    difficulty: "Easy",
+    description: "Write a pure function `toggleDarkMode(classList, isDark)` that returns a new array of classes. If `isDark` is true, ensure 'dark-mode' is in the array. If false, ensure it is removed.",
+    examples: [{ input: "toggleDarkMode(['btn', 'dark-mode'], false)", output: "['btn']" }],
+    constraints: ["Do not mutate the original array."],
+    hint: "Use array methods like filter() or the spread operator.",
+    solution: "function toggleDarkMode(classList, isDark) {\n  const filtered = classList.filter(c => c !== 'dark-mode');\n  return isDark ? [...filtered, 'dark-mode'] : filtered;\n}"
+  }
+]);
+
+day6_coding.push(...[
+  {
+    id: "code-d6-throttle",
+    title: "Implement Throttle (Leading & Trailing)",
+    difficulty: "Hard",
+    description: "Implement a robust `throttle(func, wait)` that ensures the function is called at most once every `wait` milliseconds. TRICK: It must fire on the leading edge (immediately on first call) and on the trailing edge (if called during the wait).",
+    examples: [{ input: "throttle(fn, 100)", output: "Fires immediately, then waits 100ms before firing again if triggered." }],
+    constraints: ["Handle arguments and context (`this`) correctly."],
+    hint: "Maintain a `lastRan` timestamp and a `lastFunc` timeout ID.",
+    solution: "function throttle(func, limit) {\n  let lastFunc;\n  let lastRan;\n  return function(...args) {\n    const context = this;\n    if (!lastRan) {\n      func.apply(context, args);\n      lastRan = Date.now();\n    } else {\n      clearTimeout(lastFunc);\n      lastFunc = setTimeout(function() {\n        if ((Date.now() - lastRan) >= limit) {\n          func.apply(context, args);\n          lastRan = Date.now();\n        }\n      }, limit - (Date.now() - lastRan));\n    }\n  }\n}"
+  },
+  {
+    id: "code-d6-groupobjs",
+    title: "Group Objects by Property",
+    difficulty: "Medium",
+    description: "Write a function `groupBy(arr, property)` that takes an array of objects and groups them by a specified property name.",
+    examples: [{ input: "groupBy([{cat: 'A'}, {cat: 'B'}, {cat: 'A'}], 'cat')", output: "{ A: [...], B: [...] }" }],
+    constraints: ["Use Array.prototype.reduce()."],
+    hint: "Initialize reduce with an empty object {}. Push items to the corresponding key's array.",
+    solution: "function groupBy(arr, prop) {\n  return arr.reduce((acc, obj) => {\n    const key = obj[prop];\n    if (!acc[key]) acc[key] = [];\n    acc[key].push(obj);\n    return acc;\n  }, {});\n}"
+  }
+]);
