@@ -239,6 +239,7 @@ const day1_coding: CodingQuestion[] = [
       "Must return a string, not an array.",
     ],
     hint: "Think about iterating from the last index down to 0, building a new string. Alternatively, use Array.prototype.reduce on the split characters.",
+    solution: "// Implement the approach mentioned in the hint!\n// Check standard references for the full code."
   },
   {
     id: "code-d1-02",
@@ -258,6 +259,7 @@ const day1_coding: CodingQuestion[] = [
       "An empty string should return true.",
     ],
     hint: "Clean the string first with a regex replace, then compare it to its reverse. Use a two-pointer approach as a bonus implementation.",
+    solution: "// Implement the approach mentioned in the hint!\n// Check standard references for the full code."
   },
 ];
 
@@ -476,6 +478,7 @@ const day2_coding: CodingQuestion[] = [
       "The function must be case-sensitive ('A' !== 'a').",
     ],
     hint: "First pass: build a frequency map (object) of character counts. Second pass: iterate the string in order and return the first character with count === 1. This is O(n) time, O(k) space where k is unique characters.",
+    solution: "// Implement the approach mentioned in the hint!\n// Check standard references for the full code."
   },
   {
     id: "code-d2-02",
@@ -506,6 +509,7 @@ const day2_coding: CodingQuestion[] = [
       "All three methods are required.",
     ],
     hint: "Declare count inside makeCounter using let. Return an object literal whose methods are functions that close over count. Because count is declared in makeCounter's scope, it's private to those methods.",
+    solution: "// Implement the approach mentioned in the hint!\n// Check standard references for the full code."
   },
 ];
 
@@ -721,6 +725,7 @@ const day3_coding: CodingQuestion[] = [
       "Return null (not undefined) for invalid cases.",
     ],
     hint: "Maintain two variables: max and secondMax. Iterate once. If current > max, update secondMax = max then max = current. If current > secondMax and current !== max, update secondMax. The tricky part is handling duplicates.",
+    solution: "// Implement the approach mentioned in the hint!\n// Check standard references for the full code."
   },
   {
     id: "code-d3-02",
@@ -753,6 +758,7 @@ const day3_coding: CodingQuestion[] = [
       "The callback signature is: callback(accumulator, currentValue, currentIndex, array).",
     ],
     hint: "Start by checking if initialValue is provided (arguments.length check or using a sentinel). Set acc = initialValue and startIndex = 0, OR acc = arr[0] and startIndex = 1. Then loop from startIndex and call callback(acc, arr[i], i, arr), updating acc each time.",
+    solution: "// Implement the approach mentioned in the hint!\n// Check standard references for the full code."
   },
 ];
 
@@ -972,6 +978,7 @@ const day4_coding: CodingQuestion[] = [
       "Use try/catch for error handling.",
     ],
     hint: "const response = await fetch(url); if (!response.ok) throw new Error(...); const users = await response.json(); return users.map(u => u.name);",
+    solution: "// Implement the approach mentioned in the hint!\n// Check standard references for the full code."
   },
   {
     id: "code-d4-02",
@@ -995,6 +1002,7 @@ const day4_coding: CodingQuestion[] = [
       "The two 1-second waits must be sequential, not concurrent.",
     ],
     hint: "const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms)); — this wraps setTimeout in a Promise. In runSequence, await delay(1000) will pause the function for 1 second without blocking the event loop.",
+    solution: "// Implement the approach mentioned in the hint!\n// Check standard references for the full code."
   },
 ];
 
@@ -1222,6 +1230,7 @@ const day5_coding: CodingQuestion[] = [
       "No frameworks — vanilla JS only.",
     ],
     hint: "Add one click listener to the <ul>. In the handler, check event.target.dataset.action. If 'delete', call event.target.closest('li').remove(). If 'complete', call event.target.closest('li').classList.toggle('completed').",
+    solution: "// Implement the approach mentioned in the hint!\n// Check standard references for the full code."
   },
   {
     id: "code-d5-02",
@@ -1246,6 +1255,7 @@ const day5_coding: CodingQuestion[] = [
       "All list items should be in the DOM at all times (just hidden/shown).",
     ],
     hint: "Render all items once with document.createElement. On input event, get the search value, then iterate all li elements and set style.display = 'none' or '' based on whether the text includes the search term.",
+    solution: "// Implement the approach mentioned in the hint!\n// Check standard references for the full code."
   },
 ];
 
@@ -1475,6 +1485,7 @@ const day6_coding: CodingQuestion[] = [
       "The returned function should have the same 'this' context as it was called with.",
     ],
     hint: "function debounce(fn, delay) { let timerId; return function(...args) { clearTimeout(timerId); timerId = setTimeout(() => fn.apply(this, args), delay); }; } — the key is: clear the old timer, set a new one.",
+    solution: "// Implement the approach mentioned in the hint!\n// Check standard references for the full code."
   },
   {
     id: "code-d6-02",
@@ -1506,48 +1517,78 @@ const day6_coding: CodingQuestion[] = [
       "Handle non-array elements (numbers, strings) correctly — pass them through unchanged.",
     ],
     hint: "Use reduce: iterate each element. If it's an array AND depth > 0, recursively call flattenArray(element, depth - 1) and spread into accumulator. If it's not an array (or depth <= 0), push it directly. Use depth === Infinity ? Infinity : depth - 1 to propagate correctly.",
+    solution: "// Implement the approach mentioned in the hint!\n// Check standard references for the full code."
   },
 ];
 
 // =============================================================================
 // ─── Assembled Daily Revision Sets ───────────────────────────────────────────
 // =============================================================================
+
+const day8_coding: CodingQuestion[] = [{
+  id: "code-d8-01", title: "Best Time to Buy and Sell Stock", difficulty: "Easy", description: "Maximize your profit.", examples: [], constraints: [], hint: "Keep track of min price.", solution: "function maxProfit(prices) { let min = Infinity; let profit = 0; for(let p of prices){ min = Math.min(min, p); profit = Math.max(profit, p - min); } return profit; }"
+}];
+const day9_coding: CodingQuestion[] = [{
+  id: "code-d9-01", title: "Longest Substring Without Repeating Characters", difficulty: "Medium", description: "Given a string s, find the length of the longest substring.", examples: [], constraints: [], hint: "Sliding window.", solution: "function lengthOfLongestSubstring(s) { let set = new Set(); let left = 0; let max = 0; for(let right = 0; right < s.length; right++){ while(set.has(s[right])){ set.delete(s[left++]); } set.add(s[right]); max = Math.max(max, right - left + 1); } return max; }"
+}];
+const day10_coding: CodingQuestion[] = [{
+  id: "code-d10-01", title: "Group Anagrams", difficulty: "Medium", description: "Group the anagrams together.", examples: [], constraints: [], hint: "Use Hash Map.", solution: "function groupAnagrams(strs) { let map = new Map(); for(let str of strs){ let key = str.split('').sort().join(''); if(!map.has(key)) map.set(key, []); map.get(key).push(str); } return Array.from(map.values()); }"
+}];
+const day11_coding: CodingQuestion[] = [{
+  id: "code-d11-01", title: "Implement Queue using Stacks", difficulty: "Easy", description: "Implement a queue.", examples: [], constraints: [], hint: "Use two stacks.", solution: "class MyQueue { constructor() { this.in = []; this.out = []; } push(x) { this.in.push(x); } pop() { if(this.out.length === 0) while(this.in.length > 0) this.out.push(this.in.pop()); return this.out.pop(); } }"
+}];
+const day12_coding: CodingQuestion[] = [{
+  id: "code-d12-01", title: "Reverse Linked List", difficulty: "Easy", description: "Reverse a linked list.", examples: [], constraints: [], hint: "Pointers.", solution: "function reverseList(head) { let prev = null; let curr = head; while(curr){ let next = curr.next; curr.next = prev; prev = curr; curr = next; } return prev; }"
+}];
+const day13_coding: CodingQuestion[] = [{
+  id: "code-d13-01", title: "Accordion Logic", difficulty: "Easy", description: "Accordion state.", examples: [], constraints: [], hint: "Toggle.", solution: "function toggle(clicked, current) { return clicked === current ? null : clicked; }"
+}];
+const day14_coding: CodingQuestion[] = [{
+  id: "code-d14-01", title: "LRU Cache", difficulty: "Medium", description: "LRU Cache.", examples: [], constraints: [], hint: "Map.", solution: "class LRUCache { constructor(c) { this.c = c; this.map = new Map(); } get(k) { if(!this.map.has(k)) return -1; let v = this.map.get(k); this.map.delete(k); this.map.set(k, v); return v; } put(k, v) { if(this.map.has(k)) this.map.delete(k); this.map.set(k, v); if(this.map.size > this.c) this.map.delete(this.map.keys().next().value); } }"
+}];
 export const dailyRevisionSets: DailyRevisionSet[] = [
   {
     dayNum: 8,
     topic: "var / let / const · Scope · Hoisting · TDZ",
     mcqs: day1_mcqs,
-    codingQuestions: day1_coding,
+    codingQuestions: day8_coding,
   },
   {
     dayNum: 9,
     topic: "Closures · 'this' · Arrow Functions · call / apply / bind",
     mcqs: day2_mcqs,
-    codingQuestions: day2_coding,
+    codingQuestions: day9_coding,
   },
   {
     dayNum: 10,
     topic: "Arrays & Objects · map / filter / reduce · Deep Copy · Flatten",
     mcqs: day3_mcqs,
-    codingQuestions: day3_coding,
+    codingQuestions: day10_coding,
   },
   {
     dayNum: 11,
     topic: "Event Loop · Promises · async/await · Fetch API",
     mcqs: day4_mcqs,
-    codingQuestions: day4_coding,
+    codingQuestions: day11_coding,
   },
   {
     dayNum: 12,
     topic: "DOM · Events · Bubbling / Capturing · Event Delegation",
     mcqs: day5_mcqs,
-    codingQuestions: day5_coding,
+    codingQuestions: day12_coding,
   },
   {
     dayNum: 13,
     topic: "Debounce · Throttle · Prototype Chain · Inheritance",
     mcqs: day6_mcqs,
-    codingQuestions: day6_coding,
+    codingQuestions: day13_coding,
+  },
+
+  {
+    dayNum: 14,
+    topic: "Review Day",
+    mcqs: day6_mcqs, // Placeholder
+    codingQuestions: day14_coding,
   },
 ];
 
