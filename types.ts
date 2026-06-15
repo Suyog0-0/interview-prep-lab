@@ -33,6 +33,7 @@ export interface CodingQuestion {
   examples: { input: string; output: string; explanation?: string }[];
   constraints: string[];
   hint: string;
+  solution?: string;
 }
 
 export interface InterviewSection {

@@ -1429,17 +1429,42 @@ function LeapfrogDayPrepView({ dayNum }: { dayNum: number }) {
               </div>
 
               {/* Hint */}
-              <div className="p-4 rounded-lg bg-amber-500/5 border border-amber-500/15 flex items-start gap-3">
-                <Lightbulb className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
-                <div>
-                  <div className="text-[10px] font-mono uppercase tracking-wider text-amber-500 font-bold mb-1">
-                    Hint
+              {cq.hint && (
+                <div className="p-4 rounded-lg bg-amber-500/5 border border-amber-500/15 flex items-start gap-3">
+                  <Lightbulb className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
+                  <div>
+                    <div className="text-[10px] font-mono uppercase tracking-wider text-amber-500 font-bold mb-1">
+                      Hint
+                    </div>
+                    <p className="text-zinc-300 text-[13px] leading-relaxed">
+                      {cq.hint}
+                    </p>
                   </div>
-                  <p className="text-zinc-300 text-[13px] leading-relaxed">
-                    {cq.hint}
-                  </p>
                 </div>
-              </div>
+              )}
+
+              {/* Solution */}
+              {cq.solution && (
+                <div className="mt-4">
+                  <button
+                    onClick={() => setQuizStates(prev => ({
+                      ...prev,
+                      [cq.id]: {
+                        ...(prev[cq.id] || { selectedOption: null, showExplanation: false }),
+                        showAnswer: !prev[cq.id]?.showAnswer
+                      }
+                    }))}
+                    className="text-xs font-bold text-violet-400 hover:text-violet-300 transition-colors flex items-center gap-1"
+                  >
+                    {quizStates[cq.id]?.showAnswer ? "Hide Solution" : "Show Solution"}
+                  </button>
+                  {quizStates[cq.id]?.showAnswer && (
+                    <div className="mt-3 p-4 rounded-lg bg-zinc-900 border border-zinc-800 text-sm font-mono text-zinc-300 whitespace-pre-wrap overflow-x-auto">
+                      {cq.solution}
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           ))}
         </div>
@@ -2260,6 +2285,29 @@ export default function Home() {
                         <div className="mt-4 p-3 rounded-lg bg-blue-500/10 border border-blue-500/20 text-[13px] text-blue-300 flex gap-2 items-start">
                           <Lightbulb className="w-4 h-4 mt-0.5 shrink-0" />
                           <span>{q.hint}</span>
+                        </div>
+                      )}
+                      
+                      {/* Solution */}
+                      {q.solution && (
+                        <div className="mt-4 mb-4">
+                          <button
+                            onClick={() => setQuizStates(prev => ({
+                              ...prev,
+                              [q.id]: {
+                                ...(prev[q.id] || { selectedOption: null, showExplanation: false }),
+                                showAnswer: !prev[q.id]?.showAnswer
+                              }
+                            }))}
+                            className="text-xs font-bold text-violet-400 hover:text-violet-300 transition-colors flex items-center gap-1"
+                          >
+                            {quizStates[q.id]?.showAnswer ? "Hide Solution" : "Show Solution"}
+                          </button>
+                          {quizStates[q.id]?.showAnswer && (
+                            <div className="mt-3 p-4 rounded-lg bg-zinc-900 border border-zinc-800 text-sm font-mono text-zinc-300 whitespace-pre-wrap overflow-x-auto">
+                              {q.solution}
+                            </div>
+                          )}
                         </div>
                       )}
                       
