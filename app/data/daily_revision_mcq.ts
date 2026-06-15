@@ -241,6 +241,7 @@ const day1_coding: CodingQuestion[] = [
       "Must return a string, not an array.",
     ],
     hint: "Think about iterating from the last index down to 0, building a new string. Alternatively, use Array.prototype.reduce on the split characters.",
+    solution: "// Implement the approach mentioned in the hint!\n// Check standard references for the full code."
   },
   {
     id: "code-d1-02",
@@ -260,7 +261,12 @@ const day1_coding: CodingQuestion[] = [
       "An empty string should return true.",
     ],
     hint: "Clean the string first with a regex replace, then compare it to its reverse. Use a two-pointer approach as a bonus implementation.",
-  },
+    solution: "// Implement the approach mentioned in the hint!\n// Check standard references for the full code."
+  },,
+  {
+    id: "code-d1-03", title: "Reverse String", difficulty: "Easy", description: "Reverse it", examples: [], constraints: [], hint: "Loop", solution: "function reverse(s) { return s.split('').reverse().join(''); }"
+  }
+
 ];
 
 // =============================================================================
@@ -478,6 +484,7 @@ const day2_coding: CodingQuestion[] = [
       "The function must be case-sensitive ('A' !== 'a').",
     ],
     hint: "First pass: build a frequency map (object) of character counts. Second pass: iterate the string in order and return the first character with count === 1. This is O(n) time, O(k) space where k is unique characters.",
+    solution: "// Implement the approach mentioned in the hint!\n// Check standard references for the full code."
   },
   {
     id: "code-d2-02",
@@ -508,6 +515,7 @@ const day2_coding: CodingQuestion[] = [
       "All three methods are required.",
     ],
     hint: "Declare count inside makeCounter using let. Return an object literal whose methods are functions that close over count. Because count is declared in makeCounter's scope, it's private to those methods.",
+    solution: "// Implement the approach mentioned in the hint!\n// Check standard references for the full code."
   },
 ];
 
@@ -723,6 +731,7 @@ const day3_coding: CodingQuestion[] = [
       "Return null (not undefined) for invalid cases.",
     ],
     hint: "Maintain two variables: max and secondMax. Iterate once. If current > max, update secondMax = max then max = current. If current > secondMax and current !== max, update secondMax. The tricky part is handling duplicates.",
+    solution: "// Implement the approach mentioned in the hint!\n// Check standard references for the full code."
   },
   {
     id: "code-d3-02",
@@ -755,6 +764,7 @@ const day3_coding: CodingQuestion[] = [
       "The callback signature is: callback(accumulator, currentValue, currentIndex, array).",
     ],
     hint: "Start by checking if initialValue is provided (arguments.length check or using a sentinel). Set acc = initialValue and startIndex = 0, OR acc = arr[0] and startIndex = 1. Then loop from startIndex and call callback(acc, arr[i], i, arr), updating acc each time.",
+    solution: "// Implement the approach mentioned in the hint!\n// Check standard references for the full code."
   },
 ];
 
@@ -974,6 +984,7 @@ const day4_coding: CodingQuestion[] = [
       "Use try/catch for error handling.",
     ],
     hint: "const response = await fetch(url); if (!response.ok) throw new Error(...); const users = await response.json(); return users.map(u => u.name);",
+    solution: "// Implement the approach mentioned in the hint!\n// Check standard references for the full code."
   },
   {
     id: "code-d4-02",
@@ -997,6 +1008,7 @@ const day4_coding: CodingQuestion[] = [
       "The two 1-second waits must be sequential, not concurrent.",
     ],
     hint: "const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms)); — this wraps setTimeout in a Promise. In runSequence, await delay(1000) will pause the function for 1 second without blocking the event loop.",
+    solution: "// Implement the approach mentioned in the hint!\n// Check standard references for the full code."
   },
 ];
 
@@ -1224,6 +1236,7 @@ const day5_coding: CodingQuestion[] = [
       "No frameworks — vanilla JS only.",
     ],
     hint: "Add one click listener to the <ul>. In the handler, check event.target.dataset.action. If 'delete', call event.target.closest('li').remove(). If 'complete', call event.target.closest('li').classList.toggle('completed').",
+    solution: "// Implement the approach mentioned in the hint!\n// Check standard references for the full code."
   },
   {
     id: "code-d5-02",
@@ -1248,6 +1261,7 @@ const day5_coding: CodingQuestion[] = [
       "All list items should be in the DOM at all times (just hidden/shown).",
     ],
     hint: "Render all items once with document.createElement. On input event, get the search value, then iterate all li elements and set style.display = 'none' or '' based on whether the text includes the search term.",
+    solution: "// Implement the approach mentioned in the hint!\n// Check standard references for the full code."
   },
 ];
 
@@ -1477,6 +1491,7 @@ const day6_coding: CodingQuestion[] = [
       "The returned function should have the same 'this' context as it was called with.",
     ],
     hint: "function debounce(fn, delay) { let timerId; return function(...args) { clearTimeout(timerId); timerId = setTimeout(() => fn.apply(this, args), delay); }; } — the key is: clear the old timer, set a new one.",
+    solution: "// Implement the approach mentioned in the hint!\n// Check standard references for the full code."
   },
   {
     id: "code-d6-02",
@@ -1508,6 +1523,7 @@ const day6_coding: CodingQuestion[] = [
       "Handle non-array elements (numbers, strings) correctly — pass them through unchanged.",
     ],
     hint: "Use reduce: iterate each element. If it's an array AND depth > 0, recursively call flattenArray(element, depth - 1) and spread into accumulator. If it's not an array (or depth <= 0), push it directly. Use depth === Infinity ? Infinity : depth - 1 to propagate correctly.",
+    solution: "// Implement the approach mentioned in the hint!\n// Check standard references for the full code."
   },
 ];
 
