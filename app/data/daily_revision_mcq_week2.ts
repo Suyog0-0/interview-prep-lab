@@ -1601,3 +1601,161 @@ export {
   day5_mcqs, day5_coding,
   day6_mcqs, day6_coding,
 };
+// --- INJECTED EXTRA CODING QUESTIONS ---
+day8_coding.push(...[
+  {
+    id: "code-d8-triplets",
+    title: "Compare the Triplets",
+    difficulty: "Easy",
+    description: "Alice and Bob each created one problem for HackerRank. A reviewer rates the two challenges, awarding points on a scale from 1 to 100 for three categories: problem clarity, originality, and difficulty. Given a=[a0, a1, a2] and b=[b0, b1, b2], compare them element by element. If a[i] > b[i], Alice gets 1 point. If a[i] < b[i], Bob gets 1 point. TRICK: What is the cleanest, most un-nested way to compute the score?",
+    examples: [{ input: "a=[5,6,7], b=[3,6,10]", output: "[1, 1]" }],
+    constraints: ["Return an array of two integers [aliceScore, bobScore]."],
+    hint: "Use `reduce` or a simple loop mapping comparisons to boolean 1s or 0s.",
+    solution: "function compareTriplets(a, b) {\n  let alice = 0, bob = 0;\n  for (let i = 0; i < 3; i++) {\n    if (a[i] > b[i]) alice++;\n    if (a[i] < b[i]) bob++;\n  }\n  return [alice, bob];\n}"
+  },
+  {
+    id: "code-d8-diagonaldiff",
+    title: "Diagonal Difference",
+    difficulty: "Easy",
+    description: "Given a square matrix, calculate the absolute difference between the sums of its diagonals. TRICK: Solve it in a single pass O(N) rather than O(N^2) using nested loops.",
+    examples: [{ input: "[[11,2,4], [4,5,6], [10,8,-12]]", output: "15" }],
+    constraints: ["O(N) time complexity.", "Matrix is perfectly square."],
+    hint: "Left-to-Right diagonal index is [i][i]. Right-to-Left diagonal index is [i][n - 1 - i].",
+    solution: "function diagonalDifference(arr) {\n  let sum1 = 0, sum2 = 0;\n  const n = arr.length;\n  for (let i = 0; i < n; i++) {\n    sum1 += arr[i][i];\n    sum2 += arr[i][n - 1 - i];\n  }\n  return Math.abs(sum1 - sum2);\n}"
+  }
+]);
+
+day9_coding.push(...[
+  {
+    id: "code-d9-sales",
+    title: "Sales by Match",
+    difficulty: "Easy",
+    description: "There is a large pile of socks that must be paired by color. Given an array of integers representing the color of each sock, determine how many pairs of socks with matching colors there are. TRICK: Can you do this in one pass using a Set?",
+    examples: [{ input: "n=7, ar=[1,2,1,2,1,3,2]", output: "2" }],
+    constraints: ["O(N) time complexity."],
+    hint: "Keep a Set. If the sock is in the Set, increment pairs and remove it. If not, add it.",
+    solution: "function sockMerchant(n, ar) {\n  let pairs = 0;\n  const set = new Set();\n  for (let sock of ar) {\n    if (set.has(sock)) {\n      pairs++;\n      set.delete(sock);\n    } else {\n      set.add(sock);\n    }\n  }\n  return pairs;\n}"
+  },
+  {
+    id: "code-d9-valleys",
+    title: "Counting Valleys",
+    difficulty: "Easy",
+    description: "An avid hiker keeps meticulous records. During the last hike, exactly steps steps were taken. Given a string of 'U' and 'D', find the number of valleys walked through. TRICK: A valley is defined as entering below sea level and returning to sea level. At what exact transition should you count a valley?",
+    examples: [{ input: "steps=8, path='UDDDUDUU'", output: "1" }],
+    constraints: ["O(N) time."],
+    hint: "Keep track of altitude. If altitude reaches 0 AND the last step was 'U', you just climbed out of a valley.",
+    solution: "function countingValleys(steps, path) {\n  let altitude = 0;\n  let valleys = 0;\n  for (let step of path) {\n    if (step === 'U') {\n      altitude++;\n      if (altitude === 0) valleys++;\n    } else {\n      altitude--;\n    }\n  }\n  return valleys;\n}"
+  }
+]);
+
+day10_coding.push(...[
+  {
+    id: "code-d10-ransom",
+    title: "Ransom Note Hash Map",
+    difficulty: "Easy",
+    description: "Harold is a kidnapper who wrote a ransom note. He wants to cut whole words from a magazine. Given the words in the magazine and the words in the ransom note, print 'Yes' if he can replicate his note exactly using whole words, otherwise print 'No'. TRICK: Words are case-sensitive and must be used exactly the correct number of times.",
+    examples: [{ input: "magazine=['two','times','three'], note=['two','times','two']", output: "'No'" }],
+    constraints: ["O(M + N) time complexity."],
+    hint: "Build a frequency map of the magazine words. Iterate the note and decrement. If count < 0, return 'No'.",
+    solution: "function checkMagazine(magazine, note) {\n  const map = new Map();\n  for (let word of magazine) map.set(word, (map.get(word) || 0) + 1);\n  for (let word of note) {\n    const count = map.get(word) || 0;\n    if (count === 0) return console.log('No');\n    map.set(word, count - 1);\n  }\n  console.log('Yes');\n}"
+  },
+  {
+    id: "code-d10-sherlock",
+    title: "Sherlock and Anagrams",
+    difficulty: "Medium",
+    description: "Two strings are anagrams of each other if the letters of one string can be rearranged to form the other. Find the number of pairs of substrings of a string that are anagrams of each other. TRICK: This is notoriously slow if you check permutations. Sort the substrings to create hash keys instead.",
+    examples: [{ input: "'abba'", output: "4 (a,a), (b,b), (ab,ba), (abb,bba)" }],
+    constraints: ["Length of string is up to 100."],
+    hint: "Generate all substrings, sort each one alphabetically, and store the count in a hash map. For a frequency n, it contributes n*(n-1)/2 pairs.",
+    solution: "function sherlockAndAnagrams(s) {\n  const map = {};\n  for (let i = 0; i < s.length; i++) {\n    for (let j = i + 1; j <= s.length; j++) {\n      const sub = s.slice(i, j).split('').sort().join('');\n      map[sub] = (map[sub] || 0) + 1;\n    }\n  }\n  let pairs = 0;\n  for (let key in map) {\n    const n = map[key];\n    pairs += (n * (n - 1)) / 2;\n  }\n  return pairs;\n}"
+  }
+]);
+
+day11_coding.push(...[
+  {
+    id: "code-d11-balanced",
+    title: "Balanced Brackets",
+    difficulty: "Medium",
+    description: "A bracket is considered to be any one of the following characters: (, ), {, }, [, or ]. Determine if a sequence of brackets is balanced. TRICK: What if the string starts with a closing bracket? Your stack logic must not crash.",
+    examples: [{ input: "'{[()]}'", output: "'YES'" }, { input: "'{[(])}'", output: "'NO'" }],
+    constraints: ["O(N) time."],
+    hint: "Push opening brackets to a stack. If it's a closing bracket, pop and check if it matches the correct pair. Stack must be empty at the end.",
+    solution: "function isBalanced(s) {\n  const stack = [];\n  const match = { ')': '(', '}': '{', ']': '[' };\n  for (let char of s) {\n    if (char === '(' || char === '{' || char === '[') stack.push(char);\n    else if (stack.pop() !== match[char]) return 'NO';\n  }\n  return stack.length === 0 ? 'YES' : 'NO';\n}"
+  },
+  {
+    id: "code-d11-clouds",
+    title: "Jumping on Clouds",
+    difficulty: "Easy",
+    description: "There is a new mobile game that starts with consecutively numbered clouds. Some of the clouds are thunderheads (1) and others are cumulus (0). You can jump on any cumulus cloud having a number that is equal to the number of the current cloud plus 1 or 2. TRICK: You want to find the MINIMUM number of jumps.",
+    examples: [{ input: "c=[0,0,1,0,0,1,0]", output: "4" }],
+    constraints: ["Always jump +2 if possible. If not, jump +1."],
+    hint: "Use a while loop. Check `if (c[i+2] === 0)` first.",
+    solution: "function jumpingOnClouds(c) {\n  let jumps = 0;\n  let i = 0;\n  while (i < c.length - 1) {\n    if (c[i + 2] === 0) i += 2;\n    else i += 1;\n    jumps++;\n  }\n  return jumps;\n}"
+  },
+  {
+    id: "code-d11-2darray",
+    title: "2D Array DS (Hourglass Sum)",
+    difficulty: "Easy",
+    description: "Given a 6x6 2D Array, an hourglass is a subset of values with indices falling in a pattern (top 3, mid 1, bottom 3). Calculate the hourglass sum for every hourglass in the array, then print the maximum hourglass sum. TRICK: Negative numbers exist! Ensure your initial maxSum is very low.",
+    examples: [{ input: "A grid with negative values", output: "Max sum" }],
+    constraints: ["maxSum initial value cannot be 0."],
+    hint: "Iterate row from 0 to 3, col from 0 to 3. Sum the 7 positions.",
+    solution: "function hourglassSum(arr) {\n  let max = -Infinity;\n  for (let r = 0; r <= 3; r++) {\n    for (let c = 0; c <= 3; c++) {\n      let sum = arr[r][c] + arr[r][c+1] + arr[r][c+2] \n                + arr[r+1][c+1] \n                + arr[r+2][c] + arr[r+2][c+1] + arr[r+2][c+2];\n      max = Math.max(max, sum);\n    }\n  }\n  return max;\n}"
+  }
+]);
+
+day12_coding.push(...[
+  {
+    id: "code-d12-leftrot",
+    title: "Left Rotation",
+    difficulty: "Easy",
+    description: "A left rotation operation on an array shifts each of the array's elements 1 unit to the left. Given an integer d, perform d left rotations. TRICK: Rotating d times in a loop is O(N * d). Can you do this in O(N) using array slicing?",
+    examples: [{ input: "a=[1,2,3,4,5], d=4", output: "[5,1,2,3,4]" }],
+    constraints: ["Optimize to O(N) using slices."],
+    hint: "Slice the array from `d` to the end, and concatenate it with the slice from 0 to `d`.",
+    solution: "function rotLeft(a, d) {\n  const effectiveD = d % a.length;\n  return a.slice(effectiveD).concat(a.slice(0, effectiveD));\n}"
+  },
+  {
+    id: "code-d12-chaos",
+    title: "New Year Chaos",
+    difficulty: "Medium",
+    description: "It is New Year's Day and people are in line. Each person wears a sticker indicating their initial position. Any person can bribe the person directly in front of them to swap positions, but they still wear their original sticker. One person can bribe at most TWO others. Determine the minimum number of bribes that took place to get to a given queue order, or print 'Too chaotic'.",
+    examples: [{ input: "q=[2,1,5,3,4]", output: "3" }, { input: "q=[2,5,1,3,4]", output: "'Too chaotic'" }],
+    constraints: ["Must print the result."],
+    hint: "Iterate from the back. If a person moved more than 2 spaces forward (q[i] - (i+1) > 2), it's Too chaotic. Otherwise, count how many people overtook them by checking from Math.max(0, q[i]-2) to i.",
+    solution: "function minimumBribes(q) {\n  let bribes = 0;\n  for (let i = q.length - 1; i >= 0; i--) {\n    if (q[i] - (i + 1) > 2) return console.log('Too chaotic');\n    for (let j = Math.max(0, q[i] - 2); j < i; j++) {\n      if (q[j] > q[i]) bribes++;\n    }\n  }\n  console.log(bribes);\n}"
+  },
+  {
+    id: "code-d12-searchrotated",
+    title: "Search in Rotated Sorted Array",
+    difficulty: "Medium",
+    description: "There is an integer array nums sorted in ascending order (with distinct values). Prior to being passed to your function, nums is possibly rotated at an unknown pivot index k. Given the array nums after the possible rotation and an integer target, return the index of target if it is in nums, or -1 if it is not in nums. TRICK: Must be O(log n).",
+    examples: [{ input: "nums = [4,5,6,7,0,1,2], target = 0", output: "4" }],
+    constraints: ["O(log N) time."],
+    hint: "Use binary search. At least one half of the array will always be perfectly sorted. Check which half is sorted, then check if the target lies within that half.",
+    solution: "function search(nums, target) {\n  let left = 0, right = nums.length - 1;\n  while (left <= right) {\n    let mid = Math.floor((left + right) / 2);\n    if (nums[mid] === target) return mid;\n    if (nums[left] <= nums[mid]) {\n      if (target >= nums[left] && target < nums[mid]) right = mid - 1;\n      else left = mid + 1;\n    } else {\n      if (target > nums[mid] && target <= nums[right]) left = mid + 1;\n      else right = mid - 1;\n    }\n  }\n  return -1;\n}"
+  }
+]);
+
+day13_coding.push(...[
+  {
+    id: "code-d13-minswaps",
+    title: "Minimum Swaps 2",
+    difficulty: "Medium",
+    description: "You are given an unordered array consisting of consecutive integers without any duplicates. Find the minimum number of swaps required to sort the array in ascending order.",
+    examples: [{ input: "arr = [4,3,1,2]", output: "3" }],
+    constraints: ["O(N) time complexity."],
+    hint: "Because the numbers are 1 to N, the correct position for element `val` is at index `val - 1`. If it's not there, swap it to its correct position.",
+    solution: "function minimumSwaps(arr) {\n  let swaps = 0;\n  for (let i = 0; i < arr.length; i++) {\n    while (arr[i] !== i + 1) {\n      let temp = arr[arr[i] - 1];\n      arr[arr[i] - 1] = arr[i];\n      arr[i] = temp;\n      swaps++;\n    }\n  }\n  return swaps;\n}"
+  },
+  {
+    id: "code-d13-arraymanip",
+    title: "Array Manipulation",
+    difficulty: "Hard",
+    description: "Starting with a 1-indexed array of zeros and a list of operations, for each operation add a value to each of the array element between two given indices, inclusive. Once all operations have been performed, return the maximum value in the array. TRICK: Do not physically loop through the range for every operation (that's O(N*M)). Use a difference array.",
+    examples: [{ input: "n=5, queries=[[1,2,100], [2,5,100], [3,4,100]]", output: "200" }],
+    constraints: ["O(N + M) time complexity.", "The output must be the maximum value."],
+    hint: "Difference Array technique: Add `value` at `start_index`, and subtract `value` at `end_index + 1`. Then compute the prefix sum.",
+    solution: "function arrayManipulation(n, queries) {\n  const arr = new Array(n + 2).fill(0);\n  for (let q of queries) {\n    arr[q[0]] += q[2];\n    arr[q[1] + 1] -= q[2];\n  }\n  let max = 0, current = 0;\n  for (let i = 1; i <= n; i++) {\n    current += arr[i];\n    if (current > max) max = current;\n  }\n  return max;\n}"
+  }
+]);
