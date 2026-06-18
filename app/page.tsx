@@ -1466,6 +1466,7 @@ function LeapfrogDayPrepView({ dayNum }: { dayNum: number }) {
                   )}
                 </div>
               )}
+              <Scratchpad id={cq.id} defaultCode={`// Title: ${cq.title}\n\n// Write your solution below:\n\n`} />
             </div>
           ))}
         </div>
@@ -1475,9 +1476,22 @@ function LeapfrogDayPrepView({ dayNum }: { dayNum: number }) {
 }
 
 // ─── Scratchpad Component ───────────────────────────────────────
-const Scratchpad = ({ defaultCode }: { defaultCode?: string }) => {
-  const [code, setCode] = useState(defaultCode || "// Write your JS code here...\n// You can use console.log() to view outputs.\n\n");
+const Scratchpad = ({ id, defaultCode }: { id?: string, defaultCode?: string }) => {
+  const [code, setCode] = useState(() => {
+    if (typeof window !== "undefined" && id) {
+      const saved = localStorage.getItem(`scratchpad-${id}`);
+      if (saved) return saved;
+    }
+    return defaultCode || "// Write your JS code here...\n// You can use console.log() to view outputs.\n\n";
+  });
+  
   const [output, setOutput] = useState("");
+
+  useEffect(() => {
+    if (id && typeof window !== "undefined") {
+      localStorage.setItem(`scratchpad-${id}`, code);
+    }
+  }, [code, id]);
 
   const runCode = () => {
     const logs: string[] = [];
@@ -1494,7 +1508,7 @@ const Scratchpad = ({ defaultCode }: { defaultCode?: string }) => {
       if (logs.length === 0) {
         setOutput("Code executed successfully (no output).");
       } else {
-        setOutput(logs.join('\\n'));
+        setOutput(logs.join('\n'));
       }
     } catch (err: unknown) {
       if (err instanceof Error) {
@@ -1520,7 +1534,7 @@ const Scratchpad = ({ defaultCode }: { defaultCode?: string }) => {
           <Zap className="w-3.5 h-3.5" /> Run Code
         </button>
       </div>
-      <div className="h-[250px] w-full bg-[#1e1e1e]">
+      <div style={{ height: `${Math.max(250, code.split('\n').length * 21 + 30)}px` }} className="w-full bg-[#1e1e1e] transition-all duration-200">
         <Editor
           height="100%"
           defaultLanguage="javascript"
@@ -2312,7 +2326,7 @@ export default function Home() {
                         </div>
                       )}
                       
-                      <Scratchpad defaultCode={`// Title: ${q.title}\n\n// Write your solution below:\n\n`} />
+                      <Scratchpad id={q.id} defaultCode={`// Title: ${q.title}\n\n// Write your solution below:\n\n`} />
                     </div>
                   ))}
                 </div>
