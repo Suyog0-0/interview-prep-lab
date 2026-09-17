@@ -1,6 +1,5 @@
 import type { InterviewSection } from "../../types";
 import { dailyRevisionSets as week1Sets } from "./daily_revision_mcq";
-import { dailyRevisionSets as week2Sets } from "./daily_revision_mcq_week2";
 import { dailyRevisionSetsWeek3 as week3Sets } from "./daily_revision_mcq_week3";
 import { getDayQuestions } from "./leapfrog_daily_content";
 import { getDayMCQs } from "./leapfrog_mcq_content";
@@ -532,7 +531,13 @@ export const prepResources: PrepResource[] = [
 ];
 
 // Attach revision sets to their matching days
-const allRevisionSets = [...week1Sets, ...week2Sets, ...week3Sets];
+// NOTE: daily_revision_mcq_week2.ts was removed — it was a verbatim duplicate of
+// week1 (90/91 identical MCQs, 12 identical coding questions), just relabeled to
+// days 8-14. Its one genuinely unique question was merged into week1's day3_mcqs.
+// Days 8-13 now fall back to their base getDayQuestions()/getDayMCQs() content
+// (still populated — see leapfrog_daily_content.ts / leapfrog_mcq_content.ts)
+// without the duplicate bonus revisionSet layer. Day 14 is still covered by week3.
+const allRevisionSets = [...week1Sets, ...week3Sets];
 
 prepWeeks.forEach(week => {
   week.days.forEach(day => {
