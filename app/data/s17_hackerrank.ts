@@ -29,9 +29,9 @@ const hackerrank_coding: CodingQuestion[] = [
       { input: "[4, 4, 4, 4]", output: "2" },
     ],
     constraints: ["1 <= n <= 100", "Values fit in a 32-bit integer", "Target O(n) time"],
-    hint: "Count occurrences in a Map, then sum Math.floor(count / 2).",
+    hint: "Count occurrences in a dict, then sum count // 2.",
     solution:
-      "function countPairs(arr) {\n  const freq = new Map();\n  for (const v of arr) freq.set(v, (freq.get(v) || 0) + 1);\n  let pairs = 0;\n  for (const count of freq.values()) pairs += Math.floor(count / 2);\n  return pairs;\n}",
+      "def count_pairs(arr):\n    freq = {}\n    for v in arr:\n        freq[v] = freq.get(v, 0) + 1\n    pairs = 0\n    for count in freq.values():\n        pairs += count // 2\n    return pairs",
   },
   {
     id: "s17-c02",
@@ -46,7 +46,7 @@ const hackerrank_coding: CodingQuestion[] = [
     constraints: ["2 <= s.length <= 10^6", "s contains only 'U' and 'D'", "Single pass, O(1) extra space"],
     hint: "Track altitude. Increment the counter each time a 'U' brings altitude from -1 back to 0.",
     solution:
-      "function countValleys(s) {\n  let altitude = 0;\n  let valleys = 0;\n  for (const step of s) {\n    if (step === 'U') {\n      altitude++;\n      if (altitude === 0) valleys++;\n    } else {\n      altitude--;\n    }\n  }\n  return valleys;\n}",
+      "def count_valleys(s):\n    altitude = 0\n    valleys = 0\n    for step in s:\n        if step == 'U':\n            altitude += 1\n            if altitude == 0:\n                valleys += 1\n        else:\n            altitude -= 1\n    return valleys",
   },
   {
     id: "s17-c03",
@@ -59,9 +59,9 @@ const hackerrank_coding: CodingQuestion[] = [
       { input: 's = "a", n = 1000000000000', output: "1000000000000" },
     ],
     constraints: ["1 <= s.length <= 100", "1 <= n <= 10^12", "Do NOT build the string — it will not fit in memory"],
-    hint: "Full repetitions × count in s, plus the count in the leftover prefix of length n % s.length.",
+    hint: "Full repetitions x count in s, plus the count in the leftover prefix of length n % len(s).",
     solution:
-      "function repeatedString(s, n) {\n  const countA = (str) => [...str].filter((ch) => ch === 'a').length;\n  const fullRepeats = Math.floor(n / s.length);\n  const remainder = n % s.length;\n  return fullRepeats * countA(s) + countA(s.slice(0, remainder));\n}",
+      "def repeated_string(s, n):\n    def count_a(text):\n        return text.count('a')\n\n    full_repeats = n // len(s)\n    remainder = n % len(s)\n    return full_repeats * count_a(s) + count_a(s[:remainder])",
   },
   {
     id: "s17-c04",
@@ -76,7 +76,7 @@ const hackerrank_coding: CodingQuestion[] = [
     constraints: ["2 <= c.length <= 100", "c[0] === 0 and c[c.length - 1] === 0", "A valid path is guaranteed"],
     hint: "Greedy: always take the 2-step jump when the landing tile is safe.",
     solution:
-      "function jumpingOnClouds(c) {\n  let i = 0;\n  let jumps = 0;\n  while (i < c.length - 1) {\n    i += (i + 2 < c.length && c[i + 2] === 0) ? 2 : 1;\n    jumps++;\n  }\n  return jumps;\n}",
+      "def jumping_on_clouds(c):\n    i = 0\n    jumps = 0\n    while i < len(c) - 1:\n        i += 2 if (i + 2 < len(c) and c[i + 2] == 0) else 1\n        jumps += 1\n    return jumps",
   },
 
   // ── Arrays ──
@@ -93,7 +93,7 @@ const hackerrank_coding: CodingQuestion[] = [
     constraints: ["1 <= n <= 10^5", "0 <= d <= n", "Aim for O(n) time"],
     hint: "Element at index i moves to index (i - d + n) % n — or just slice and concatenate.",
     solution:
-      "function rotateLeft(arr, d) {\n  const n = arr.length;\n  const shift = d % n;\n  return [...arr.slice(shift), ...arr.slice(0, shift)];\n}\n\n// O(1) extra space, index-math version:\nfunction rotateLeftInPlaceMath(arr, d) {\n  const n = arr.length;\n  const out = new Array(n);\n  for (let i = 0; i < n; i++) out[(i - d % n + n) % n] = arr[i];\n  return out;\n}",
+      "def rotate_left(arr, d):\n    n = len(arr)\n    shift = d % n\n    return arr[shift:] + arr[:shift]\n\n\n# O(1) extra space per element, index-math version:\ndef rotate_left_math(arr, d):\n    n = len(arr)\n    out = [None] * n\n    for i in range(n):\n        out[(i - d % n + n) % n] = arr[i]\n    return out",
   },
   {
     id: "s17-c06",
@@ -108,10 +108,10 @@ const hackerrank_coding: CodingQuestion[] = [
         explanation: "There are 16 possible hourglasses in a 6x6 grid; return the maximum of their sums.",
       },
     ],
-    constraints: ["Grid is exactly 6 x 6", "-9 <= value <= 9", "Initialise the max to -Infinity, not 0 — sums can be negative"],
+    constraints: ["Grid is exactly 6 x 6", "-9 <= value <= 9", "Initialise the max to negative infinity, not 0 — sums can be negative"],
     hint: "Nested loops over the 4x4 valid top-left corners. Sum the 7 offsets directly.",
     solution:
-      "function hourglassSum(grid) {\n  let max = -Infinity;\n  for (let r = 0; r < 4; r++) {\n    for (let c = 0; c < 4; c++) {\n      const sum =\n        grid[r][c] + grid[r][c + 1] + grid[r][c + 2] +\n        grid[r + 1][c + 1] +\n        grid[r + 2][c] + grid[r + 2][c + 1] + grid[r + 2][c + 2];\n      max = Math.max(max, sum);\n    }\n  }\n  return max;\n}",
+      "def hourglass_sum(grid):\n    best = float('-inf')\n    for r in range(4):\n        for c in range(4):\n            total = (\n                grid[r][c] + grid[r][c + 1] + grid[r][c + 2] +\n                grid[r + 1][c + 1] +\n                grid[r + 2][c] + grid[r + 2][c + 1] + grid[r + 2][c + 2]\n            )\n            best = max(best, total)\n    return best",
   },
   {
     id: "s17-c07",
@@ -125,7 +125,7 @@ const hackerrank_coding: CodingQuestion[] = [
     constraints: ["3 <= n <= 10^7", "1 <= q <= 2 * 10^5", "A naive nested loop will time out — you need O(n + q)"],
     hint: "Difference array: add k at index a, subtract k at index b+1, then take a running prefix sum.",
     solution:
-      "function arrayManipulation(n, ops) {\n  const diff = new Array(n + 2).fill(0);\n  for (const [a, b, k] of ops) {\n    diff[a] += k;\n    diff[b + 1] -= k;\n  }\n  let running = 0;\n  let max = 0;\n  for (let i = 1; i <= n; i++) {\n    running += diff[i];\n    if (running > max) max = running;\n  }\n  return max;\n}",
+      "def array_manipulation(n, ops):\n    diff = [0] * (n + 2)\n    for a, b, k in ops:\n        diff[a] += k\n        diff[b + 1] -= k\n    running = 0\n    best = 0\n    for i in range(1, n + 1):\n        running += diff[i]\n        if running > best:\n            best = running\n    return best",
   },
   {
     id: "s17-c08",
@@ -140,7 +140,7 @@ const hackerrank_coding: CodingQuestion[] = [
     constraints: ["1 <= n <= 10^5", "The array is a permutation of 1..n", "Target O(n) time"],
     hint: "Walk the array; while the value at index i is not i+1, swap it into the position where it belongs. Each swap places at least one element correctly.",
     solution:
-      "function minimumSwaps(arr) {\n  let swaps = 0;\n  for (let i = 0; i < arr.length; i++) {\n    while (arr[i] !== i + 1) {\n      const target = arr[i] - 1;\n      [arr[i], arr[target]] = [arr[target], arr[i]];\n      swaps++;\n    }\n  }\n  return swaps;\n}",
+      "def minimum_swaps(arr):\n    swaps = 0\n    for i in range(len(arr)):\n        while arr[i] != i + 1:\n            target = arr[i] - 1\n            arr[i], arr[target] = arr[target], arr[i]\n            swaps += 1\n    return swaps",
   },
 
   // ── Dictionaries & Hashmaps ──
@@ -155,9 +155,9 @@ const hackerrank_coding: CodingQuestion[] = [
       { input: 'magazine = ["two","times","three"], note = ["two","times","two"]', output: '"No"', explanation: 'Only one "two" is available but two are needed.' },
     ],
     constraints: ["1 <= words <= 3 * 10^4", "Words are lowercase alphanumeric", "Target O(m + n) time"],
-    hint: "Build a frequency Map of the magazine, then decrement per note word; fail if a count hits zero or is missing.",
+    hint: "Build a frequency dict of the magazine, then decrement per note word; fail if a count hits zero or is missing.",
     solution:
-      "function checkMagazine(magazine, note) {\n  const pool = new Map();\n  for (const w of magazine) pool.set(w, (pool.get(w) || 0) + 1);\n  for (const w of note) {\n    const left = pool.get(w) || 0;\n    if (left === 0) return 'No';\n    pool.set(w, left - 1);\n  }\n  return 'Yes';\n}",
+      "def check_magazine(magazine, note):\n    pool = {}\n    for w in magazine:\n        pool[w] = pool.get(w, 0) + 1\n    for w in note:\n        left = pool.get(w, 0)\n        if left == 0:\n            return 'No'\n        pool[w] = left - 1\n    return 'Yes'",
   },
   {
     id: "s17-c10",
@@ -172,7 +172,7 @@ const hackerrank_coding: CodingQuestion[] = [
     constraints: ["1 <= length <= 10^5", "Lowercase letters only"],
     hint: "Any shared substring implies a shared single character — so this reduces to a set intersection.",
     solution:
-      "function twoStrings(s1, s2) {\n  const seen = new Set(s1);\n  for (const ch of s2) if (seen.has(ch)) return 'YES';\n  return 'NO';\n}",
+      "def two_strings(s1, s2):\n    seen = set(s1)\n    for ch in s2:\n        if ch in seen:\n            return 'YES'\n    return 'NO'",
   },
   {
     id: "s17-c11",
@@ -184,10 +184,10 @@ const hackerrank_coding: CodingQuestion[] = [
       { input: "arr = [1, 2, 2, 4], r = 2", output: "2" },
       { input: "arr = [1, 3, 9, 9, 27, 81], r = 3", output: "6" },
     ],
-    constraints: ["1 <= n <= 10^5", "1 <= r <= 10^9", "Values can exceed 2^32 — a triple loop will time out"],
-    hint: "One pass with two maps: how many valid pairs end at this value, and how many single elements could precede it.",
+    constraints: ["1 <= n <= 10^5", "1 <= r <= 10^9", "Values can be large — a triple loop will time out"],
+    hint: "One pass with two dicts: how many valid pairs end at this value, and how many single elements could precede it.",
     solution:
-      "function countTriplets(arr, r) {\n  const left = new Map();\n  const right = new Map();\n  for (const v of arr) right.set(v, (right.get(v) || 0) + 1);\n\n  let total = 0;\n  for (const v of arr) {\n    right.set(v, right.get(v) - 1);\n    if (v % r === 0) {\n      const before = left.get(v / r) || 0;\n      const after = right.get(v * r) || 0;\n      total += before * after;\n    }\n    left.set(v, (left.get(v) || 0) + 1);\n  }\n  return total;\n}",
+      "def count_triplets(arr, r):\n    left = {}\n    right = {}\n    for v in arr:\n        right[v] = right.get(v, 0) + 1\n\n    total = 0\n    for v in arr:\n        right[v] -= 1\n        if v % r == 0:\n            before = left.get(v // r, 0)\n            after = right.get(v * r, 0)\n            total += before * after\n        left[v] = left.get(v, 0) + 1\n    return total",
   },
 
   // ── Sorting ──
@@ -204,7 +204,7 @@ const hackerrank_coding: CodingQuestion[] = [
     constraints: ["2 <= n <= 600", "Use an early-exit flag so an already-sorted array costs O(n)"],
     hint: "Outer loop n times, inner loop compares neighbours. Break out if a full inner pass makes no swap.",
     solution:
-      "function countSwaps(a) {\n  const arr = [...a];\n  let swaps = 0;\n  for (let i = 0; i < arr.length; i++) {\n    let swappedThisPass = false;\n    for (let j = 0; j < arr.length - 1 - i; j++) {\n      if (arr[j] > arr[j + 1]) {\n        [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]];\n        swaps++;\n        swappedThisPass = true;\n      }\n    }\n    if (!swappedThisPass) break;\n  }\n  return { swaps, first: arr[0], last: arr[arr.length - 1] };\n}",
+      "def count_swaps(a):\n    arr = list(a)\n    swaps = 0\n    for i in range(len(arr)):\n        swapped_this_pass = False\n        for j in range(len(arr) - 1 - i):\n            if arr[j] > arr[j + 1]:\n                arr[j], arr[j + 1] = arr[j + 1], arr[j]\n                swaps += 1\n                swapped_this_pass = True\n        if not swapped_this_pass:\n            break\n    return {'swaps': swaps, 'first': arr[0], 'last': arr[-1]}",
   },
   {
     id: "s17-c13",
@@ -216,9 +216,9 @@ const hackerrank_coding: CodingQuestion[] = [
       { input: "[1, 1, 3, 2, 1]", output: "[0, 3, 1, 1, 0, ... 0]", explanation: "1 appears three times, 2 once, 3 once." },
     ],
     constraints: ["1 <= n <= 10^6", "0 <= value <= 99", "O(n) time, O(1) extra space since the range is fixed"],
-    hint: "Pre-fill an array of 100 zeros and increment by value as index. No comparisons needed.",
+    hint: "Pre-fill a list of 100 zeros and increment by value as index. No comparisons needed.",
     solution:
-      "function countingSort(arr) {\n  const buckets = new Array(100).fill(0);\n  for (const v of arr) buckets[v]++;\n  return buckets;\n}",
+      "def counting_sort(arr):\n    buckets = [0] * 100\n    for v in arr:\n        buckets[v] += 1\n    return buckets",
   },
 
   // ── String Manipulation ──
@@ -233,9 +233,9 @@ const hackerrank_coding: CodingQuestion[] = [
       { input: '"We promptly judged antique ivory buckles for the prize"', output: '"not pangram"' },
     ],
     constraints: ["0 < length <= 10^5", "Single pass, O(1) extra space (26 slots)"],
-    hint: "Lowercase the input, drop anything outside a-z into a Set, and check whether the Set size is 26.",
+    hint: "Lowercase the input, drop anything outside a-z into a set, and check whether the set size is 26.",
     solution:
-      "function pangrams(s) {\n  const letters = new Set(\n    s.toLowerCase().split('').filter((ch) => ch >= 'a' && ch <= 'z')\n  );\n  return letters.size === 26 ? 'pangram' : 'not pangram';\n}",
+      "def pangrams(s):\n    letters = {ch for ch in s.lower() if 'a' <= ch <= 'z'}\n    return 'pangram' if len(letters) == 26 else 'not pangram'",
   },
   {
     id: "s17-c15",
@@ -250,7 +250,7 @@ const hackerrank_coding: CodingQuestion[] = [
     constraints: ["1 <= length <= 10^5", "Only 'A' and 'B' appear", "Single pass"],
     hint: "Count every position where a character equals the one before it.",
     solution:
-      "function alternatingCharacters(s) {\n  let deletions = 0;\n  for (let i = 1; i < s.length; i++) {\n    if (s[i] === s[i - 1]) deletions++;\n  }\n  return deletions;\n}",
+      "def alternating_characters(s):\n    deletions = 0\n    for i in range(1, len(s)):\n        if s[i] == s[i - 1]:\n            deletions += 1\n    return deletions",
   },
   {
     id: "s17-c16",
@@ -266,7 +266,7 @@ const hackerrank_coding: CodingQuestion[] = [
     constraints: ["1 <= length <= 10^5", "Lowercase letters only", "Watch the single-outlier-of-count-1 edge case"],
     hint: "Build character counts, then count how often each count value occurs. At most two distinct counts may exist, and the odd one out must differ by 1 or be 1 itself.",
     solution:
-      "function isValid(s) {\n  const charCount = new Map();\n  for (const ch of s) charCount.set(ch, (charCount.get(ch) || 0) + 1);\n\n  const countOfCounts = new Map();\n  for (const c of charCount.values()) countOfCounts.set(c, (countOfCounts.get(c) || 0) + 1);\n\n  if (countOfCounts.size === 1) return 'YES';\n  if (countOfCounts.size > 2) return 'NO';\n\n  const entries = [...countOfCounts.entries()].sort((a, b) => a[1] - b[1]);\n  const [oddCount, oddFreq] = entries[0];\n  const [mainCount] = entries[1];\n  if (oddFreq !== 1) return 'NO';\n  return oddCount === 1 || oddCount - mainCount === 1 ? 'YES' : 'NO';\n}",
+      "def is_valid(s):\n    char_count = {}\n    for ch in s:\n        char_count[ch] = char_count.get(ch, 0) + 1\n\n    count_of_counts = {}\n    for c in char_count.values():\n        count_of_counts[c] = count_of_counts.get(c, 0) + 1\n\n    if len(count_of_counts) == 1:\n        return 'YES'\n    if len(count_of_counts) > 2:\n        return 'NO'\n\n    entries = sorted(count_of_counts.items(), key=lambda pair: pair[1])\n    odd_count, odd_freq = entries[0]\n    main_count, _ = entries[1]\n    if odd_freq != 1:\n        return 'NO'\n    return 'YES' if (odd_count == 1 or odd_count - main_count == 1) else 'NO'",
   },
 
   // ── Greedy ──
@@ -283,7 +283,7 @@ const hackerrank_coding: CodingQuestion[] = [
     constraints: ["2 <= n <= 10^5", "Comparing every pair is O(n^2) and will time out"],
     hint: "Sort first — the closest pair must be adjacent in sorted order.",
     solution:
-      "function minimumAbsoluteDifference(arr) {\n  const sorted = [...arr].sort((a, b) => a - b);\n  let min = Infinity;\n  for (let i = 1; i < sorted.length; i++) {\n    min = Math.min(min, sorted[i] - sorted[i - 1]);\n  }\n  return min;\n}",
+      "def minimum_absolute_difference(arr):\n    sorted_arr = sorted(arr)\n    best = float('inf')\n    for i in range(1, len(sorted_arr)):\n        best = min(best, sorted_arr[i] - sorted_arr[i - 1])\n    return best",
   },
   {
     id: "s17-c18",
@@ -296,9 +296,9 @@ const hackerrank_coding: CodingQuestion[] = [
       { input: "prices = [2, 5, 6], k = 2", output: "15", explanation: "Buy the expensive items first at base price; the cheapest item is bought second by one friend at double price." },
     ],
     constraints: ["1 <= n, k <= 10^5", "Greedy choice: buy the most expensive items at the lowest multiplier"],
-    hint: "Sort descending, then the i-th purchase (0-indexed) carries multiplier Math.floor(i / k) + 1.",
+    hint: "Sort descending, then the i-th purchase (0-indexed) carries multiplier (i // k) + 1.",
     solution:
-      "function getMinimumCost(prices, k) {\n  const sorted = [...prices].sort((a, b) => b - a);\n  let total = 0;\n  for (let i = 0; i < sorted.length; i++) {\n    total += sorted[i] * (Math.floor(i / k) + 1);\n  }\n  return total;\n}",
+      "def get_minimum_cost(prices, k):\n    sorted_prices = sorted(prices, reverse=True)\n    total = 0\n    for i in range(len(sorted_prices)):\n        total += sorted_prices[i] * (i // k + 1)\n    return total",
   },
 
   // ── Search ──
@@ -313,9 +313,9 @@ const hackerrank_coding: CodingQuestion[] = [
       { input: "arr = [1, 3, 5], target = 4", output: "-1" },
     ],
     constraints: ["1 <= n <= 10^6", "The array is sorted ascending", "O(log n) time required"],
-    hint: "Use low + Math.floor((high - low) / 2) rather than (low + high) / 2 to avoid overflow in fixed-width languages.",
+    hint: "Use low + (high - low) // 2 rather than (low + high) // 2 to avoid overflow in fixed-width languages (habit worth keeping even though Python ints don't overflow).",
     solution:
-      "function binarySearch(arr, target) {\n  let low = 0;\n  let high = arr.length - 1;\n  while (low <= high) {\n    const mid = low + Math.floor((high - low) / 2);\n    if (arr[mid] === target) return mid;\n    if (arr[mid] < target) low = mid + 1;\n    else high = mid - 1;\n  }\n  return -1;\n}",
+      "def binary_search(arr, target):\n    low, high = 0, len(arr) - 1\n    while low <= high:\n        mid = low + (high - low) // 2\n        if arr[mid] == target:\n            return mid\n        if arr[mid] < target:\n            low = mid + 1\n        else:\n            high = mid - 1\n    return -1",
   },
   {
     id: "s17-c20",
@@ -327,9 +327,9 @@ const hackerrank_coding: CodingQuestion[] = [
       { input: "arr = [1, 5, 3, 4, 2], k = 2", output: "3", explanation: "The pairs are (5,3), (4,2) and (3,1)." },
     ],
     constraints: ["2 <= n <= 10^5", "All values are distinct", "0 < k < 10^9", "Target O(n) time"],
-    hint: "Put everything in a Set, then for each value check whether value + k is also present.",
+    hint: "Put everything in a set, then for each value check whether value + k is also present.",
     solution:
-      "function pairs(arr, k) {\n  const seen = new Set(arr);\n  let count = 0;\n  for (const v of arr) if (seen.has(v + k)) count++;\n  return count;\n}",
+      "def pairs(arr, k):\n    seen = set(arr)\n    count = 0\n    for v in arr:\n        if (v + k) in seen:\n            count += 1\n    return count",
   },
 
   // ── Stacks & Queues ──
@@ -347,7 +347,7 @@ const hackerrank_coding: CodingQuestion[] = [
     constraints: ["1 <= length <= 10^3", "Only bracket characters appear", "O(n) time and space"],
     hint: "Push openers onto a stack; on a closer, the popped value must be its partner. The stack must be empty at the end.",
     solution:
-      "function isBalanced(s) {\n  const partners = { ')': '(', ']': '[', '}': '{' };\n  const stack = [];\n  for (const ch of s) {\n    if (ch === '(' || ch === '[' || ch === '{') {\n      stack.push(ch);\n    } else {\n      if (stack.pop() !== partners[ch]) return 'NO';\n    }\n  }\n  return stack.length === 0 ? 'YES' : 'NO';\n}",
+      "def is_balanced(s):\n    partners = {')': '(', ']': '[', '}': '{'}\n    stack = []\n    for ch in s:\n        if ch in '([{':\n            stack.append(ch)\n        else:\n            if not stack or stack.pop() != partners[ch]:\n                return 'NO'\n    return 'YES' if not stack else 'NO'",
   },
 
   // ── Recursion & DP ──
@@ -364,7 +364,7 @@ const hackerrank_coding: CodingQuestion[] = [
     constraints: ["1 <= n <= 10^5", "-10^4 <= value <= 10^4", "O(n) time, O(1) space"],
     hint: "Two rolling values: the best sum including the previous element, and the best excluding it.",
     solution:
-      "function maxSubsetSum(arr) {\n  let including = 0;\n  let excluding = 0;\n  for (const v of arr) {\n    const newIncluding = excluding + v;\n    excluding = Math.max(including, excluding);\n    including = newIncluding;\n  }\n  return Math.max(including, excluding);\n}",
+      "def max_subset_sum(arr):\n    including = 0\n    excluding = 0\n    for v in arr:\n        new_including = excluding + v\n        excluding = max(including, excluding)\n        including = new_including\n    return max(including, excluding)",
   },
   {
     id: "s17-c23",
@@ -376,28 +376,28 @@ const hackerrank_coding: CodingQuestion[] = [
       { input: "n = 10", output: "55" },
       { input: "n = 50", output: "12586269025" },
     ],
-    constraints: ["0 <= n <= 90", "Beyond n = 78 the result exceeds Number.MAX_SAFE_INTEGER — use BigInt if exact values are needed"],
-    hint: "Cache results in a Map keyed by n, or drop recursion entirely and iterate with two rolling variables.",
+    constraints: ["0 <= n <= 90", "Python's ints are arbitrary precision, so large Fibonacci numbers stay exact with no overflow concern"],
+    hint: "Cache results in a dict keyed by n, or drop recursion entirely and iterate with two rolling variables.",
     solution:
-      "function fib(n, memo = new Map()) {\n  if (n <= 1) return n;\n  if (memo.has(n)) return memo.get(n);\n  const result = fib(n - 1, memo) + fib(n - 2, memo);\n  memo.set(n, result);\n  return result;\n}\n\n// Iterative, O(1) space:\nfunction fibIterative(n) {\n  let [a, b] = [0, 1];\n  for (let i = 0; i < n; i++) [a, b] = [b, a + b];\n  return a;\n}",
+      "def fib(n, memo=None):\n    if memo is None:\n        memo = {}\n    if n <= 1:\n        return n\n    if n in memo:\n        return memo[n]\n    result = fib(n - 1, memo) + fib(n - 2, memo)\n    memo[n] = result\n    return result\n\n\n# Iterative, O(1) space:\ndef fib_iterative(n):\n    a, b = 0, 1\n    for _ in range(n):\n        a, b = b, a + b\n    return a",
   },
   {
     id: "s17-c24",
     title: "Read Input From stdin (HackerRank I/O Harness)",
     difficulty: "Easy",
     description:
-      "HackerRank's JavaScript (Node.js) environment does not hand you arguments — you must read the test case from standard input yourself. Write a program that reads n on the first line, an array of n space-separated integers on the second line, and prints their sum.",
+      "HackerRank's Python environment does not hand you arguments — you must read the test case from standard input yourself. Write a program that reads n on the first line, an array of n space-separated integers on the second line, and prints their sum.",
     examples: [
       { input: "5\\n1 2 3 4 5", output: "15" },
     ],
     constraints: [
-      "Node.js runtime",
-      "Input arrives on process.stdin, output goes to console.log or process.stdout",
-      "Trailing newlines and \\r on Windows-style input must be trimmed",
+      "Python 3 runtime",
+      "Input arrives via sys.stdin (or repeated input() calls), output goes to print()",
+      "Trailing whitespace and newlines should be stripped before parsing",
     ],
-    hint: "Accumulate every stdin chunk, split on newlines once the stream closes, then parse.",
+    hint: "Read all of stdin at once and split it into lines, or call input() the right number of times.",
     solution:
-      "process.stdin.resume();\nprocess.stdin.setEncoding('utf-8');\n\nlet inputChunks = '';\nprocess.stdin.on('data', (chunk) => { inputChunks += chunk; });\nprocess.stdin.on('end', () => {\n  const lines = inputChunks.replace(/\\r/g, '').split('\\n');\n  const n = parseInt(lines[0], 10);\n  const values = lines[1].trim().split(/\\s+/).map(Number).slice(0, n);\n  console.log(values.reduce((sum, v) => sum + v, 0));\n});",
+      "import sys\n\n\ndef main():\n    data = sys.stdin.read().split('\\n')\n    n = int(data[0])\n    values = list(map(int, data[1].split()))[:n]\n    print(sum(values))\n\n\nif __name__ == '__main__':\n    main()",
   },
 ];
 
@@ -429,10 +429,10 @@ const hackerrank_mcqs: MCQQuestion[] = [
     id: "s17-m03",
     question: "A string s is repeated infinitely and you must count occurrences of 'a' in the first 10^12 characters. Why does building the string fail?",
     options: [
-      "String concatenation is not supported in JavaScript",
+      "String concatenation is not supported in Python",
       "Memory is exhausted long before 10^12 characters are allocated",
-      "String indexing is O(n) in JavaScript",
-      "The result would exceed Number.MAX_SAFE_INTEGER",
+      "String indexing is O(n) in Python",
+      "Python cannot represent integers larger than 10^12",
     ],
     correctAnswerIndex: 1,
     explanation:
@@ -465,7 +465,7 @@ const hackerrank_mcqs: MCQQuestion[] = [
     options: [
       "The while loop runs at most twice per index",
       "Every swap places at least one element into its final position, so there are at most n - 1 swaps total",
-      "JavaScript optimises the inner loop away",
+      "Python optimises the inner loop away",
       "The array is already nearly sorted by assumption",
     ],
     correctAnswerIndex: 1,
@@ -495,16 +495,16 @@ const hackerrank_mcqs: MCQQuestion[] = [
   },
   {
     id: "s17-m09",
-    question: "Initialising the running maximum to 0 rather than -Infinity in the hourglass-sum problem causes what?",
+    question: "Initialising the running maximum to 0 rather than negative infinity in the hourglass-sum problem causes what?",
     options: [
-      "A stack overflow",
+      "A RecursionError",
       "A wrong answer when every hourglass sum is negative",
       "An off-by-one index error",
       "Nothing — the results are identical",
     ],
     correctAnswerIndex: 1,
     explanation:
-      "Grid values may be negative, so all 16 hourglass sums can be below zero. Seeding the maximum at 0 would return 0, a value no hourglass actually produces. Seed with -Infinity or with the first computed sum.",
+      "Grid values may be negative, so all 16 hourglass sums can be below zero. Seeding the maximum at 0 would return 0, a value no hourglass actually produces. Seed with float('-inf') or with the first computed sum.",
   },
   {
     id: "s17-m10",
@@ -547,42 +547,42 @@ const hackerrank_mcqs: MCQQuestion[] = [
   },
   {
     id: "s17-m13",
-    question: "Why is mid computed as low + Math.floor((high - low) / 2) in binary search?",
+    question: "Why is mid computed as low + (high - low) // 2 in binary search?",
     options: [
-      "It is faster than (low + high) / 2",
+      "It is faster than (low + high) // 2",
       "It avoids integer overflow when low + high exceeds the maximum integer",
       "It guarantees the loop terminates",
       "It handles unsorted arrays",
     ],
     correctAnswerIndex: 1,
     explanation:
-      "In fixed-width integer languages like Java or C++, low + high can overflow on large arrays. The subtraction form never exceeds the array bounds. JavaScript's doubles make it less urgent, but it is the habit interviewers expect.",
+      "In fixed-width integer languages like Java or C++, low + high can overflow on large arrays. The subtraction form never exceeds the array bounds. Python's arbitrary-precision integers make it unnecessary here, but it is the habit interviewers expect from any language background.",
   },
   {
     id: "s17-m14",
     question: "Which statement about the counting-pairs (Sales by Match) problem is correct?",
     options: [
       "Sorting is required before counting",
-      "The answer is the sum of Math.floor(frequency / 2) across all values",
+      "The answer is the sum of (frequency // 2) across all values",
       "The answer equals the number of distinct values",
       "It requires a nested loop over all pairs",
     ],
     correctAnswerIndex: 1,
     explanation:
-      "Each value contributes floor(count / 2) complete pairs independently of the others, so one frequency pass in O(n) is enough. Sorting would only add unnecessary O(n log n) overhead.",
+      "Each value contributes count // 2 complete pairs independently of the others, so one frequency pass in O(n) is enough. Sorting would only add unnecessary O(n log n) overhead.",
   },
   {
     id: "s17-m15",
-    question: "In HackerRank's Node.js environment, how does your program receive the test input?",
+    question: "In HackerRank's Python environment, how does your program receive the test input?",
     options: [
-      "As command-line arguments in process.argv",
-      "By reading process.stdin and parsing it yourself",
+      "As command-line arguments in sys.argv",
+      "By reading sys.stdin (or using input()) and parsing it yourself",
       "As parameters automatically bound to your function",
-      "From a global variable named input",
+      "From a global variable named input_data",
     ],
     correctAnswerIndex: 1,
     explanation:
-      "The JavaScript runner pipes the test case into standard input. You accumulate chunks on the 'data' event, split on newlines at 'end', and parse. Forgetting this is a common reason otherwise-correct solutions score zero.",
+      "The Python runner pipes the test case into standard input. You read it via sys.stdin.read() or repeated input() calls, then parse it yourself. Forgetting this is a common reason otherwise-correct solutions score zero.",
   },
   {
     id: "s17-m16",
@@ -608,7 +608,7 @@ const hackerrank_mcqs: MCQQuestion[] = [
     ],
     correctAnswerIndex: 1,
     explanation:
-      "A Set lookup for value + k is O(1) per element, giving O(n) overall. On sorted input a two-pointer sweep achieves the same without extra space. Binary search per element would be O(n log n).",
+      "A set lookup for value + k is O(1) per element, giving O(n) overall. On sorted input a two-pointer sweep achieves the same without extra space. Binary search per element would be O(n log n).",
   },
   {
     id: "s17-m18",
@@ -657,9 +657,9 @@ const hackerrank_questions: InterviewQuestion[] = [
     q: "What is a prefix sum, and when does it help?",
     hint: "Precompute cumulative totals once.",
     answer:
-      "A prefix sum array stores the running total up to each index, so the sum of any range [i, j] becomes prefix[j] - prefix[i-1] in O(1) after an O(n) build. Use it whenever many range-sum queries hit the same static array.",
-    code: "const prefix = [0];\nfor (const v of arr) prefix.push(prefix[prefix.length - 1] + v);\nconst rangeSum = (i, j) => prefix[j + 1] - prefix[i];",
-    language: "javascript",
+      "A prefix sum array stores the running total up to each index, so the sum of any range [i, j] becomes prefix[j+1] - prefix[i] in O(1) after an O(n) build. Use it whenever many range-sum queries hit the same static array.",
+    code: "prefix = [0]\nfor v in arr:\n    prefix.append(prefix[-1] + v)\n\ndef range_sum(i, j):\n    return prefix[j + 1] - prefix[i]",
+    language: "python",
     category: "Arrays",
   },
   {
@@ -668,8 +668,8 @@ const hackerrank_questions: InterviewQuestion[] = [
     hint: "The inverse of a prefix sum — for range updates instead of range queries.",
     answer:
       "A difference array makes range *updates* O(1): to add k over [a, b], record +k at a and -k at b+1. After all updates, a prefix-sum pass reconstructs the real values. It turns O(n * q) range-increment work into O(n + q).",
-    code: "diff[a] += k;\ndiff[b + 1] -= k;\n// then: running += diff[i] for each i",
-    language: "javascript",
+    code: "diff[a] += k\ndiff[b + 1] -= k\n# then: running += diff[i] for each i",
+    language: "python",
     category: "Arrays",
   },
   {
@@ -690,12 +690,12 @@ const hackerrank_questions: InterviewQuestion[] = [
   },
   {
     id: "s17-q06",
-    q: "Why does a frequency Map beat sorting for counting problems?",
+    q: "Why does a frequency dict beat sorting for counting problems?",
     hint: "O(n) versus O(n log n).",
     answer:
-      "Counting how many times each value occurs needs no ordering, so a Map or plain object does it in one O(n) pass with O(k) space. Sorting first costs O(n log n) and throws away nothing useful in return.",
-    code: "const freq = new Map();\nfor (const v of arr) freq.set(v, (freq.get(v) || 0) + 1);",
-    language: "javascript",
+      "Counting how many times each value occurs needs no ordering, so a dict does it in one O(n) pass with O(k) space. Sorting first costs O(n log n) and throws away nothing useful in return.",
+    code: "freq = {}\nfor v in arr:\n    freq[v] = freq.get(v, 0) + 1\n\n# Or, idiomatically:\nfrom collections import Counter\nfreq = Counter(arr)",
+    language: "python",
     category: "Hashmaps",
   },
   {
@@ -711,17 +711,17 @@ const hackerrank_questions: InterviewQuestion[] = [
     q: "What are the two ways to implement dynamic programming?",
     hint: "Memoization versus tabulation.",
     answer:
-      "Top-down memoization keeps the recursive structure and caches results in a Map or array — easy to derive from a brute-force solution but risks stack overflow. Bottom-up tabulation fills a table iteratively from the base cases — no recursion depth limit and often allows O(1) space with rolling variables.",
+      "Top-down memoization keeps the recursive structure and caches results in a dict or list — easy to derive from a brute-force solution but risks hitting Python's recursion limit. Bottom-up tabulation fills a table iteratively from the base cases — no recursion depth limit and often allows O(1) space with rolling variables.",
     category: "Algorithms",
   },
   {
     id: "s17-q09",
-    q: "How do you read input in HackerRank's JavaScript environment?",
-    hint: "process.stdin, not function arguments.",
+    q: "How do you read input in HackerRank's Python environment?",
+    hint: "sys.stdin, not function arguments.",
     answer:
-      "Accumulate chunks on the stdin 'data' event, then on 'end' split the buffer on newlines and parse each line. Strip '\\r' for safety and trim before splitting on whitespace. Output with console.log.",
-    code: "let data = '';\nprocess.stdin.on('data', (c) => { data += c; });\nprocess.stdin.on('end', () => {\n  const lines = data.replace(/\\r/g, '').split('\\n');\n  // parse lines here\n});",
-    language: "javascript",
+      "Read the whole input with sys.stdin.read() (or call input() the right number of times), split into lines, then parse each line. Strip whitespace before splitting on it. Output with print().",
+    code: "import sys\n\ndata = sys.stdin.read().split('\\n')\n# parse lines here",
+    language: "python",
     category: "Platform",
   },
   {
@@ -745,7 +745,7 @@ const hackerrank_questions: InterviewQuestion[] = [
     q: "Which edge cases should you check before submitting any HackerRank solution?",
     hint: "Empty, single, negative, duplicate, maximum.",
     answer:
-      "Empty or single-element input, all-negative values (never seed a maximum at 0), duplicates, the smallest and largest values the constraints permit, and integer overflow when results exceed Number.MAX_SAFE_INTEGER. Hidden test cases target exactly these.",
+      "Empty or single-element input, all-negative values (never seed a maximum at 0), duplicates, and the smallest and largest values the constraints permit. Python's integers are arbitrary precision, so overflow isn't a concern the way it is in fixed-width languages — but floating-point results (divisions, averages) can still lose precision, so check whether the expected output wants an int or a float. Hidden test cases target exactly these edges.",
     category: "Meta",
   },
 ];
@@ -756,23 +756,23 @@ const hackerrank_notes: NoteSection[] = [
   {
     title: "Reading the Constraints Is Half the Solution",
     content:
-      "HackerRank always publishes the bounds on n. Those bounds are a complexity specification in disguise. Map the bound to the required complexity before writing a single line: n <= 1000 allows O(n^2); n up to 10^5 needs O(n log n); n up to 10^7 needs O(n) or O(log n). If your instinct is a nested loop but n is 10^5, stop and look for a hashmap, a sort, or a prefix/difference array.",
+      "HackerRank always publishes the bounds on n. Those bounds are a complexity specification in disguise. Map the bound to the required complexity before writing a single line: n <= 1000 allows O(n^2); n up to 10^5 needs O(n log n); n up to 10^7 needs O(n) or O(log n). If your instinct is a nested loop but n is 10^5, stop and look for a dict, a sort, or a prefix/difference array.",
     tip: "Two-thirds of 'timed out' verdicts are a correct algorithm at the wrong complexity class — not a bug.",
   },
   {
-    title: "The Frequency Map Pattern",
+    title: "The Frequency Dict Pattern",
     content:
-      "A surprising share of the Interview Preparation Kit reduces to counting. Build a Map from value to occurrence count in one pass, then read the answer off the counts. This covers pair matching, anagram checks, ransom-note feasibility, and the 'valid frequency string' family. The follow-up move is a second map — a count of counts — which is what makes the validity check tractable.",
-    code: "const freq = new Map();\nfor (const v of items) freq.set(v, (freq.get(v) || 0) + 1);\n\nconst countOfCounts = new Map();\nfor (const c of freq.values()) countOfCounts.set(c, (countOfCounts.get(c) || 0) + 1);",
-    language: "javascript",
-    tip: "Use Map over a plain object when keys may be numbers — Map preserves the key type and insertion order.",
+      "A surprising share of the Interview Preparation Kit reduces to counting. Build a dict from value to occurrence count in one pass, then read the answer off the counts. This covers pair matching, anagram checks, ransom-note feasibility, and the 'valid frequency string' family. The follow-up move is a second dict — a count of counts — which is what makes the validity check tractable.",
+    code: "freq = {}\nfor v in items:\n    freq[v] = freq.get(v, 0) + 1\n\ncount_of_counts = {}\nfor c in freq.values():\n    count_of_counts[c] = count_of_counts.get(c, 0) + 1",
+    language: "python",
+    tip: "collections.Counter(items) builds the frequency dict in one call, and Counter.most_common(k) gives you the top-k directly.",
   },
   {
     title: "Prefix Sums vs Difference Arrays",
     content:
       "These are duals of one another and people mix them up under time pressure. A prefix sum answers many range *queries* on a static array in O(1) each. A difference array applies many range *updates* in O(1) each, then a single prefix pass reveals the final values. If the problem says 'apply q operations, then report one value', you want the difference array.",
-    code: "// Query-heavy: prefix sum\nconst prefix = [0];\nfor (const v of arr) prefix.push(prefix.at(-1) + v);\n\n// Update-heavy: difference array\nconst diff = new Array(n + 2).fill(0);\nfor (const [a, b, k] of ops) { diff[a] += k; diff[b + 1] -= k; }",
-    language: "javascript",
+    code: "# Query-heavy: prefix sum\nprefix = [0]\nfor v in arr:\n    prefix.append(prefix[-1] + v)\n\n# Update-heavy: difference array\ndiff = [0] * (n + 2)\nfor a, b, k in ops:\n    diff[a] += k\n    diff[b + 1] -= k",
+    language: "python",
   },
   {
     title: "Sliding Window and Two Pointers",
@@ -787,17 +787,17 @@ const hackerrank_notes: NoteSection[] = [
     tip: "If you can state 'the best answer ending at index i depends on the best answer at i-1 and i-2', you are in DP territory, and the space can almost always be reduced to O(1).",
   },
   {
-    title: "The Node.js stdin Harness",
+    title: "The Python stdin Harness",
     content:
-      "HackerRank's JavaScript runner does not call your function with arguments — it pipes the test case into standard input and expects output on stdout. Solutions that work perfectly in a local editor score zero if this wrapper is missing or mis-parses. Accumulate all chunks, split on newline at 'end', strip carriage returns, and trim before splitting on whitespace. Parse numbers explicitly; everything arrives as a string.",
-    code: "process.stdin.resume();\nprocess.stdin.setEncoding('utf-8');\nlet raw = '';\nprocess.stdin.on('data', (chunk) => { raw += chunk; });\nprocess.stdin.on('end', () => {\n  const lines = raw.replace(/\\r/g, '').split('\\n');\n  const n = parseInt(lines[0], 10);\n  const arr = lines[1].trim().split(/\\s+/).map(Number);\n  console.log(solve(n, arr));\n});",
-    language: "javascript",
-    tip: "Write the harness first, echo the parsed input back once to confirm it is correct, then replace the echo with your solution.",
+      "HackerRank's Python runner does not call your function with arguments — it pipes the test case into standard input and expects output on stdout. Solutions that work perfectly with hardcoded values in a local editor score zero if this harness is missing or mis-parses. Read all of stdin at once with sys.stdin.read(), split on newlines, and parse each field explicitly — everything arrives as a string, so ints and floats need to be converted.",
+    code: "import sys\n\ndata = sys.stdin.read().split('\\n')\nn = int(data[0])\narr = list(map(int, data[1].split()))\nprint(solve(n, arr))",
+    language: "python",
+    tip: "Write the harness first, print the parsed input back once to confirm it is correct, then replace that print with your solution.",
   },
   {
     title: "Pre-Submission Checklist",
     content:
-      "Before hitting submit, run through: empty and single-element input; all-negative values (seed maxima at -Infinity, never 0); duplicate values; the largest n the constraints permit; and results that may exceed Number.MAX_SAFE_INTEGER (2^53 - 1). Confirm the output format exactly — several problems want the literal strings 'YES'/'NO' or 'Yes'/'No', and the casing is graded.",
+      "Before hitting submit, run through: empty and single-element input; all-negative values (seed maxima at float('-inf'), never 0); duplicate values; and the largest n the constraints permit. Python's ints don't overflow, but confirm the output format exactly — several problems want the literal strings 'YES'/'NO' or 'Yes'/'No', and the casing is graded, as is whether a numeric answer should print as an int or a float.",
     tip: "Hidden test cases are built specifically from these edge cases. Checking them costs thirty seconds and is the difference between a partial and a full score.",
   },
 ];
