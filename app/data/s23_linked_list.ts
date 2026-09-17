@@ -6,9 +6,9 @@ const notes: NoteSection[] = [
   {
     title: "Nodes, head, and next — the minimal shape",
     content:
-      "A singly linked list is a chain of nodes, each holding a value and a `next` pointer to the following node (or null at the end). There is no random access by index — you must walk from `head`. This trade-off is the whole point: insertion/deletion at a known node is O(1) (no shifting, unlike an array), but reaching that node in the first place is O(n).",
-    code: "class ListNode {\n  constructor(val, next = null) {\n    this.val = val;\n    this.next = next;\n  }\n}\n\n// build 1 -> 2 -> 3\nconst head = new ListNode(1, new ListNode(2, new ListNode(3)));",
-    language: "javascript",
+      "A singly linked list is a chain of nodes, each holding a value and a `next` pointer to the following node (or None at the end). There is no random access by index — you must walk from `head`. This trade-off is the whole point: insertion/deletion at a known node is O(1) (no shifting, unlike a list), but reaching that node in the first place is O(n). Python has no built-in linked-list type, so you define the node yourself.",
+    code: "class ListNode:\n    def __init__(self, val, next=None):\n        self.val = val\n        self.next = next\n\n# build 1 -> 2 -> 3\nhead = ListNode(1, ListNode(2, ListNode(3)))",
+    language: "python",
   },
   {
     title: "Slow/Fast Pointers (Floyd's Algorithm)",
@@ -21,10 +21,10 @@ const notes: NoteSection[] = [
 const questions: InterviewQuestion[] = [
   {
     id: "s23-q01",
-    q: "Why is inserting into a linked list O(1) but an array insert (at the front) is O(n)?",
+    q: "Why is inserting into a linked list O(1) but a list insert (at the front) is O(n)?",
     hint: "Pointers vs shifting.",
     answer:
-      "Inserting into a linked list at a known node just rewires a couple of `next` pointers — O(1) regardless of list size. Inserting at the front of an array requires shifting every existing element over by one slot — O(n). The trade-off is that reaching a specific position in a linked list requires walking from the head, which is itself O(n).",
+      "Inserting into a linked list at a known node just rewires a couple of `next` pointers — O(1) regardless of list length. Inserting at the front of a Python list (`my_list.insert(0, x)`) requires shifting every existing element over by one slot — O(n). The trade-off is that reaching a specific position in a linked list requires walking from the head, which is itself O(n).",
     category: "Linked List",
   },
   {
@@ -32,7 +32,7 @@ const questions: InterviewQuestion[] = [
     q: "How do slow/fast pointers detect a cycle in a linked list?",
     hint: "Floyd's Tortoise and Hare.",
     answer:
-      "Move a slow pointer one node at a time and a fast pointer two nodes at a time. If there is no cycle, fast reaches null and the search ends. If there IS a cycle, fast will eventually catch up to and meet slow inside the loop, because the distance between them shrinks by one every step once both are inside the cycle.",
+      "Move a slow pointer one node at a time and a fast pointer two nodes at a time. If there is no cycle, fast reaches None and the search ends. If there IS a cycle, fast will eventually catch up to and meet slow inside the loop, because the distance between them shrinks by one every step once both are inside the cycle.",
     category: "Linked List",
   },
 ];
@@ -43,11 +43,11 @@ const coding: CodingQuestion[] = [
     title: "Reverse Linked List",
     difficulty: "Easy",
     description: "Reverse a singly linked list and return the new head.",
-    examples: [{ input: "1 -> 2 -> 3 -> null", output: "3 -> 2 -> 1 -> null" }],
+    examples: [{ input: "1 -> 2 -> 3 -> None", output: "3 -> 2 -> 1 -> None" }],
     constraints: ["0 <= number of nodes <= 5000"],
-    hint: "Walk the list once, rewiring each node's `next` to point backward, using a `prev` pointer that starts at null.",
+    hint: "Walk the list once, rewiring each node's `next` to point backward, using a `prev` pointer that starts at None.",
     solution:
-      "function reverseList(head) {\n  let prev = null;\n  let curr = head;\n  while (curr) {\n    const next = curr.next;\n    curr.next = prev;\n    prev = curr;\n    curr = next;\n  }\n  return prev;\n}",
+      "def reverse_list(head):\n    prev = None\n    curr = head\n    while curr:\n        next_node = curr.next\n        curr.next = prev\n        prev = curr\n        curr = next_node\n    return prev",
   },
   {
     id: "s23-c02",
@@ -56,9 +56,9 @@ const coding: CodingQuestion[] = [
     description: "Given the head of a singly linked list, return the middle node. If there are two middle nodes, return the second.",
     examples: [{ input: "1 -> 2 -> 3 -> 4 -> 5", output: "3" }, { input: "1 -> 2 -> 3 -> 4 -> 5 -> 6", output: "4" }],
     constraints: ["1 <= nodes <= 100", "Single pass, O(1) extra space"],
-    hint: "Slow/fast pointers: when fast reaches the end (or null), slow sits exactly at the middle.",
+    hint: "Slow/fast pointers: when fast reaches the end (or None), slow sits exactly at the middle.",
     solution:
-      "function middleNode(head) {\n  let slow = head;\n  let fast = head;\n  while (fast && fast.next) {\n    slow = slow.next;\n    fast = fast.next.next;\n  }\n  return slow;\n}",
+      "def middle_node(head):\n    slow = head\n    fast = head\n    while fast and fast.next:\n        slow = slow.next\n        fast = fast.next.next\n    return slow",
   },
   {
     id: "s23-c03",
@@ -69,7 +69,7 @@ const coding: CodingQuestion[] = [
     constraints: ["0 <= nodes in each list <= 50"],
     hint: "Use a dummy head node to simplify edge cases, then walk both lists picking the smaller current node each time.",
     solution:
-      "function mergeTwoLists(l1, l2) {\n  const dummy = { val: 0, next: null };\n  let tail = dummy;\n  while (l1 && l2) {\n    if (l1.val <= l2.val) {\n      tail.next = l1;\n      l1 = l1.next;\n    } else {\n      tail.next = l2;\n      l2 = l2.next;\n    }\n    tail = tail.next;\n  }\n  tail.next = l1 || l2;\n  return dummy.next;\n}",
+      "def merge_two_lists(l1, l2):\n    dummy = ListNode(0)\n    tail = dummy\n    while l1 and l2:\n        if l1.val <= l2.val:\n            tail.next = l1\n            l1 = l1.next\n        else:\n            tail.next = l2\n            l2 = l2.next\n        tail = tail.next\n    tail.next = l1 if l1 else l2\n    return dummy.next",
   },
   {
     id: "s23-c04",
@@ -77,10 +77,10 @@ const coding: CodingQuestion[] = [
     difficulty: "Easy",
     description: "Given the head of a linked list, determine whether it contains a cycle.",
     examples: [{ input: "3 -> 2 -> 0 -> -4, with -4 pointing back to 2", output: "true" }],
-    constraints: ["O(1) extra space required — no Set of visited nodes"],
-    hint: "Floyd's slow/fast pointers: if they ever meet, there's a cycle. If fast reaches null, there isn't.",
+    constraints: ["O(1) extra space required — no set of visited nodes"],
+    hint: "Floyd's slow/fast pointers: if they ever meet, there's a cycle. If fast reaches None, there isn't.",
     solution:
-      "function hasCycle(head) {\n  let slow = head;\n  let fast = head;\n  while (fast && fast.next) {\n    slow = slow.next;\n    fast = fast.next.next;\n    if (slow === fast) return true;\n  }\n  return false;\n}",
+      "def has_cycle(head):\n    slow = head\n    fast = head\n    while fast and fast.next:\n        slow = slow.next\n        fast = fast.next.next\n        if slow is fast:\n            return True\n    return False",
   },
   {
     id: "s23-c05",
@@ -91,7 +91,7 @@ const coding: CodingQuestion[] = [
     constraints: ["Do it in one pass"],
     hint: "Advance a lead pointer n steps first, then move both lead and a trailing pointer together — when lead hits the end, trailing is right before the node to remove.",
     solution:
-      "function removeNthFromEnd(head, n) {\n  const dummy = { val: 0, next: head };\n  let lead = dummy;\n  let trail = dummy;\n  for (let i = 0; i < n; i++) lead = lead.next;\n  while (lead.next) {\n    lead = lead.next;\n    trail = trail.next;\n  }\n  trail.next = trail.next.next;\n  return dummy.next;\n}",
+      "def remove_nth_from_end(head, n):\n    dummy = ListNode(0, head)\n    lead = dummy\n    trail = dummy\n    for _ in range(n):\n        lead = lead.next\n    while lead.next:\n        lead = lead.next\n        trail = trail.next\n    trail.next = trail.next.next\n    return dummy.next",
   },
   {
     id: "s23-c06",
@@ -102,23 +102,23 @@ const coding: CodingQuestion[] = [
     constraints: ["Aim for O(n) time, O(1) space (in-place reversal of the second half)"],
     hint: "Find the middle with slow/fast pointers, reverse the second half in place, then compare the two halves node by node.",
     solution:
-      "function isPalindrome(head) {\n  if (!head || !head.next) return true;\n\n  let slow = head;\n  let fast = head;\n  while (fast && fast.next) {\n    slow = slow.next;\n    fast = fast.next.next;\n  }\n\n  let prev = null;\n  let curr = slow;\n  while (curr) {\n    const next = curr.next;\n    curr.next = prev;\n    prev = curr;\n    curr = next;\n  }\n\n  let left = head;\n  let right = prev;\n  while (right) {\n    if (left.val !== right.val) return false;\n    left = left.next;\n    right = right.next;\n  }\n  return true;\n}",
+      "def is_palindrome(head):\n    if not head or not head.next:\n        return True\n\n    slow = head\n    fast = head\n    while fast and fast.next:\n        slow = slow.next\n        fast = fast.next.next\n\n    prev = None\n    curr = slow\n    while curr:\n        next_node = curr.next\n        curr.next = prev\n        prev = curr\n        curr = next_node\n\n    left = head\n    right = prev\n    while right:\n        if left.val != right.val:\n            return False\n        left = left.next\n        right = right.next\n    return True",
   },
 ];
 
 const mcqs: MCQQuestion[] = [
   {
     id: "s23-m01",
-    question: "Why does the Linked List Cycle detector use O(1) space instead of a Set of visited nodes?",
+    question: "Why does the Linked List Cycle detector use O(1) space instead of a set of visited nodes?",
     options: [
-      "Sets don't work with objects",
+      "Sets don't work with custom objects",
       "Floyd's slow/fast pointer technique needs no extra storage — only two pointer variables, regardless of list length",
       "It's impossible to detect cycles with O(1) space",
-      "The Set approach is actually faster"
+      "The set-based approach is actually faster"
     ],
     correctAnswerIndex: 1,
     explanation:
-      "A Set-based approach also works (add each node, check membership) but costs O(n) space. Slow/fast pointers achieve the same detection with only two variables, trading a slightly less obvious proof for constant space.",
+      "A set-based approach also works (add each node, check membership) but costs O(n) space. Slow/fast pointers achieve the same detection with only two variables, trading a slightly less obvious proof for constant space.",
   },
   {
     id: "s23-m02",
@@ -138,7 +138,7 @@ const mcqs: MCQQuestion[] = [
     question: "Why is a dummy head node used in Merge Two Sorted Lists and Remove Nth From End?",
     options: [
       "It's required by the linked list data structure",
-      "It removes special-casing for when the answer's real head changes (e.g. the smallest element isn't from list1, or the node to remove is the original head)",
+      "It removes special-casing for when the answer's real head changes (e.g. the smallest element isn't from l1, or the node to remove is the original head)",
       "It makes the list circular",
       "It reduces time complexity"
     ],
