@@ -7,6 +7,19 @@ import { s05_solid } from "./s05_solid";
 import { s06_f1soft } from "./s06_f1soft";
 import { s16_system_design } from "./s16_system_design";
 import { s17_hackerrank } from "./s17_hackerrank";
+import { s18_hashmap_hashset } from "./s18_hashmap_hashset";
+import { s19_two_pointer } from "./s19_two_pointer";
+import { s20_sliding_window } from "./s20_sliding_window";
+import { s21_stack } from "./s21_stack";
+import { s22_binary_search } from "./s22_binary_Search";
+import { s23_linked_list } from "./s23_linked_list";
+import { s24_recursion } from "./s24_recursion";
+import { s25_arrays_strings_gaps } from "./s25_arrays_strings_gaps";
+import { s26_matrix } from "./s26_matrix";
+import { s27_react_routing_forms_redux } from "./s27_react_routing_forms_redux";
+import { s28_mongoose_architecture_auth } from "./s28_mongoose_architecture_auth";
+import { s29_file_uploads } from "./s29_file_uploads";
+import { s30_quick_revision } from "./s30_quick_revision";
 import { leapfrogDaysSections } from "./leapfrog_prep_data";
 export { dailyRevisionSetsWeek3 } from "./daily_revision_mcq_week3";
 import { generateExams } from "./exams";
@@ -358,24 +371,51 @@ export const leapfrog_simulation: InterviewSection = {
 };
 
 export const interviewData: InterviewSection[] = [
+  // ── Quick Revision up front — this is meant to be easy to find, not buried ──
+  s30_quick_revision,
+
+  // ── DSA (VERY IMPORTANT / MEDIUM) ──
   s01_core,
   s02_ds,
+  s25_arrays_strings_gaps,
+  s18_hashmap_hashset,
+  s19_two_pointer,
+  s20_sliding_window,
+  s21_stack,
+  s22_binary_search,
+  s23_linked_list,
+  s24_recursion,
   s03_bigo,
+  s26_matrix,
   s04_oop,
   s05_solid,
+
+  // ── JavaScript, Async, DOM (VERY IMPORTANT) ──
   s06_frontend,
   s07_js,
+
+  // ── React (IMPORTANT) ──
   s08_react,
+  s27_react_routing_forms_redux,
   s09_nextjs,
+
+  // ── Backend, Database, Auth, Full-Stack (IMPORTANT) ──
   s10_rest,
   s11_cors,
   s12_jwt,
   s13_sql,
   s14_node,
+  s28_mongoose_architecture_auth,
+  s29_file_uploads,
   s15_problem,
   s16_system_design,
+
+  // ── HackerRank ──
   s17_hackerrank,
+
+  // ── Supplementary (de-emphasized per audit — different-company bank, kept for practice) ──
   s06_f1soft,
+
   ...leapfrogDaysSections,
   leapfrog_overall,
   leapfrog_coding,
