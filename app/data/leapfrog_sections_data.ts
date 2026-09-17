@@ -19,7 +19,7 @@ import type { InterviewSection } from "../../types";
 // 1. CODING EXAM PREP
 // ─────────────────────────────────────────────────────────────────────────────
 export const leapfrog_coding: InterviewSection = {
-  id: 17,
+  id: 31,
   slug: "leapfrog-coding",
   title: "Coding Exam Prep",
   subtitle: "Arrays · Strings · HashMap · Stack · Two-Pointer · Complexity",
@@ -690,7 +690,7 @@ console.log(mergeSorted([1, 3, 5], [2, 4, 6])); // [1,2,3,4,5,6]`,
 // 2. VIRTUAL INTERVIEW PREP
 // ─────────────────────────────────────────────────────────────────────────────
 export const leapfrog_virtual: InterviewSection = {
-  id: 18,
+  id: 32,
   slug: "leapfrog-virtual",
   title: "Virtual Interview Prep",
   subtitle: "JS Theory · Project Walkthrough · Communication",
@@ -1365,7 +1365,7 @@ type Admin = User & { role: 'admin' };`,
 // 3. ON-SITE TECHNICAL INTERVIEW PREP
 // ─────────────────────────────────────────────────────────────────────────────
 export const leapfrog_onsite: InterviewSection = {
-  id: 19,
+  id: 33,
   slug: "leapfrog-onsite",
   title: "On-Site Technical Interview",
   subtitle: "OOP · CSS · HTTP · Middleware · Live Coding · System Thinking",
@@ -2088,7 +2088,7 @@ Leapfrog interviewers often ask for real-world examples of each.`,
 // 4. HR INTERVIEW PREP
 // ─────────────────────────────────────────────────────────────────────────────
 export const leapfrog_hr: InterviewSection = {
-  id: 20,
+  id: 34,
   slug: "leapfrog-hr",
   title: "HR Interview Prep",
   subtitle: "Behavioural · Cultural Fit · Why Leapfrog · STAR Stories",
@@ -2629,7 +2629,7 @@ Avoid: "Money" or "I just want a job" — even if true, frame it around growth a
 // 5. REMOTE ASSIGNMENT SAMPLES (NEW)
 // ─────────────────────────────────────────────────────────────────────────────
 export const leapfrog_remote: InterviewSection = {
-  id: 23,
+  id: 35,
   slug: "leapfrog-remote",
   title: "Remote Assignment Samples",
   subtitle: "Timed Mini-Apps · Fetch API · Filter/Search · Clean Code · README",

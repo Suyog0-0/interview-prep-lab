@@ -351,7 +351,7 @@ s05_solid.mcqs = solid_mcqs;
 s06_f1soft.mcqs = f1soft_mcqs;
  
 export const leapfrog_overall: InterviewSection = {
-  id: 22,
+  id: 37,
   slug: "leapfrog-overall",
   title: "Overall Prep",
   subtitle: "3-Week Study Plan · Coding Exam → HR Interview",
@@ -362,7 +362,7 @@ export const leapfrog_overall: InterviewSection = {
 
 
 export const leapfrog_simulation: InterviewSection = {
-  id: 21,
+  id: 36,
   slug: "leapfrog-simulation",
   title: "Interview Simulation",
   subtitle: "Mock Leapfrog Interview",
