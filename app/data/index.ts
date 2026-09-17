@@ -11,7 +11,7 @@ import { s18_hashmap_hashset } from "./s18_hashmap_hashset";
 import { s19_two_pointer } from "./s19_two_pointer";
 import { s20_sliding_window } from "./s20_sliding_window";
 import { s21_stack } from "./s21_stack";
-import { s22_binary_search } from "./s22_binary_Search";
+import { s22_binary_search } from "./s22_binary_search";
 import { s23_linked_list } from "./s23_linked_list";
 import { s24_recursion } from "./s24_recursion";
 import { s25_arrays_strings_gaps } from "./s25_arrays_strings_gaps";
