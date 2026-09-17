@@ -36,12 +36,36 @@ export interface CodingQuestion {
   solution?: string;
 }
 
+// ─── Leapfrog Prep Priority System ─────────────────────────────────────────
+// Exactly four levels — no "maybe important" or "nice to know" in between.
+// VERY_IMPORTANT sections get the strongest coverage and appear first in
+// their stack (DSA, then JavaScript); LOW sections are conceptual-only and
+// sit at the bottom so they never crowd out core material.
+export type Priority = "VERY_IMPORTANT" | "IMPORTANT" | "MEDIUM" | "LOW";
+
+export const PRIORITY_LABEL: Record<Priority, string> = {
+  VERY_IMPORTANT: "Very Important",
+  IMPORTANT: "Important",
+  MEDIUM: "Medium",
+  LOW: "Low",
+};
+
+// Fixed render order for priority badges / grouped views.
+export const PRIORITY_ORDER: Priority[] = [
+  "VERY_IMPORTANT",
+  "IMPORTANT",
+  "MEDIUM",
+  "LOW",
+];
+
 export interface InterviewSection {
   id: number | string;        // 01–15, or strings for generated/special modules
   slug: string;      // e.g. "core-programming"
   title: string;     // e.g. "Core Programming"
   subtitle: string;  // e.g. "Loops, Conditionals, Basics"
   color: string;     // Tailwind-compatible hex accent
+  priority?: Priority; // Leapfrog prep priority — see Priority above
+  stack?: "DSA" | "JavaScript" | "React" | "Backend" | "FullStack" | "DevOps" | "HackerRank" | "Revision" | "Other";
   questions: InterviewQuestion[];
   mcqs?: MCQQuestion[]; // 20 MCQs for the test — injected after creation for some modules
   notes?: NoteSection[]; // Learning notes for the module
