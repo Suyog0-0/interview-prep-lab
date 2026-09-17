@@ -6,6 +6,7 @@ import { s04_oop } from "./s04_oop";
 import { s05_solid } from "./s05_solid";
 import { s06_f1soft } from "./s06_f1soft";
 import { s16_system_design } from "./s16_system_design";
+import { s17_hackerrank } from "./s17_hackerrank";
 import { leapfrogDaysSections } from "./leapfrog_prep_data";
 export { dailyRevisionSetsWeek3 } from "./daily_revision_mcq_week3";
 import { generateExams } from "./exams";
@@ -373,6 +374,7 @@ export const interviewData: InterviewSection[] = [
   s14_node,
   s15_problem,
   s16_system_design,
+  s17_hackerrank,
   s06_f1soft,
   ...leapfrogDaysSections,
   leapfrog_overall,
