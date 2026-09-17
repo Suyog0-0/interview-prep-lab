@@ -1,10 +1,10 @@
 import type { InterviewSection, CodingQuestion, MCQQuestion, NoteSection } from "../../types";
 
 /**
- * Section 25 — Arrays & Strings: Missing Problems
+ * Section 25 — Lists & Strings: Missing Problems
  * Priority: VERY IMPORTANT (DSA)
  *
- * The audit found Arrays/Strings/Sorting already had partial coverage scattered
+ * The audit found Lists/Strings/Sorting already had partial coverage scattered
  * across leapfrog_prep_data.ts, s02_ds.ts and the daily revision sets, but named
  * problems like Rotate Array, Sort Colors, Kadane's Algorithm, Insertion Sort,
  * Reverse Words and Is Subsequence were only ever MENTIONED, never coded. This
@@ -15,17 +15,17 @@ const notes: NoteSection[] = [
   {
     title: "Prefix/Suffix Products — Product of Array Except Self",
     content:
-      "When a problem needs, for every index, some aggregate of 'everything except me', build the aggregate from both directions: a prefix pass (everything to the left) and a suffix pass (everything to the right), then combine the two at each index. This avoids the O(n^2) trap of recomputing the whole aggregate for every index, and it works without division — important when the array can contain zero.",
-    code: "function productExceptSelf(nums) {\n  const n = nums.length;\n  const result = new Array(n).fill(1);\n  let prefix = 1;\n  for (let i = 0; i < n; i++) {\n    result[i] = prefix;\n    prefix *= nums[i];\n  }\n  let suffix = 1;\n  for (let i = n - 1; i >= 0; i--) {\n    result[i] *= suffix;\n    suffix *= nums[i];\n  }\n  return result;\n}",
-    language: "javascript",
+      "When a problem needs, for every index, some aggregate of 'everything except me', build the aggregate from both directions: a prefix pass (everything to the left) and a suffix pass (everything to the right), then combine the two at each index. This avoids the O(n^2) trap of recomputing the whole aggregate for every index, and it works without division — important when the list can contain zero.",
+    code: "def product_except_self(nums):\n    n = len(nums)\n    result = [1] * n\n    prefix = 1\n    for i in range(n):\n        result[i] = prefix\n        prefix *= nums[i]\n    suffix = 1\n    for i in range(n - 1, -1, -1):\n        result[i] *= suffix\n        suffix *= nums[i]\n    return result",
+    language: "python",
   },
   {
     title: "Kadane's Algorithm",
     content:
-      "Kadane's Algorithm finds the maximum sum of a contiguous subarray in O(n). At each position, decide whether extending the previous subarray is better than starting fresh at the current element: `currentSum = Math.max(nums[i], currentSum + nums[i])`. Track the best currentSum ever seen as the running answer.",
-    code: "function maxSubArray(nums) {\n  let currentSum = nums[0];\n  let maxSum = nums[0];\n  for (let i = 1; i < nums.length; i++) {\n    currentSum = Math.max(nums[i], currentSum + nums[i]);\n    maxSum = Math.max(maxSum, currentSum);\n  }\n  return maxSum;\n}",
-    language: "javascript",
-    tip: "The key insight: if currentSum ever goes negative, it can only hurt any subarray it's extended into — so the algorithm 'resets' by starting fresh at the current element whenever that's better.",
+      "Kadane's Algorithm finds the maximum sum of a contiguous subarray in O(n). At each position, decide whether extending the previous subarray is better than starting fresh at the current element: `current_sum = max(nums[i], current_sum + nums[i])`. Track the best current_sum ever seen as the running answer.",
+    code: "def max_sub_array(nums):\n    current_sum = nums[0]\n    max_sum = nums[0]\n    for i in range(1, len(nums)):\n        current_sum = max(nums[i], current_sum + nums[i])\n        max_sum = max(max_sum, current_sum)\n    return max_sum",
+    language: "python",
+    tip: "The key insight: if current_sum ever goes negative, it can only hurt any subarray it's extended into — so the algorithm 'resets' by starting fresh at the current element whenever that's better.",
   },
 ];
 
@@ -34,56 +34,56 @@ const coding: CodingQuestion[] = [
     id: "s25-c01",
     title: "Find Maximum and Minimum",
     difficulty: "Easy",
-    description: "Given an array of numbers, find both the maximum and minimum values in a single pass.",
+    description: "Given a list of numbers, find both the maximum and minimum values in a single pass.",
     examples: [{ input: "[3, 7, 1, 9, 4]", output: "{ max: 9, min: 1 }" }],
-    constraints: ["1 <= n <= 10^5", "One pass — do not call Math.max/Math.min separately, which is two passes"],
+    constraints: ["1 <= n <= 10^5", "One pass — do not call max()/min() separately, which is two passes"],
     hint: "Initialize both to the first element, then update each on the fly as you scan once.",
     solution:
-      "function findMaxMin(arr) {\n  let max = arr[0];\n  let min = arr[0];\n  for (let i = 1; i < arr.length; i++) {\n    if (arr[i] > max) max = arr[i];\n    if (arr[i] < min) min = arr[i];\n  }\n  return { max, min };\n}",
+      "def find_max_min(arr):\n    result_max = arr[0]\n    result_min = arr[0]\n    for i in range(1, len(arr)):\n        if arr[i] > result_max:\n            result_max = arr[i]\n        if arr[i] < result_min:\n            result_min = arr[i]\n    return {'max': result_max, 'min': result_min}",
   },
   {
     id: "s25-c02",
     title: "Find Peak Element",
     difficulty: "Medium",
-    description: "A peak is an element strictly greater than its neighbours. Given an array, find the index of any peak (treat out-of-bounds neighbours as -Infinity).",
+    description: "A peak is an element strictly greater than its neighbours. Given a list, find the index of any peak (treat out-of-bounds neighbours as -infinity).",
     examples: [{ input: "[1, 2, 3, 1]", output: "2" }, { input: "[1, 2, 1, 3, 5, 6, 4]", output: "1 or 5" }],
     constraints: ["1 <= n <= 1000", "O(log n) is achievable with binary search"],
     hint: "If the middle element is smaller than its right neighbour, a peak must exist somewhere to the right (values are trending up); otherwise search left.",
     solution:
-      "function findPeakElement(nums) {\n  let low = 0;\n  let high = nums.length - 1;\n  while (low < high) {\n    const mid = low + Math.floor((high - low) / 2);\n    if (nums[mid] < nums[mid + 1]) low = mid + 1;\n    else high = mid;\n  }\n  return low;\n}",
+      "def find_peak_element(nums):\n    low, high = 0, len(nums) - 1\n    while low < high:\n        mid = low + (high - low) // 2\n        if nums[mid] < nums[mid + 1]:\n            low = mid + 1\n        else:\n            high = mid\n    return low",
   },
   {
     id: "s25-c03",
     title: "Rotate Array",
     difficulty: "Medium",
-    description: "Given an array, rotate it to the right by k steps, in place.",
+    description: "Given a list, rotate it to the right by k steps, in place.",
     examples: [{ input: "nums = [1,2,3,4,5,6,7], k = 3", output: "[5,6,7,1,2,3,4]" }],
     constraints: ["1 <= n <= 10^5", "In-place, O(1) extra space using the reversal trick"],
-    hint: "Reverse the whole array, then reverse the first k elements, then reverse the rest — three reversals produce the rotation.",
+    hint: "Reverse the whole list, then reverse the first k elements, then reverse the rest — three reversals produce the rotation.",
     solution:
-      "function rotate(nums, k) {\n  k %= nums.length;\n  const reverse = (arr, start, end) => {\n    while (start < end) {\n      [arr[start], arr[end]] = [arr[end], arr[start]];\n      start++;\n      end--;\n    }\n  };\n  reverse(nums, 0, nums.length - 1);\n  reverse(nums, 0, k - 1);\n  reverse(nums, k, nums.length - 1);\n  return nums;\n}",
+      "def rotate(nums, k):\n    k %= len(nums)\n\n    def reverse(arr, start, end):\n        while start < end:\n            arr[start], arr[end] = arr[end], arr[start]\n            start += 1\n            end -= 1\n\n    reverse(nums, 0, len(nums) - 1)\n    reverse(nums, 0, k - 1)\n    reverse(nums, k, len(nums) - 1)\n    return nums",
   },
   {
     id: "s25-c04",
     title: "Sort Colors (Dutch National Flag)",
     difficulty: "Medium",
-    description: "Given an array containing only 0s, 1s, and 2s, sort it in place in one pass without using a library sort.",
+    description: "Given a list containing only 0s, 1s, and 2s, sort it in place in one pass without using a library sort.",
     examples: [{ input: "[2, 0, 2, 1, 1, 0]", output: "[0, 0, 1, 1, 2, 2]" }],
-    constraints: ["1 <= n <= 300", "One pass, O(1) space — no counting-sort bucket array"],
+    constraints: ["1 <= n <= 300", "One pass, O(1) space — no counting-sort bucket list"],
     hint: "Three pointers: low (boundary for 0s), mid (current), high (boundary for 2s). Swap based on the value at mid.",
     solution:
-      "function sortColors(nums) {\n  let low = 0, mid = 0, high = nums.length - 1;\n  while (mid <= high) {\n    if (nums[mid] === 0) {\n      [nums[low], nums[mid]] = [nums[mid], nums[low]];\n      low++; mid++;\n    } else if (nums[mid] === 1) {\n      mid++;\n    } else {\n      [nums[mid], nums[high]] = [nums[high], nums[mid]];\n      high--;\n      // do NOT advance mid here — the swapped-in value hasn't been checked yet\n    }\n  }\n  return nums;\n}",
+      "def sort_colors(nums):\n    low, mid, high = 0, 0, len(nums) - 1\n    while mid <= high:\n        if nums[mid] == 0:\n            nums[low], nums[mid] = nums[mid], nums[low]\n            low += 1\n            mid += 1\n        elif nums[mid] == 1:\n            mid += 1\n        else:\n            nums[mid], nums[high] = nums[high], nums[mid]\n            high -= 1\n            # do NOT advance mid here — the swapped-in value hasn't been checked yet\n    return nums",
   },
   {
     id: "s25-c05",
     title: "Product of Array Except Self",
     difficulty: "Medium",
-    description: "Given an array, return an array where each element is the product of all other elements — without using division.",
+    description: "Given a list, return a list where each element is the product of all other elements — without using division.",
     examples: [{ input: "[1, 2, 3, 4]", output: "[24, 12, 8, 6]" }],
-    constraints: ["2 <= n <= 10^5", "No division operator", "O(n) time, O(1) extra space excluding the output array"],
+    constraints: ["2 <= n <= 10^5", "No division operator", "O(n) time, O(1) extra space excluding the output list"],
     hint: "See the 'Prefix/Suffix Products' note above.",
     solution:
-      "function productExceptSelf(nums) {\n  const n = nums.length;\n  const result = new Array(n).fill(1);\n  let prefix = 1;\n  for (let i = 0; i < n; i++) {\n    result[i] = prefix;\n    prefix *= nums[i];\n  }\n  let suffix = 1;\n  for (let i = n - 1; i >= 0; i--) {\n    result[i] *= suffix;\n    suffix *= nums[i];\n  }\n  return result;\n}",
+      "def product_except_self(nums):\n    n = len(nums)\n    result = [1] * n\n    prefix = 1\n    for i in range(n):\n        result[i] = prefix\n        prefix *= nums[i]\n    suffix = 1\n    for i in range(n - 1, -1, -1):\n        result[i] *= suffix\n        suffix *= nums[i]\n    return result",
   },
   {
     id: "s25-c06",
@@ -94,18 +94,18 @@ const coding: CodingQuestion[] = [
     constraints: ["1 <= n <= 10^5", "O(n) required"],
     hint: "See the Kadane's Algorithm note above.",
     solution:
-      "function maxSubArray(nums) {\n  let currentSum = nums[0];\n  let maxSum = nums[0];\n  for (let i = 1; i < nums.length; i++) {\n    currentSum = Math.max(nums[i], currentSum + nums[i]);\n    maxSum = Math.max(maxSum, currentSum);\n  }\n  return maxSum;\n}",
+      "def max_sub_array(nums):\n    current_sum = nums[0]\n    max_sum = nums[0]\n    for i in range(1, len(nums)):\n        current_sum = max(nums[i], current_sum + nums[i])\n        max_sum = max(max_sum, current_sum)\n    return max_sum",
   },
   {
     id: "s25-c07",
     title: "Merge Intervals",
     difficulty: "Medium",
-    description: "Given an array of intervals, merge all overlapping intervals and return the non-overlapping result.",
+    description: "Given a list of intervals, merge all overlapping intervals and return the non-overlapping result.",
     examples: [{ input: "[[1,3],[2,6],[8,10],[15,18]]", output: "[[1,6],[8,10],[15,18]]" }],
     constraints: ["1 <= n <= 10^4", "Sort by start time first — required before the linear merge pass"],
-    hint: "Sort intervals by start. Walk through; if the current interval overlaps the last one added to the result, extend its end; otherwise push it as a new interval.",
+    hint: "Sort intervals by start. Walk through; if the current interval overlaps the last one added to the result, extend its end; otherwise append it as a new interval.",
     solution:
-      "function merge(intervals) {\n  const sorted = [...intervals].sort((a, b) => a[0] - b[0]);\n  const result = [sorted[0]];\n  for (let i = 1; i < sorted.length; i++) {\n    const last = result[result.length - 1];\n    const [start, end] = sorted[i];\n    if (start <= last[1]) {\n      last[1] = Math.max(last[1], end);\n    } else {\n      result.push([start, end]);\n    }\n  }\n  return result;\n}",
+      "def merge(intervals):\n    sorted_intervals = sorted(intervals, key=lambda iv: iv[0])\n    result = [sorted_intervals[0]]\n    for start, end in sorted_intervals[1:]:\n        last = result[-1]\n        if start <= last[1]:\n            last[1] = max(last[1], end)\n        else:\n            result.append([start, end])\n    return result",
   },
   {
     id: "s25-c08",
@@ -113,10 +113,10 @@ const coding: CodingQuestion[] = [
     difficulty: "Medium",
     description: "Given a string, reverse the order of the words. Collapse multiple spaces and trim leading/trailing whitespace.",
     examples: [{ input: '"  the sky   is blue  "', output: '"blue is sky the"' }],
-    constraints: ["1 <= s.length <= 10^4"],
-    hint: "Split on whitespace (a regex handles collapsing multiple spaces), filter out empty strings, reverse the array, join with a single space.",
+    constraints: ["1 <= len(s) <= 10^4"],
+    hint: "s.split() with no arguments already collapses runs of whitespace and strips leading/trailing whitespace — no regex needed. Just reverse the resulting list and join with a single space.",
     solution:
-      "function reverseWords(s) {\n  return s.trim().split(/\\s+/).reverse().join(' ');\n}",
+      "def reverse_words(s):\n    return ' '.join(s.split()[::-1])",
   },
   {
     id: "s25-c09",
@@ -124,10 +124,10 @@ const coding: CodingQuestion[] = [
     difficulty: "Medium",
     description: "Given a string, compress runs of repeated characters into character+count (only if the count is greater than 1), in place conceptually.",
     examples: [{ input: '"aabcccccaaa"', output: '"a2bc5a3"' }],
-    constraints: ["1 <= s.length <= 2000"],
+    constraints: ["1 <= len(s) <= 2000"],
     hint: "Walk the string tracking the current character and a run length; flush character (+ count if > 1) whenever the character changes.",
     solution:
-      "function compress(s) {\n  let result = '';\n  let i = 0;\n  while (i < s.length) {\n    const ch = s[i];\n    let count = 0;\n    while (i < s.length && s[i] === ch) {\n      count++;\n      i++;\n    }\n    result += ch + (count > 1 ? count : '');\n  }\n  return result;\n}",
+      "def compress(s):\n    result = []\n    i = 0\n    while i < len(s):\n        ch = s[i]\n        count = 0\n        while i < len(s) and s[i] == ch:\n            count += 1\n            i += 1\n        result.append(ch + (str(count) if count > 1 else ''))\n    return ''.join(result)",
   },
   {
     id: "s25-c10",
@@ -135,10 +135,10 @@ const coding: CodingQuestion[] = [
     difficulty: "Easy",
     description: "Given strings s and t, determine if s is a subsequence of t (characters of s appear in t in the same order, not necessarily contiguous).",
     examples: [{ input: 's = "abc", t = "ahbgdc"', output: "true" }, { input: 's = "axc", t = "ahbgdc"', output: "false" }],
-    constraints: ["0 <= s.length <= 100", "0 <= t.length <= 10^4"],
+    constraints: ["0 <= len(s) <= 100", "0 <= len(t) <= 10^4"],
     hint: "Two pointers, one per string. Advance the t-pointer always; advance the s-pointer only on a match. s is a subsequence if its pointer reaches the end.",
     solution:
-      "function isSubsequence(s, t) {\n  let i = 0;\n  for (let j = 0; j < t.length && i < s.length; j++) {\n    if (s[i] === t[j]) i++;\n  }\n  return i === s.length;\n}",
+      "def is_subsequence(s, t):\n    i = 0\n    for j in range(len(t)):\n        if i < len(s) and s[i] == t[j]:\n            i += 1\n    return i == len(s)",
   },
   {
     id: "s25-c11",
@@ -146,21 +146,21 @@ const coding: CodingQuestion[] = [
     difficulty: "Medium",
     description: "Given a string, return its longest palindromic substring.",
     examples: [{ input: '"babad"', output: '"bab" (or "aba")' }],
-    constraints: ["1 <= s.length <= 1000"],
+    constraints: ["1 <= len(s) <= 1000"],
     hint: "Expand around every possible center (there are 2n-1 of them, including between-character centers for even-length palindromes) and track the longest expansion.",
     solution:
-      "function longestPalindrome(s) {\n  let start = 0, maxLen = 0;\n  const expand = (left, right) => {\n    while (left >= 0 && right < s.length && s[left] === s[right]) {\n      left--;\n      right++;\n    }\n    return right - left - 1; // length of palindrome found\n  };\n  for (let i = 0; i < s.length; i++) {\n    const oddLen = expand(i, i);\n    const evenLen = expand(i, i + 1);\n    const len = Math.max(oddLen, evenLen);\n    if (len > maxLen) {\n      maxLen = len;\n      start = i - Math.floor((len - 1) / 2);\n    }\n  }\n  return s.substring(start, start + maxLen);\n}",
+      "def longest_palindrome(s):\n    start, max_len = 0, 0\n\n    def expand(left, right):\n        while left >= 0 and right < len(s) and s[left] == s[right]:\n            left -= 1\n            right += 1\n        return right - left - 1  # length of palindrome found\n\n    for i in range(len(s)):\n        odd_len = expand(i, i)\n        even_len = expand(i, i + 1)\n        length = max(odd_len, even_len)\n        if length > max_len:\n            max_len = length\n            start = i - (length - 1) // 2\n\n    return s[start:start + max_len]",
   },
   {
     id: "s25-c12",
     title: "Insertion Sort",
     difficulty: "Easy",
-    description: "Implement insertion sort: build the sorted array one element at a time by inserting each new element into its correct position among the already-sorted elements.",
+    description: "Implement insertion sort: build the sorted list one element at a time by inserting each new element into its correct position among the already-sorted elements.",
     examples: [{ input: "[5, 2, 4, 6, 1, 3]", output: "[1, 2, 3, 4, 5, 6]" }],
     constraints: ["Educational — O(n^2) worst case, O(n) best case on nearly-sorted input"],
     hint: "For each element starting from index 1, shift larger elements in the sorted prefix one slot right, then drop the current element into the gap.",
     solution:
-      "function insertionSort(arr) {\n  for (let i = 1; i < arr.length; i++) {\n    const key = arr[i];\n    let j = i - 1;\n    while (j >= 0 && arr[j] > key) {\n      arr[j + 1] = arr[j];\n      j--;\n    }\n    arr[j + 1] = key;\n  }\n  return arr;\n}",
+      "def insertion_sort(arr):\n    for i in range(1, len(arr)):\n        key = arr[i]\n        j = i - 1\n        while j >= 0 and arr[j] > key:\n            arr[j + 1] = arr[j]\n            j -= 1\n        arr[j + 1] = key\n    return arr",
   },
 ];
 
@@ -169,27 +169,27 @@ const mcqs: MCQQuestion[] = [
     id: "s25-m01",
     question: "Why does Product of Array Except Self avoid using division?",
     options: [
-      "Division is slower than multiplication in JavaScript",
-      "It fails when the array contains a zero (division by zero, and it can't recover the other products correctly if there are multiple zeros)",
-      "JavaScript doesn't support division on arrays",
+      "Division is slower than multiplication in Python",
+      "It fails when the list contains a zero (division by zero, and it can't recover the other products correctly if there are multiple zeros)",
+      "Python doesn't support division on lists",
       "There's no real reason — it's just convention"
     ],
     correctAnswerIndex: 1,
     explanation:
-      "The division approach (total product / current element) breaks the moment any element is 0. The prefix/suffix approach naturally handles zeros because it never divides — it just multiplies running totals from each direction.",
+      "The division approach (total product / current element) breaks the moment any element is 0 (and raises ZeroDivisionError in Python). The prefix/suffix approach naturally handles zeros because it never divides — it just multiplies running totals from each direction.",
   },
   {
     id: "s25-m02",
-    question: "In Kadane's Algorithm, what does it mean when `currentSum` resets to `nums[i]` instead of continuing to add?",
+    question: "In Kadane's Algorithm, what does it mean when `current_sum` resets to `nums[i]` instead of continuing to add?",
     options: [
       "A bug in the implementation",
       "The subarray ending at the previous position was net-negative, so starting fresh at the current element beats extending it",
-      "The array must be sorted first",
+      "The list must be sorted first",
       "It only happens at the very last index"
     ],
     correctAnswerIndex: 1,
     explanation:
-      "`Math.max(nums[i], currentSum + nums[i])` picks whichever is larger. When continuing the old subarray would only drag the sum down, starting over at the current element is strictly better — that's the core insight that makes Kadane's O(n) instead of checking every possible subarray.",
+      "`max(nums[i], current_sum + nums[i])` picks whichever is larger. When continuing the old subarray would only drag the sum down, starting over at the current element is strictly better — that's the core insight that makes Kadane's O(n) instead of checking every possible subarray.",
   },
   {
     id: "s25-m03",
@@ -209,7 +209,7 @@ const mcqs: MCQQuestion[] = [
 export const s25_arrays_strings_gaps: InterviewSection = {
   id: 25,
   slug: "arrays-strings-gaps",
-  title: "Arrays & Strings — Core Problems",
+  title: "Lists & Strings — Core Problems",
   subtitle: "Rotate Array, Sort Colors, Kadane's, Product Except Self, and other named problems",
   color: "#ef4444",
   priority: "VERY_IMPORTANT",
