@@ -63,7 +63,7 @@ export const s03_bigo: InterviewSection = {
     },
     {
       id: "s03-q10",
-      q: "What is the time complexity of this code?\nfor (let i = 0; i < n; i++) { for (let j = 0; j < n; j++) { ... } }",
+      q: "What is the time complexity of this code?\nfor i in range(n):\n    for j in range(n):\n        ...",
       hint: "Count the nested iterations.",
       answer: "O(n²) — the inner loop runs n times for each of n outer iterations.",
     },
@@ -75,9 +75,9 @@ export const s03_bigo: InterviewSection = {
     },
     {
       id: "s03-q12",
-      q: "What is the time complexity of JavaScript's Array.sort()?",
-      hint: "It uses an efficient sorting algorithm under the hood.",
-      answer: "O(n log n) — modern JS engines (V8) use TimSort.",
+      q: "What is the time complexity of Python's sorted() and list.sort()?",
+      hint: "It uses an efficient, stable sorting algorithm under the hood.",
+      answer: "O(n log n) worst case — CPython uses Timsort, a hybrid of merge sort and insertion sort. It's also stable (equal elements keep their relative order) and adaptive — it runs closer to O(n) on already-sorted or nearly-sorted input.",
     },
     {
       id: "s03-q13",
@@ -87,15 +87,15 @@ export const s03_bigo: InterviewSection = {
     },
     {
       id: "s03-q14",
-      q: "What is the time complexity of push() and pop() on an array?",
-      hint: "No re-indexing needed.",
-      answer: "O(1) amortized — adding/removing from the end doesn't require shifting other elements.",
+      q: "What is the time complexity of append() and pop() on a Python list?",
+      hint: "No re-indexing needed at the end.",
+      answer: "O(1) amortized — adding/removing from the end doesn't require shifting other elements. (pop() defaults to removing the last element; pop(0) is a different story — see next question.)",
     },
     {
       id: "s03-q15",
-      q: "What is the time complexity of unshift() and shift()?",
+      q: "What is the time complexity of insert(0, x) and pop(0) on a Python list?",
       hint: "All elements must move.",
-      answer: "O(n) — every existing element must be re-indexed when adding/removing from the front.",
+      answer: "O(n) — every existing element must shift when adding/removing from the front. If you need frequent front operations, use collections.deque instead, which gives O(1) appendleft()/popleft().",
     },
   ],
 };
